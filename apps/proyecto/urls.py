@@ -10,7 +10,7 @@ app_name = 'evaluacionCliente'
 urlpatterns = [
     
     # URL de base 
-    path('', index),
-    path('evaluacionCliente/index/', index, name='index'),
+    path('', login_required(index)),
+    path('evaluacionCliente/index/', login_required(index), name='index'),
 
 ]

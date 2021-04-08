@@ -1,8 +1,6 @@
 /*========= Importando hojas de estilo =========*/
 /* Bootstrap 3.3.7 */
-@import url('./bootstrap.min.css');
 /* Material desing for Bootstrap */
-@import url('./bootstrap-material-design.min.css');
 @import url('./ripples.min.css');
 /* Sweet Alert 2 */
 @import url('./sweetalert2.css');
@@ -210,7 +208,7 @@ body, html{
 /*contentPage*/
 .dashboard-contentPage{
 	right: 0;
-	z-index: 1;
+	z-index: auto;
 	padding-left: 270px;
 }
 .dashboard-Navbar,

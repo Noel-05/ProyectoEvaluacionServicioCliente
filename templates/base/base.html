@@ -4,22 +4,46 @@
 
 <head>
 {% block head %}
-	<title> {% block title %} Inicio {% endblock %} </title>
-	<link type="image/x-icon" href = "{% static './assets/img/logo_favicon.jpg' %}" rel="icon">
+	<title>{% block title %} Inicio {% endblock %}</title>
+
+
+	{% block static %}
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-	<link rel="stylesheet" href="{% static './css/main.css' %}">
-	<script src="{% static './js/jquery-3.1.1.min.js' %}"></script>
-	<script src="{% static './js/sweetalert2.min.js' %}"></script>
-	<script src="{% static './js/bootstrap.min.js' %}"></script>
-	<script src="{% static './js/material.min.js' %}"></script>
-	<script src="{% static './js/ripples.min.js' %}"></script>
-	<script src="{% static './js/jquery.mCustomScrollbar.concat.min.js' %}"></script>
-	<script src="{% static './js/main.js' %}"></script>
-    <script>
-		$.material.init();
-	</script>
+	<link rel="stylesheet" href="{% static 'css/main.css' %}">
+
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.js"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+	
+
+	<!--====== Scripts -->
+	<script src="{% static 'js/sweetalert2.min.js' %}"></script>
+	<script src="{% static 'js/material.min.js' %}"></script>
+	<script src="{% static 'js/ripples.min.js' %}"></script>
+	<script src="{% static 'js/jquery.mCustomScrollbar.concat.min.js' %}"></script>
+  	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>	
+	<script src="{% static 'js/main.js' %}"></script>
+
+	<script>
+      {% if messages %}
+          var html_mensaje = '';
+          {% for mensaje in messages %}
+              html_mensaje += '{{ mensaje }}';
+          {% endfor %}
+          notificacionError(html_mensaje);
+      {% endif %}
+  	</script>
+
+	{% endblock %}
 {% endblock %}
+
+  {% block extra_css %}
+  {% endblock extra_css %}
+
 </head>
 
 <body>
@@ -39,7 +63,7 @@
 			<div class="full-box dashboard-sideBar-UserInfo">
 				<figure class="full-box">
 					<img src="{% static './assets/img/logo_acopus2.jpg' %}" alt="UserIcon"></figure></br>
-					<figcaption class="text-center text-titles">Administrador</figcaption>
+					<figcaption class="text-center text-titles"> {{user.username}} </figcaption>
 				</figure>
 				<ul class="full-box list-unstyled text-center">
 					<li>
@@ -48,7 +72,7 @@
 						</a>
 					</li>
 					<li>
-						<a href="#!" class="btn-exit-system">
+						<a href="{% url 'usuario:logout' %}" class="btn-exit-system">
 							<i class="zmdi zmdi-power"></i>
 						</a>
 					</li>
@@ -59,10 +83,16 @@
 			<!-- SideBar Menu -->
 			<ul class="list-unstyled full-box dashboard-sideBar-Menu">
 				
-                <li>
-					<a href="#!">
-						<i class="zmdi zmdi-account-add zmdi-hc-fw"></i> Usuarios
+				<li>
+					<a href="#!" class="btn-sideBar-SubMenu">
+						<i class="zmdi zmdi-account-add zmdi-hc-fw"></i> Usuarios <i class="zmdi zmdi-caret-down pull-right"></i>
 					</a>
+					<ul class="list-unstyled full-box">
+						<li>
+							<a href="{% url 'usuario:inicio_usuarios' %}"><i class="zmdi zmdi-account zmdi-hc-fw"></i>Administrar Usuarios</a>
+						</li>
+
+					</ul>
 				</li>
 
 				<li>
@@ -154,11 +184,13 @@
 					</a>
 				</li>
 
-{% comment %} 				<li>
+				{% comment %} 				
+				<li>
 					<a href="#!" class="btn-search">
 						<i class="zmdi zmdi-search"></i>
 					</a>
-				</li> {% endcomment %}
+				</li> 
+				{% endcomment %}
 
 				<li>
 					<a href="#!" class="btn-modal-help">
@@ -190,11 +222,13 @@
                     </div>
                 </article>
 
-{% comment %}                 <figure class="full-box">
+				{% comment %}
+				<figure class="full-box">
                     </br>
                     </br>
                     <img src="{% static './assets/img/logo_acopus.jpg' %}" alt="UserIcon"></figure></br>
-                </figure> {% endcomment %}
+                </figure> 
+                {% endcomment %}
 
             </div>
         
@@ -289,6 +323,10 @@
 		    </div>
 	  	</div>
 	</div>
+
+	{% block js %}
+
+	{% endblock %}
 
 </body>
 </html>
