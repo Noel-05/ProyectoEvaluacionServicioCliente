@@ -6,7 +6,7 @@ class DepartamentoForm(forms.ModelForm):
 		model = Departamento
 		fields = {'codigo_departamento', 'nombre_departamento'}
 
-	codigo_departamento = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+	codigo_departamento = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'pattern': '([A-Za-z0-9]+)', 'title': 'No se permiten espacios, solo numeros y letras'}))
 	nombre_departamento = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))   
 
 	def __init__(self, *args, **kwargs):
@@ -36,7 +36,7 @@ class AgenciaForm(forms.ModelForm):
 		model = Agencia
 		fields = {'codigo_agencia', 'nombre_agencia', 'direccion_agencia'}
 
-	codigo_agencia = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+	codigo_agencia = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'pattern': '([A-Za-z0-9]+)', 'title': 'No se permiten espacios, solo numeros y letras'}))
 	nombre_agencia = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))   
 	direccion_agencia = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))   
 
