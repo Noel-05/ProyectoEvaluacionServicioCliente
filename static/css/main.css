@@ -265,7 +265,7 @@ body, html{
 .Notifications-bg,
 .Notifications-body{
 	height: 100%;
-	position: absolute;
+	position: fixed;
 	top: 0;
 	right: 0;
 }

@@ -1,0 +1,80 @@
+{% extends 'base/base.html' %}
+
+{% load static %}
+
+{%block title%}
+  Listar Comites
+{%endblock%}
+
+{% block content %}
+	<div style="text-align:center; margin: 0 auto;">
+	    <div class="container" align="center">
+	      <h2 class="form-titulo" style ="margin-left: 5px;">Listado de Comites</h2>
+	      <button class="btn btn-outline-success" onclick="location.href='{% url 'evaluacionCliente:crear_comite' %}'">Agregar</button>
+	      <p></p>
+	    </div>
+
+		{% if comites %}
+		    <div class="table-responsive">
+				<table id="bootstrapdatatable" class="table table-hover">
+					<thead>
+						<tr>
+							<th>Nombre del Comite</th>	
+							<th>Descripci&oacute;n del Comite</th>	
+							<th>Opciones</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for comite in comites %}
+							<tr>
+								<td>{{ comite.nombre_comite }}</td>
+								<td>{{ comite.descripcion_comite }}</td>	
+								<td>
+									<button type="button" class="btn btn-primary btn-sm tableButton"  onclick="location.href='{% url 'evaluacionCliente:editar_comite' comite.id_comite %}'" style="color:white;"> EDITAR </button>
+									<button type="button" class="btn btn-danger tableButton  btn-sm" data-toggle="modal" data-target="#a{{ comite.id_comite }}">ELIMINAR</button>
+								</td>					
+							</tr>
+
+							<div class="modal fade" id="a{{ comite.id_comite }}" tabindex="-1"
+							     role="dialog" aria-labelledBy="fm-modal-grid"
+							    aria-hidden="true">
+							    <div class="modal-dialog modal-lg">
+							        <div class="modal-content">
+								        <div class="modal-header">
+								            Eliminaci&oacute;n de {{ comite.nombre_comite }}
+								            <button type="button" class="close" data-dismiss="modal">&times;</button>
+								        </div>
+							            <div class="modal-body">
+									        <div class="modal-body text-center" >
+									            <h3><strong>¿Realmente desea eliminar el {{ comite.nombre_comite }}?</strong></h3>
+									        </div>							            
+							            <div class="modal-footer">
+											<form action="{% url 'evaluacionCliente:eliminar_comite' comite.id_comite %}" method="POST">
+											       {% csrf_token %}
+											       <button class="btn btn-danger" data-align="right"><strong>CONFIRMAR ELIMINACIÓN</strong></button>
+											</form>
+							                <button class="btn btn-primary" data-dismiss="modal"><strong>CANCELAR</strong></button>
+							            </div>
+							        	</div>
+							    	</div>
+								</div>
+							</div>	
+
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		{% else %}
+			<h1>No existen comites registrados</h1>
+		{% endif %}
+
+
+
+	{% block js %}
+
+	{% endblock js %}
+
+
+{% endblock content %}

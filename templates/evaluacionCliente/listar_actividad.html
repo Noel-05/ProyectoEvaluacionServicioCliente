@@ -1,0 +1,87 @@
+{% extends 'base/base.html' %}
+
+{% load static %}
+
+{%block title%}
+  Listar Actividades
+{%endblock%}
+
+{% block content %}
+	<div style="text-align:center; margin: 0 auto;">
+	    <div class="container" align="center">
+	      <h2 class="form-titulo" style ="margin-left: 5px;">Listado de Actividades</h2>
+	      <button class="btn btn-outline-success" onclick="location.href='{% url 'evaluacionCliente:crear_actividad' %}'">Agregar</button>
+	      <p></p>
+	    </div>
+
+		{% if actividades %}
+		    <div class="table-responsive">
+				<table id="bootstrapdatatable" class="table table-hover">
+					<thead>
+						<tr>
+							<th>Nombre Actividad</th>
+							<th>Descripci&oacute;n Actividad</th>	
+							<th>Fecha Realizaci&oacute;n </th>	
+							<th>Agencia Responsable</th>	
+							<th>Departamento Responsable</th>	
+							<th>C&oacute;mite Responsable</th>	
+							<th>Opciones</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for actividad in actividades %}
+							<tr>
+								<td>{{ actividad.nombre_actividad }}</td>
+								<td>{{ actividad.descripcion_actividad }}</td>	
+								<td>{{ actividad.fecha_realizacion }}</td>	
+								<td>{{ actividad.codigo_agencia }}</td>	
+								<td>{{ actividad.codigo_departamento }}</td>	
+								<td>{{ actividad.id_comite }}</td>	
+								<td>
+									<button type="button" class="btn btn-primary btn-sm tableButton"  onclick="" style="color:white;"> EDITAR </button>
+									<button type="button" class="btn btn-danger tableButton  btn-sm" data-toggle="modal" data-target="#a{{ actividad.id_actividad }}">ELIMINAR</button>
+								</td>					
+							</tr>
+
+							<div class="modal fade" id="a{{ actividad.id_actividad }}" tabindex="-1"
+							     role="dialog" aria-labelledBy="fm-modal-grid"
+							    aria-hidden="true">
+							    <div class="modal-dialog modal-lg">
+							        <div class="modal-content">
+								        <div class="modal-header">
+								            Eliminación de {{ actividad.nombre_actividad }}
+								            <button type="button" class="close" data-dismiss="modal">&times;</button>
+								        </div>
+							            <div class="modal-body">
+									        <div class="modal-body text-center" >
+									            <h3><strong>¿Realmente desea eliminar la Actividad con nombre {{ actividad.nombre_actividad }}?</strong></h3>
+									        </div>							            
+							            <div class="modal-footer">
+											<form action="{% url 'evaluacionCliente:eliminar_actividad' actividad.id_actividad %}" method="POST">
+											       {% csrf_token %}
+											       <button class="btn btn-danger" data-align="right"><strong>CONFIRMAR ELIMINACIÓN</strong></button>
+											</form>
+							                <button class="btn btn-primary" data-dismiss="modal"><strong>CANCELAR</strong></button>
+							            </div>
+							        	</div>
+							    	</div>
+								</div>
+							</div>	
+							
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+
+	{% else %}
+		<h1>No existen actividades registradas</h1>
+	{% endif %}
+
+
+	{% block js %}
+
+	{% endblock js %}
+
+{% endblock content %}

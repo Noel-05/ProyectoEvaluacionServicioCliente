@@ -25,7 +25,7 @@ class Departamento(models.Model):
 
 class Comite(models.Model):
     id_comite = models.AutoField(primary_key=True)
-    nombre_comite = models.CharField(max_length=150, null=False)
+    nombre_comite = models.CharField(max_length=150, null=False, unique=True)
     descripcion_comite = models.CharField(max_length=250, null=True, blank=True)
 
     def __str__(self):

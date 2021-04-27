@@ -4,7 +4,7 @@
 
 <head>
 {% block head %}
-	<title>{% block title %} Inicio {% endblock %}</title>
+	<title>{% block title %} Inicio {% endblock title %}</title>
 
 
 	{% block static %}
@@ -12,12 +12,14 @@
 	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 	<link rel="stylesheet" href="{% static 'css/main.css' %}">
 
-	<script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.js"></script>
-	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	<script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+	<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+	<script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
 	
 
 	<!--====== Scripts -->
@@ -36,6 +38,35 @@
           {% endfor %}
           notificacionError(html_mensaje);
       {% endif %}
+
+	$(document).ready(function() {
+	    $('#bootstrapdatatable').DataTable({     
+		      	"aLengthMenu": [[5, 10, 25, -1], [5, 10, 25, "Todo"]],
+		        "iDisplayLength": 5, 
+            language: {           	
+                "decimal": "",
+                "emptyTable": "No hay información",
+                "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+                "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                "infoPostFix": "",
+                "thousands": ",",
+                "lengthMenu": "Mostrar _MENU_ Entradas",
+                "loadingRecords": "Cargando...",
+                "processing": "Procesando...",
+                "search": "Buscar:",
+                "zeroRecords": "Sin resultados encontrados",
+                "paginate": {
+                    "first": "Primero",
+                    "last": "Ultimo",
+                    "next": "Siguiente",
+                    "previous": "Anterior"
+              },
+            },  	        
+	       } 
+	    );
+	} );
+
   	</script>
 
 	{% endblock %}
@@ -123,7 +154,7 @@
 					</a>
 					<ul class="list-unstyled full-box">
 						<li>
-							<a href="#!"><i class="zmdi zmdi-balance zmdi-hc-fw"></i> Consultar Agencia </a>
+							<a href="{% url 'evaluacionCliente:listar_agencia' %}"><i class="zmdi zmdi-balance zmdi-hc-fw"></i> Consultar Agencia </a>
 						</li>
 					</ul>
 				</li>
@@ -134,7 +165,7 @@
 					</a>
 					<ul class="list-unstyled full-box">
 						<li>
-							<a href="#!"><i class="zmdi zmdi-format-list-bulleted zmdi-hc-fw"></i>Consultar Departamento</a>
+							<a href="{% url 'evaluacionCliente:listar_departamento' %}"><i class="zmdi zmdi-format-list-bulleted zmdi-hc-fw"></i>Consultar Departamento</a>
 						</li>
 					</ul>
 				</li>
@@ -145,7 +176,7 @@
 					</a>
 					<ul class="list-unstyled full-box">
 						<li>
-							<a href="#!"><i class="zmdi zmdi-accounts-list zmdi-hc-fw"></i>Consultar Comit&eacute;</a>
+							<a href="{% url 'evaluacionCliente:listar_comite' %}"><i class="zmdi zmdi-accounts-list zmdi-hc-fw"></i>Consultar Comit&eacute;</a>
 						</li>
 					</ul>
 				</li>
@@ -156,7 +187,7 @@
 					</a>
 					<ul class="list-unstyled full-box">
 						<li>
-							<a href="#!"><i class="zmdi zmdi-notifications-add zmdi-hc-fw"></i> Consultar Actividades </a>
+							<a href="{% url 'evaluacionCliente:listar_actividad' %}"><i class="zmdi zmdi-notifications-add zmdi-hc-fw"></i> Consultar Actividades </a>
 						</li>
 					</ul>
 				</li>
@@ -232,7 +263,7 @@
 
             </div>
         
-        {% endblock %}
+        {% endblock content %}
 
 	</section>
 
@@ -324,9 +355,6 @@
 	  	</div>
 	</div>
 
-	{% block js %}
-
-	{% endblock %}
 
 </body>
 </html>
