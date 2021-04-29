@@ -35,6 +35,7 @@ urlpatterns = [
     #URLs para Actividades
     path('evaluacionCliente/crear_actividad/', login_required(crearActividad), name='crear_actividad'),
     path('evaluacionCliente/listar_actividad/', login_required(listarActividad), name='listar_actividad'),    
+    path('evaluacionCliente/editar_actividad/<id_actividad>/', login_required(editarActividad), name='editar_actividad'),
     path('evaluacionCliente/eliminar_actividad/<pk>/', login_required(eliminarActividad.as_view()), name='eliminar_actividad'),
 
 

@@ -173,6 +173,24 @@ def listarActividad(request):
 	#Mandar la consulta al template
 	return render(request, 'evaluacionCliente/listar_actividad.html', {'actividades': actividades})
 
+#Editar Actividades
+def editarActividad(request, id_actividad):
+	actividad_form = None
+	error = None
+
+	try:
+		actividad = Actividad.objects.get(id_actividad = id_actividad)
+		if request.method =='GET':
+			actividad_form=ActividadForm(instance = actividad)
+		else:
+			actividad_form = ActividadForm(request.POST, instance = actividad)
+			if actividad_form.is_valid():
+				actividad_form.save()
+			return HttpResponseRedirect(reverse_lazy('evaluacionCliente:listar_actividad'))
+	except ObjectDoesNotExist as e:
+		error = e
+	return render(request, 'evaluacionCliente/editar_actividad.html', {'actividad_form': actividad_form, 'error':error})
+
 #Eliminar Actividad
 class eliminarActividad(DeleteView):
     model = Actividad
