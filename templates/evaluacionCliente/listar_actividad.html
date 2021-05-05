@@ -38,7 +38,7 @@
 								<td>{{ actividad.codigo_departamento }}</td>	
 								<td>{{ actividad.id_comite }}</td>	
 								<td>
-									<button type="button" class="btn btn-primary btn-sm tableButton"  onclick="" style="color:white;"> EDITAR </button>
+									<button type="button" class="btn btn-primary btn-sm tableButton"  onclick="location.href='{% url 'evaluacionCliente:editar_actividad' actividad.id_actividad %}'" style="color:white;"> EDITAR </button>
 									<button type="button" class="btn btn-danger tableButton  btn-sm" data-toggle="modal" data-target="#a{{ actividad.id_actividad }}">ELIMINAR</button>
 								</td>					
 							</tr>
