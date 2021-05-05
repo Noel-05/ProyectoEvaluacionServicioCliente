@@ -1,6 +1,10 @@
 from django import forms
 from .models import *
 
+
+#----------------------------------------------------------------------------------------------------------------------------------
+
+
 class DepartamentoForm(forms.ModelForm):
 	class Meta:
 		model = Departamento
@@ -22,6 +26,10 @@ class DepartamentoForm(forms.ModelForm):
 		else:
 			return self.cleaned_data['codigo_departamento']
 
+
+#----------------------------------------------------------------------------------------------------------------------------------
+
+
 class ComiteForm(forms.ModelForm):
 	class Meta:
 		model = Comite
@@ -29,6 +37,9 @@ class ComiteForm(forms.ModelForm):
 
 	nombre_comite = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
 	descripcion_comite = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'})) 
+
+
+#----------------------------------------------------------------------------------------------------------------------------------
 
 
 class AgenciaForm(forms.ModelForm):
@@ -52,6 +63,10 @@ class AgenciaForm(forms.ModelForm):
 			return instance.codigo_agencia
 		else:
 			return self.cleaned_data['codigo_agencia']  
+
+
+#----------------------------------------------------------------------------------------------------------------------------------
+
 
 class ActividadForm(forms.ModelForm):
 	class Meta:

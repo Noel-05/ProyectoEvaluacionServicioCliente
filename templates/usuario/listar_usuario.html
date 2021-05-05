@@ -12,13 +12,21 @@ Listado de Usuarios
 {% block content %}
 
     <div class="container" align="center">
-      <h2 class="form-titulo" style ="margin-left: 5px;">Registro de Usuarios</h2>
-            <input type="button" class="btn btn-outline-success" align="center" onclick="abrir_modal_creacion('{% url 'usuario:registrar_usuario' %}');", value="Agregar">
-            <p> </p>
+
+        <font face="small fonts" size="10" color="#049286">
+            <h2 align="center" class="form-titulo" style ="margin-left: 5px; margin-top:20px; bg-success text-white">Registro de Usuarios</h2>
+        </font>
+        
+        <input type="button" class="btn btn-outline-success" align="center" onclick="abrir_modal_creacion('{% url 'usuario:registrar_usuario' %}');", value="Agregar">
+        <p> </p>
+    
     </div>
+    
     <div class="table-responsive">
         <div class="table-stats order-table ov-h" align="center">
+
             <table id="tabla_usuarios" class="table table-hover">
+                
                 <thead>
                     <tr>
                         <th>#</th>
@@ -30,9 +38,11 @@ Listado de Usuarios
                         <th>Opciones</th>
                     </tr>
                 </thead>
+                
                 <tbody>               
                 </tbody>
             </table>
+
         </div>
     </div>
 

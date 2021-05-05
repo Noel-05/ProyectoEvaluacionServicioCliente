@@ -1,5 +1,4 @@
 {% extends 'base/base.html' %}
-
 {% load static %}
 
 {%block title%}
@@ -9,14 +8,20 @@
 {% block content %}
 	<div style="text-align:center; margin: 0 auto;">
 	    <div class="container" align="center">
-	      <h2 class="form-titulo" style ="margin-left: 5px;">Listado de Actividades</h2>
-	      <button class="btn btn-outline-success" onclick="location.href='{% url 'evaluacionCliente:crear_actividad' %}'">Agregar</button>
-	      <p></p>
+
+			<font face="small fonts" size="10" color="#049286">
+				<h2 align="center" class="form-titulo" style ="margin-left: 5px; margin-top:20px; bg-success text-white">Listado de Actividades</h2>
+			</font>
+	    	
+			<button class="btn btn-outline-success" onclick="location.href='{% url 'evaluacionCliente:crear_actividad' %}'">Agregar</button>
+	    	<p></p>
+
 	    </div>
 
 		{% if actividades %}
 		    <div class="table-responsive">
 				<table id="bootstrapdatatable" class="table table-hover">
+					
 					<thead>
 						<tr>
 							<th>Nombre Actividad</th>
@@ -28,6 +33,7 @@
 							<th>Opciones</th>
 						</tr>
 					</thead>
+
 					<tbody>
 						{% for actividad in actividades %}
 							<tr>
@@ -70,6 +76,7 @@
 							
 						{% endfor %}
 					</tbody>
+					
 				</table>
 			</div>
 		</div>

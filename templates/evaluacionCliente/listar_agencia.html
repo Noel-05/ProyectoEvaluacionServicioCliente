@@ -1,18 +1,18 @@
 {% extends 'base/base.html' %}
+
 {% block title %}
-
   Listar Agencias
-
 {% endblock title %}
+
 {% block content %}
 
 	<div style="text-align:center; margin: 0 auto;">
 	    <div class="container" align="center">
-			
-			
+
+			<font face="small fonts" size="10" color="#049286">
 				<h2 align="center" class="form-titulo" style ="margin-left: 5px; margin-top:20px; bg-success text-white">Listado de Agencias</h2>
-			
-			
+			</font>
+
 			<button class="btn btn-outline-success" onclick="location.href='{% url 'evaluacionCliente:crear_agencia' %}'">Agregar</button>
 	        <p> </p>
 

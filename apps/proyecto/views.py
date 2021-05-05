@@ -14,6 +14,10 @@ from django.views.decorators.csrf import csrf_protect
 from .models import *
 from .forms import *
 
+
+#----------------------------------------------------------------------------------------------------------------------------------
+
+
 #Vista para el menu base
 def index(request):
     return render(
@@ -21,8 +25,13 @@ def index(request):
         'base/base.html'
     )
 
-#-----CRUD Departamento-------
-#Crear departamento
+
+#----------------------------------------------------------------------------------------------------------------------------------
+
+
+#	CRUD DEPARTAMENTO
+
+# Crear departamento
 def crearDepartamento(request):
 	if request.method == 'POST':
 		departamento_form = DepartamentoForm(request.POST)
@@ -33,12 +42,15 @@ def crearDepartamento(request):
 		departamento_form = DepartamentoForm()
 	return render(request, 'evaluacionCliente/crear_departamento.html', {'departamento_form': departamento_form})
 
-#Vista para el departamento
+
+# Vista para el Departamento
 def listarDepartamento(request):
 	departamentos = Departamento.objects.all()
 	#Mandar la consulta al template
 	return render(request, 'evaluacionCliente/listar_departamento.html', {'departamentos': departamentos})		
 
+
+# Editar Departamento
 def editarDepartamento(request, codigo_departamento):
 	departamento_form = None
 	error = None
@@ -57,20 +69,19 @@ def editarDepartamento(request, codigo_departamento):
 	return render(request, 'evaluacionCliente/editar_departamento.html', {'departamento_form': departamento_form, 'error':error})
 
 
+# Eliminar Departamento
 class eliminarDepartamento(DeleteView):
     model = Departamento
     template_name = 'evaluacionCliente/listar_departamento.html'
     success_url = reverse_lazy('evaluacionCliente:listar_departamento')
 
-# def eliminarDepartamento(request, codigo_departamento):
-# 	departamento = Departamento.objects.get(codigo_departamento=codigo_departamento)
-# 	if request.method == 'POST':
-# 		departamento.delete()
-# 		return HttpResponseRedirect(reverse_lazy('evaluacionCliente:listar_departamento'))
-# 	return render(request, 'evaluacionCliente/eliminar_departamento.html', {'departamento': departamento})
 
-#--------------------------CRUD Comite------------
-#Crear Comite
+#----------------------------------------------------------------------------------------------------------------------------------
+
+
+#	CRUD COMITE
+
+# Crear Comite
 def crearComite(request):
 	if request.method == 'POST':
 		comite_form = ComiteForm(request.POST)
@@ -81,12 +92,15 @@ def crearComite(request):
 		comite_form = ComiteForm()
 	return render(request, 'evaluacionCliente/crear_comite.html', {'comite_form': comite_form})
 
-#Vista para el comite
+
+# Vista para el Comite
 def listarComite(request):
 	comites = Comite.objects.all()
 	#Mandar la consulta al template
 	return render(request, 'evaluacionCliente/listar_comite.html', {'comites': comites})	
 
+
+# Editar Comite
 def editarComite(request, id_comite):
 	comite_form = None
 	error = None
@@ -104,13 +118,20 @@ def editarComite(request, id_comite):
 		error = e
 	return render(request, 'evaluacionCliente/editar_comite.html', {'comite_form': comite_form, 'error':error})
 
+
+# Eliminar Comite
 class eliminarComite(DeleteView):
     model = Comite
     template_name = 'evaluacionCliente/listar_comite.html'
     success_url = reverse_lazy('evaluacionCliente:listar_comite')
 
-#--------------------------CRUD Agencia------------
-#Crear Agencia
+
+#----------------------------------------------------------------------------------------------------------------------------------
+
+
+#	CRUD AGENCIA
+
+# Crear Agencia
 def crearAgencia(request):
 	if request.method == 'POST':
 		agencia_form =AgenciaForm(request.POST)
@@ -121,12 +142,15 @@ def crearAgencia(request):
 		agencia_form = AgenciaForm()
 	return render(request, 'evaluacionCliente/crear_agencia.html', {'agencia_form': agencia_form})
 
-#Vista para la agencia
+
+# Vista para la Agencia
 def listarAgencia(request):
 	agencias = Agencia.objects.all()
 	#Mandar la consulta al template
 	return render(request, 'evaluacionCliente/listar_agencia.html', {'agencias': agencias})
 
+
+# Editar Agencia
 def editarAgencia(request, codigo_agencia):
 	agencia_form = None
 	error = None
@@ -144,13 +168,20 @@ def editarAgencia(request, codigo_agencia):
 		error = e
 	return render(request, 'evaluacionCliente/editar_agencia.html', {'agencia_form': agencia_form, 'error':error})
 
+
+# Eliminar Agencia
 class eliminarAgencia(DeleteView):
     model = Agencia
     template_name = 'evaluacionCliente/listar_agencia.html'
     success_url = reverse_lazy('evaluacionCliente:listar_agencia')
 
-#--------------------------CRUD Actividades------------
-#Crear departamento
+
+#----------------------------------------------------------------------------------------------------------------------------------
+
+
+#	CRUD ACTIVIDADES
+
+# Crear Actividad
 def crearActividad(request):
 	if request.method == 'POST':
 		actividad_form = ActividadForm(request.POST)
@@ -167,11 +198,13 @@ def crearActividad(request):
 
 	return render(request, 'evaluacionCliente/crear_actividad.html', {'actividad_form': actividad_form})
 
-#Vista para las actividades
+
+# Vista para las Actividades
 def listarActividad(request):
 	actividades = Actividad.objects.all()
 	#Mandar la consulta al template
 	return render(request, 'evaluacionCliente/listar_actividad.html', {'actividades': actividades})
+
 
 #Editar Actividades
 def editarActividad(request, id_actividad):
@@ -191,8 +224,12 @@ def editarActividad(request, id_actividad):
 		error = e
 	return render(request, 'evaluacionCliente/editar_actividad.html', {'actividad_form': actividad_form, 'error':error})
 
+
 #Eliminar Actividad
 class eliminarActividad(DeleteView):
     model = Actividad
     template_name = 'evaluacionCliente/listar_actividad.html'
     success_url = reverse_lazy('evaluacionCliente:listar_actividad')
+
+
+#----------------------------------------------------------------------------------------------------------------------------------
