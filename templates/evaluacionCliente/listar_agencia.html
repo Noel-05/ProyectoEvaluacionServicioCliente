@@ -1,18 +1,27 @@
- {% extends 'base/base.html' %}
+{% extends 'base/base.html' %}
 {% block title %}
+
   Listar Agencias
+
 {% endblock title %}
 {% block content %}
+
 	<div style="text-align:center; margin: 0 auto;">
 	    <div class="container" align="center">
-	      <h2 class="form-titulo" style ="margin-left: 5px;">Listado de Agencias</h2>
-	      <button class="btn btn-outline-success" onclick="location.href='{% url 'evaluacionCliente:crear_agencia' %}'">Agregar</button>
-	            <p> </p>
+			
+			
+				<h2 align="center" class="form-titulo" style ="margin-left: 5px; margin-top:20px; bg-success text-white">Listado de Agencias</h2>
+			
+			
+			<button class="btn btn-outline-success" onclick="location.href='{% url 'evaluacionCliente:crear_agencia' %}'">Agregar</button>
+	        <p> </p>
+
 	    </div>
 
 		{% if agencias %}
 		    <div class="table-responsive">
 				<table id="bootstrapdatatable" class="table table-hover">
+
 					<thead>
 						<tr>
 							<th>Codigo Agencia</th>
@@ -21,6 +30,7 @@
 							<th>Opciones</th>
 						</tr>
 					</thead>
+
 					<tbody>
 						{% for agencia in agencias %}
 							<tr>
@@ -60,6 +70,7 @@
 
 						{% endfor %}
 					</tbody>
+
 				</table>
 			</div>
 		</div>		
@@ -67,6 +78,5 @@
 		{% else %}
 			<h1>No existen agencias registrados</h1>
 		{% endif %}
-
 
 {% endblock content %}
