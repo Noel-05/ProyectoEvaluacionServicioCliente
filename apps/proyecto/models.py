@@ -10,7 +10,7 @@ class Agencia(models.Model):
     direccion_agencia = models.CharField(max_length=250, null=True, blank=True)
 
     def __str__(self):
-        return self.nombre_agencia
+        return self.codigo_agencia
 
 
 
@@ -47,26 +47,17 @@ class Actividad(models.Model):
 
 
 
-class Pregunta(models.Model):
-    id_pregunta = models.AutoField(primary_key=True)
-    descripcion_pregunta = models.CharField(max_length=300, null=False)
-
-    def __str__(self):
-        return self.descripcion_pregunta
-
-
-
 class EncuestaCliente(models.Model):
     codigo_agencia = models.ForeignKey(Agencia, on_delete=models.CASCADE)
-    id_pregunta = models.ForeignKey(Pregunta, on_delete=models.CASCADE)
+    descripcion_pregunta = models.CharField(max_length=300, null=False)
     titulo_encuesta_cliente = models.CharField(max_length=250, null=False)
     visibilidad_pregunta_cliente = models.CharField(max_length=1, null=False, default='S')
 
-    class Meta:
-        unique_together = ("codigo_agencia", "id_pregunta")
+    #class Meta:
+    #    unique_together = ("codigo_agencia", "id_pregunta")
     
     def __str__(self):
-        return self.codigo_agencia.__str__() + self.id_pregunta.__str__()
+        return self.codigo_agencia.__str__() +' | '+ self.titulo_encuesta_cliente.__str__() +' | '+ self.descripcion_pregunta.__str__()
 
 
 
@@ -82,15 +73,15 @@ class RespuestaEncuestaCliente(models.Model):
 
 class EncuestaPersonal(models.Model):
     id_actividad = models.ForeignKey(Actividad, on_delete=models.CASCADE)
-    id_pregunta = models.ForeignKey(Pregunta, on_delete=models.CASCADE)
+    descripcion_pregunta = models.CharField(max_length=300, null=False)
     titulo_encuesta_personal = models.CharField(max_length=250, null=False)
     visibilidad_pregunta_personal = models.CharField(max_length=1, null=False, default='S')
 
-    class Meta:
-        unique_together = ("id_actividad", "id_pregunta")
+    #class Meta:
+    #    unique_together = ("id_actividad", "id_pregunta")
     
     def __str__(self):
-        return self.id_actividad.__str__() + self.id_pregunta.__str__()
+        return self.id_actividad.__str__() +' | '+ self.titulo_encuesta_personal.__str__() +' | '+ self.descripcion_pregunta.__str__()
 
 
 
