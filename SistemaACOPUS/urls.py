@@ -42,6 +42,12 @@ urlpatterns = [
         auth_views.PasswordResetCompleteView.as_view(template_name="accounts/password_reset_done.html"), 
         name="password_reset_complete"),
 
+    path('password_change/', auth_views.PasswordChangeView.as_view(template_name='accounts/password_change.html', form_class=FormularioCambioContraseña), 
+        name='password_change'),
+
+    path('password_change/done/', auth_views.PasswordChangeDoneView.as_view(template_name='accounts/password_change_done.html'), 
+        name='password_change_done'),
+
 ]
 
 '''
@@ -49,4 +55,5 @@ urlpatterns = [
 2 - Email sent success message                //PasswordResetDoneView.as_view()
 3 - Link to password Rest form in email       //PasswordResetConfirmView.as_view()
 4 - Password successfully changed message     //PasswordResetCompleteView.as_view()
+5 - Password change                           //PasswordChangeDoneView.as_view()
 '''
