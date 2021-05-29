@@ -53,7 +53,7 @@ class ListadoUsuario(LoginPAMixin, ListView):
     model=Usuario
 
     def get_queryset(self):
-        return self.model.objects.filter(usuario_activo=True)  
+        return self.model.objects.filter(is_active=True)  
 
     def get(self, request, *args, **kwargs):
         if request.is_ajax():

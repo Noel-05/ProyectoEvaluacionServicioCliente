@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 from apps.usuario.models import Usuario
+import re
 
 class FormularioLogin(AuthenticationForm):
     def __init__(self, *args, **kwargs):
@@ -70,6 +71,14 @@ class FormularioUsuarioLogin(forms.ModelForm):
 
 		if password1 != password2:
 			raise forms.ValidationError('Contraseñas no coinciden')
+		if not 8 <= len(password2) <= 20:
+			raise forms.ValidationError('Su contraseña debe de contener entre 8 y 20 caracteres')			
+		if not(re.search('[a-z]', password2) and re.search('[A-Z]', password2)):
+			raise forms.ValidationError('Su contraseña debe de contener al menos una letra mayúscula y una minúscula, un número, un carácter especial, y contener entre 8 y 16 caracteres')
+		if not(re.search('[0-9]', password2)):
+			raise forms.ValidationError('Su contraseña debe de contener al menos una letra mayúscula y una minúscula, un número, un carácter especial, y contener entre 8 y 16 caracteres')
+		if not(re.search('[@$%&/=?(¿¡!_.,>)<*]', password2)):
+			raise forms.ValidationError('Su contraseña debe de contener al menos una letra mayúscula y una minúscula, un número, un carácter especial, y contener entre 8 y 16 caracteres')
 		return password2
 
 	def save(self, commit=True):
@@ -139,6 +148,14 @@ class FormularioUsuario(forms.ModelForm):
 
 		if password1 != password2:
 			raise forms.ValidationError('Contraseñas no coinciden')
+		if not 8 <= len(password2) <= 20:
+			raise forms.ValidationError('Su contraseña debe de contener entre 8 y 20 caracteres')			
+		if not(re.search('[a-z]', password2) and re.search('[A-Z]', password2)):
+			raise forms.ValidationError('Su contraseña debe de contener al menos una letra mayúscula y una minúscula, un número, un carácter especial, y contener entre 8 y 16 caracteres')
+		if not(re.search('[0-9]', password2)):
+			raise forms.ValidationError('Su contraseña debe de contener al menos una letra mayúscula y una minúscula, un número, un carácter especial, y contener entre 8 y 16 caracteres')
+		if not(re.search('[@$%&/=?(¿¡!_.,>)<*]', password2)):
+			raise forms.ValidationError('Su contraseña debe de contener al menos una letra mayúscula y una minúscula, un número, un carácter especial, y contener entre 8 y 16 caracteres')
 		return password2
 
 	def save(self, commit=True):
