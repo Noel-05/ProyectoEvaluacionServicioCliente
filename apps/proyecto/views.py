@@ -334,7 +334,13 @@ def eliminarEncuesta(request, idEncuesta):
 
 	EncuestaCliente.objects.get(id=idEncuesta).delete()
 
-	return HttpResponseRedirect(reverse_lazy('evaluacionCliente:consultar_encuesta2', kwargs={'codigoAgencia':agencia, 'tituloEncuesta':titulo}))
+	encuestaVal = EncuestaCliente.objects.filter(titulo_encuesta_cliente = titulo, codigo_agencia=agencia)
+
+	if len(encuestaVal) == 0:
+		return HttpResponseRedirect(reverse_lazy('evaluacionCliente:listar_encuesta'))
+	
+	else:
+		return HttpResponseRedirect(reverse_lazy('evaluacionCliente:consultar_encuesta2', kwargs={'codigoAgencia':agencia, 'tituloEncuesta':titulo}))
 
 
 #----------------------------------------------------------------------------------------------------------------------------------
@@ -611,10 +617,16 @@ def eliminarEncuestaPersonal(request, idEncuesta):
 		actividad = encuesta[i].id_actividad.id_actividad
 		titulo = encuesta[i].titulo_encuesta_personal
 		i+=1
-
+	
 	EncuestaPersonal.objects.get(id=idEncuesta).delete()
 
-	return HttpResponseRedirect(reverse_lazy('evaluacionCliente:consultar_encuesta2_personal', kwargs={'idActividad':actividad, 'tituloEncuesta':titulo}))
+	encuestaVal = EncuestaPersonal.objects.filter(id_actividad=actividad, titulo_encuesta_personal=titulo)
+
+	if len(encuestaVal) == 0:
+		return HttpResponseRedirect(reverse_lazy('evaluacionCliente:listar_encuesta_personal'))
+	
+	else:
+		return HttpResponseRedirect(reverse_lazy('evaluacionCliente:consultar_encuesta2_personal', kwargs={'idActividad':actividad, 'tituloEncuesta':titulo}))
 
 
 #----------------------------------------------------------------------------------------------------------------------------------
