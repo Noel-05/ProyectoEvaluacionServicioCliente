@@ -1,0 +1,96 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{%block title%}
+  Listar Empleados
+{%endblock%}
+
+{% block content %}
+	<div style="text-align:center; margin: 0 auto;">
+	    <div class="container" align="center">
+
+			<font face="small fonts" size="10" color="#049286">
+				<h2 align="center" class="form-titulo" style ="margin-left: 5px; margin-top:20px; bg-success text-white">Listado de Empleados</h2>
+			</font>
+	    	
+			<button class="btn btn-outline-success" onclick="location.href='{% url 'evaluacionCliente:crear_empleado' %}'">Agregar</button>
+	    	<p></p>
+
+	    </div>
+
+		{% if empleados %}
+		    <div class="table-responsive">
+				<table id="bootstrapdatatable" class="table table-hover">
+					
+					<thead>
+						<tr>
+							<th>Nombres</th>
+							<th>Apellidos</th>	
+							<th>Agencia</th>	
+							<th>Departamento</th>	
+							<th>C&oacute;mite</th>	
+							<th>correo</th>
+							<th>Opciones</th>
+						</tr>
+					</thead>
+
+					<tbody>
+						{% for emp in empleados %}
+							<tr>
+								<td>{{ emp.nombres }}</td>
+								<td>{{ emp.apellidos }}</td>
+								<td>{{ emp.codigo_agencia }}</td>
+								<td>{{ emp.codigo_departamento }}</td>
+								<td>{{ emp.id_comite }}</td>
+								<td>{{ emp.email }}</td>
+
+								<td>
+									<button type="button" class="btn btn-primary btn-sm tableButton"  onclick="location.href='{% url 'evaluacionCliente:editar_empleado' emp.id_empleado %}'" style="color:white;"> EDITAR </button>
+
+									<button type="button" class="btn btn-danger tableButton  btn-sm" data-toggle="modal" data-target="#a{{ emp.id_empleado }}">ELIMINAR</button>
+								</td>
+							</tr>
+
+							<div class="modal fade" id="a{{ emp.id_empleado }}" tabindex="-1"
+							     role="dialog" aria-labelledBy="fm-modal-grid"
+							    aria-hidden="true">
+							    <div class="modal-dialog modal-lg">
+							        <div class="modal-content">
+								        <div class="modal-header">
+								            Eliminación de Empleado con id: {{ emp.id_empleado }}
+								            <button type="button" class="close" data-dismiss="modal">&times;</button>
+								        </div>
+							            <div class="modal-body">
+									        <div class="modal-body text-center" >
+									            <h3><strong>¿Realmente desea eliminar el empleado con nombre {{ emp.nombres }}, {{ emp.apellidos }}?</strong></h3>
+									        </div>							            
+							            <div class="modal-footer">
+											<form action="{% url 'evaluacionCliente:eliminar_empleado' emp.id_empleado %}" method="POST">
+											       {% csrf_token %}
+											       <button class="btn btn-danger" data-align="right"><strong>CONFIRMAR ELIMINACIÓN</strong></button>
+											</form>
+							                <button class="btn btn-primary" data-dismiss="modal"><strong>CANCELAR</strong></button>
+							            </div>
+							        	</div>
+							    	</div>
+								</div>
+							</div>	
+
+						{% endfor %}
+					</tbody>
+					
+				</table>
+			</div>
+		</div>
+
+
+	{% else %}
+		<h1>No existen empleados registrados</h1>
+	{% endif %}
+
+
+	{% block js %}
+
+	{% endblock js %}
+
+{% endblock content %}

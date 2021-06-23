@@ -231,6 +231,61 @@ class eliminarActividad(DeleteView):
     template_name = 'evaluacionCliente/listar_actividad.html'
     success_url = reverse_lazy('evaluacionCliente:listar_actividad')
 
+#----------------------------------------------------------------------------------------------------------------------------------
+
+
+#	CRUD EMPLEADOS
+
+# Crear Empleado
+def crearEmpleado(request):
+	if request.method == 'POST':
+		empleado_form = EmpleadoForm(request.POST)
+		if empleado_form.is_valid():
+			empleado_form.save()
+			return HttpResponseRedirect(reverse_lazy('evaluacionCliente:listar_empleados'))  
+	else:
+		empleado_form = EmpleadoForm()
+	return render(request, 'evaluacionCliente/crear_empleado.html', {'empleado_form' : empleado_form})
+
+# Vista para los Empleados
+def listarEmpleados(request):
+	empleados = Empleado.objects.order_by('nombres')
+	
+	context = {
+	    'empleados': empleados,
+	}
+
+	#Mandar la consulta al template
+	return render(
+		request, 
+		'evaluacionCliente/listar_empleados.html', 
+		context,	
+	)
+
+#Editar Empleado
+def editarEmpleado(request, id_empleado):
+	empleado_form = None
+	error = None
+
+	try:
+		empleado = Empleado.objects.get(id_empleado = id_empleado)
+		if request.method =='GET':
+			empleado_form=EmpleadoForm(instance = empleado)
+		else:
+			empleado_form = EmpleadoForm(request.POST, instance = empleado)
+			if empleado_form.is_valid():
+				empleado_form.save()
+			return HttpResponseRedirect(reverse_lazy('evaluacionCliente:listar_empleados'))
+	except ObjectDoesNotExist as e:
+		error = e
+	return render(request, 'evaluacionCliente/editar_empleado.html', {'empleado_form': empleado_form, 'error':error})
+
+
+#Eliminar Empleado
+class eliminarEmpleado(DeleteView):
+    model = Empleado
+    template_name = 'evaluacionCliente/listar_empleados.html'
+    success_url = reverse_lazy('evaluacionCliente:listar_empleados')
 
 #----------------------------------------------------------------------------------------------------------------------------------
 

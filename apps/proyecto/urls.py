@@ -41,6 +41,11 @@ urlpatterns = [
     path('evaluacionCliente/editar_actividad/<id_actividad>/', login_required(editarActividad), name='editar_actividad'),
     path('evaluacionCliente/eliminar_actividad/<pk>/', login_required(eliminarActividad.as_view()), name='eliminar_actividad'),
 
+    #URLs para Empleados
+    path('evaluacionCliente/crear_empleado/', login_required(crearEmpleado), name='crear_empleado'),
+    path('evaluacionCliente/listar_empleados/', login_required(listarEmpleados), name='listar_empleados'),    
+    path('evaluacionCliente/editar_empleado/<id_empleado>/', login_required(editarEmpleado), name='editar_empleado'),
+    path('evaluacionCliente/eliminar_empleado/<pk>/', login_required(eliminarEmpleado.as_view()), name='eliminar_empleado'),
 
     #URLs para Encuesta Cliente
     path('evaluacionCliente/listar_encuesta/', login_required(listarEncuesta), name='listar_encuesta'),

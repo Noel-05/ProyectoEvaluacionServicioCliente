@@ -1,6 +1,6 @@
 from django import forms
 from .models import *
-
+import re
 
 #----------------------------------------------------------------------------------------------------------------------------------
 
@@ -76,3 +76,57 @@ class ActividadForm(forms.ModelForm):
 	nombre_actividad = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
 	descripcion_actividad = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))   
 	fecha_realizacion = forms.DateField(widget=forms.TextInput(attrs={'placeholder': 'Fecha de Inicio', 'autocomplete': 'off', 'type':'date', 'min':'1940-01-01', 'class': 'form-control'})) 
+
+#----------------------------------------------------------------------------------------------------------------------------------
+
+
+class EmpleadoForm(forms.ModelForm):
+	class Meta:
+		model=Empleado
+		fields=('codigo_agencia', 'codigo_departamento', 'id_comite', 'email', 'nombres', 'apellidos')
+
+		widgets ={
+			'email': forms.EmailInput(
+				attrs={
+					'class': 'form-control',
+					'placeholder': 'Ingrese su Correo Electronico',
+				}
+			),
+			'nombres': forms.TextInput(
+				attrs={
+					'class': 'form-control',
+					'placeholder': 'Ingrese sus Nombres',
+				}
+			),
+			'apellidos': forms.TextInput(
+				attrs={
+					'class': 'form-control',
+					'placeholder': 'Ingrese sus Apellidos',
+				}
+			),
+		
+		}
+
+	codigo_agencia= forms.ModelChoiceField(queryset=Agencia.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
+	codigo_departamento= forms.ModelChoiceField(queryset=Departamento.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
+	id_comite= forms.ModelChoiceField(queryset=Comite.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
+
+	def clean_nombres(self):
+		nombres=self.cleaned_data.get('nombres')
+		regex = re.compile('^[A-Za-zÁÉÍÓÚáéíóúñÑüÜ ]+$')
+
+		if not regex.match(nombres):
+			raise forms.ValidationError('Los nombres no deben contener, caracteres especiales, ni números')
+		if not 2 <= len(nombres) <= 100:
+			raise forms.ValidationError('Los nombres deben de contener mas caracteres')
+		return nombres
+
+	def clean_apellidos(self):
+		apellidos=self.cleaned_data.get('apellidos')
+		regex = re.compile('^[A-Za-zÁÉÍÓÚáéíóúñÑüÜ ]+$')
+
+		if not regex.match(apellidos):
+			raise forms.ValidationError('Los apellidos no deben contener, caracteres especiales, ni números')		
+		if not 2 <= len(apellidos) <= 100:
+			raise forms.ValidationError('Los apellidos deben de contener mas caracteres')
+		return apellidos
