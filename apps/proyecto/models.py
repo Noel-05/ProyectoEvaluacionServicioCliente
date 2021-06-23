@@ -10,7 +10,7 @@ class Agencia(models.Model):
     direccion_agencia = models.CharField(max_length=250, null=True, blank=True)
 
     def __str__(self):
-        return self.codigo_agencia.__str__() + ' | '+ self.nombre_agencia.__str__()
+        return self.nombre_agencia
 
 
 
