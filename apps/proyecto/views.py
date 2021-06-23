@@ -12,6 +12,13 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+from django.contrib.staticfiles import finders
+from .models import *
+import xlwt
+import os
+
 from .models import *
 from .forms import *
 
@@ -25,7 +32,49 @@ def index(request):
         'base/base.html'
     )
 
+"""
+Función para mostrar imagenes dentro de los reportes en PDF elaborados.
+@param      una url relativa
+@return     Retorna la configuración de Settings donde estan alojadas las imagenes
+@author     Noel Renderos
+"""
 
+def link_callback(uri, rel):
+    """
+    Convierte HTML a URIs absoluta en el Path del sistema para que  xhtml2pdf
+    tenga acceso a los recuros
+    """
+    result = finders.find(uri)
+
+    if result:
+        if not isinstance(result, (list, tuple)):
+            result = [result]
+    
+        result = list(os.path.realpath(path) for path in result)
+        path = result[0]
+    
+    else:
+        sUrl = settings.STATIC_URL  # Typically /static/
+        sRoot = settings.STATIC_ROOT  # Typically /home/userX/project_static/
+        mUrl = settings.MEDIA_URL  # Typically /media/
+        mRoot = settings.MEDIA_ROOT  # Typically /home/userX/project_static/media/
+
+        if uri.startswith(mUrl):
+            path = os.path.join(mRoot, uri.replace(mUrl, ""))
+    
+        elif uri.startswith(sUrl):
+            path = os.path.join(sRoot, uri.replace(sUrl, ""))
+    
+        else:
+            return uri
+
+    # make sure that file exists
+    if not os.path.isfile(path):
+        raise Exception(
+            'media URI must start with %s or %s' % (sUrl, mUrl)
+        )
+    
+    return path
 #----------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -251,8 +300,16 @@ def crearEmpleado(request):
 def listarEmpleados(request):
 	empleados = Empleado.objects.order_by('nombres')
 	
+	# Se usa doble subrayado para que funcione como el "." en el template (osea un join)
+	agencias = Agencia.objects.order_by('nombre_agencia')	
+	departamentos = Departamento.objects.order_by('codigo_departamento')	
+	comites = Comite.objects.order_by('nombre_comite')	
+	
 	context = {
 	    'empleados': empleados,
+	    'agencias': agencias,
+	    'departamentos': departamentos,
+	    'comites': comites,
 	}
 
 	#Mandar la consulta al template
@@ -287,6 +344,130 @@ class eliminarEmpleado(DeleteView):
     template_name = 'evaluacionCliente/listar_empleados.html'
     success_url = reverse_lazy('evaluacionCliente:listar_empleados')
 
+
+def filtrarEmpleados(request):
+
+	if request.method == 'POST':
+		agencia = request.POST['agency']
+		departamento = request.POST['depto']
+		comite = request.POST['comit']
+
+		if agencia == '':
+			agencia = 'vacio'
+		
+		if departamento == '':
+			departamento = 'vacio'
+
+		if comite == '':
+			str(comite)
+			comite = 'vacio'			
+
+		if agencia != 'vacio' and departamento != 'vacio' and comite != 'vacio':
+			empleados_todos_filtro = Empleado.objects.filter(codigo_agencia=agencia, codigo_departamento=departamento, id_comite=int(comite))
+			empleados_filtro=empleados_todos_filtro
+
+		elif agencia != 'vacio' and departamento != 'vacio' :
+			empleados_agencia_depto_filtro = Empleado.objects.filter(codigo_agencia=agencia, codigo_departamento=departamento)
+			empleados_filtro=empleados_agencia_depto_filtro
+		
+		elif agencia != 'vacio' and comite != 'vacio':
+			empleados_agencia_comite_filtro = Empleado.objects.filter(codigo_agencia=agencia, id_comite=int(comite))
+			empleados_filtro=empleados_agencia_comite_filtro							
+
+		elif departamento != 'vacio' and comite != 'vacio':
+			empleados_depto_comite_filtro = Empleado.objects.filter(codigo_departamento=departamento, id_comite=int(comite))
+			empleados_filtro=empleados_depto_comite_filtro
+
+		elif comite !='vacio':
+			empleados_comite_filtro = Empleado.objects.filter(id_comite=int(comite))
+			empleados_filtro=empleados_comite_filtro
+
+		elif agencia != 'vacio':
+			empleados_agencia_filtro = Empleado.objects.filter(codigo_agencia=agencia)
+			empleados_filtro=empleados_agencia_filtro
+
+		elif departamento != 'vacio':
+			empleados_depto_filtro = Empleado.objects.filter(codigo_departamento=departamento)
+			empleados_filtro=empleados_depto_filtro
+
+		elif agencia == 'vacio' and departamento == 'vacio' and comite == 'vacio':
+			empleados_sin_filtro = Empleado.objects.order_by('nombres')
+			empleados_filtro=empleados_sin_filtro
+
+		agencias = Agencia.objects.order_by('nombre_agencia')	
+		departamentos = Departamento.objects.order_by('codigo_departamento')	
+		comites = Comite.objects.order_by('nombre_comite')	
+
+		context = {
+			'empleados_filtro': empleados_filtro,
+			
+			'agencia': agencia,
+			'departamento': departamento,
+			'comite': comite,
+			
+			'agencias': agencias,
+			'departamentos': departamentos,
+			'comites': comites,
+		}
+
+		return render(
+			request,
+			'evaluacionCliente/listar_empleados.html', 
+			context,
+		) 
+
+def reporteEmpleadosPDF(request, agencia, departamento, comite):
+
+	if agencia != 'vacio' and departamento !='vacio' and comite != 'vacio':
+		empleados_todos_filtro = Empleado.objects.filter(codigo_agencia=agencia, codigo_departamento=departamento, id_comite=int(comite))
+		reporte_empleados_filtro=empleados_todos_filtro
+
+	elif agencia != 'vacio' and departamento != 'vacio':
+		empleados_agencia_depto_filtro = Empleado.objects.filter(codigo_agencia=agencia, codigo_departamento=departamento)
+		reporte_empleados_filtro=empleados_agencia_depto_filtro
+	
+	elif agencia != 'vacio' and comite != 'vacio':
+		empleados_agencia_comite_filtro = Empleado.objects.filter(codigo_agencia=agencia, id_comite=int(comite))
+		reporte_empleados_filtro=empleados_agencia_comite_filtro							
+
+	elif departamento != 'vacio' and comite != 'vacio':
+		empleados_depto_comite_filtro = Empleado.objects.filter(codigo_departamento=departamento, id_comite=int(comite))
+		reporte_empleados_filtro=empleados_depto_comite_filtro
+
+	elif comite != 'vacio':
+		empleados_comite_filtro = Empleado.objects.filter(id_comite=int(comite))
+		reporte_empleados_filtro=empleados_comite_filtro
+
+	elif agencia !='vacio':
+		empleados_agencia_filtro = Empleado.objects.filter(codigo_agencia=agencia)
+		reporte_empleados_filtro=empleados_agencia_filtro
+
+	elif departamento != 'vacio':
+		empleados_depto_filtro = Empleado.objects.filter(codigo_departamento=departamento)
+		reporte_empleados_filtro=empleados_depto_filtro
+
+	elif agencia == 'vacio' and departamento == 'vacio' and comite == 'vacio':		
+		empleados_sin_filtro = Empleado.objects.order_by('nombres')
+		reporte_empleados_filtro=empleados_sin_filtro
+
+
+	template = get_template('reportes/ReporteEmpleados.html')
+
+	context = {
+		'reporte_empleados_filtro': reporte_empleados_filtro
+	}
+
+	html = template.render(context)
+
+	response = HttpResponse(content_type = 'application/pdf')
+	response['Content-Disposition'] = 'inline; filename="ReportesEmpleados.pdf"'
+
+	pisa_status = pisa.CreatePDF(html, dest = response, link_callback=link_callback)
+    
+	if pisa_status.err:
+		return HttpResponse('We had some errors <pre>'+ html + '</pre>')
+
+	return response
 #----------------------------------------------------------------------------------------------------------------------------------
 
 
