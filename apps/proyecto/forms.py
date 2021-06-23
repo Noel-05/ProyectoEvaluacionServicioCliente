@@ -76,7 +76,9 @@ class ActividadForm(forms.ModelForm):
 	nombre_actividad = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
 	descripcion_actividad = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))   
 	fecha_realizacion = forms.DateField(widget=forms.TextInput(attrs={'placeholder': 'Fecha de Inicio', 'autocomplete': 'off', 'type':'date', 'min':'1940-01-01', 'class': 'form-control'})) 
-
+	codigo_agencia= forms.ModelChoiceField(queryset=Agencia.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
+	codigo_departamento= forms.ModelChoiceField(queryset=Departamento.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
+	id_comite= forms.ModelChoiceField(queryset=Comite.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
 #----------------------------------------------------------------------------------------------------------------------------------
 
 
