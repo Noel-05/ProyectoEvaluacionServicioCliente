@@ -48,6 +48,8 @@ urlpatterns = [
     path('evaluacionCliente/eliminar_empleado/<pk>/', login_required(eliminarEmpleado.as_view()), name='eliminar_empleado'),
     path('evaluacionCliente/filtrarEmpleados/', login_required(filtrarEmpleados), name="filtrar_empleados"),
     path('evaluacionCliente/reporteEmpleadosPDF/<str:agencia>/<str:departamento>/<str:comite>/', login_required(reporteEmpleadosPDF), name="reporte_empleadosPDF"),
+    path('evaluacionCliente/exportarEmpleadosCSV/<str:agencia>/<str:departamento>/<str:comite>/', login_required(exportarEmpleados), name="reporte_empleadosCSV"),
+
 
     #URLs para Encuesta Cliente
     path('evaluacionCliente/listar_encuesta/', login_required(listarEncuesta), name='listar_encuesta'),

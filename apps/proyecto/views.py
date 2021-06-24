@@ -468,7 +468,93 @@ def reporteEmpleadosPDF(request, agencia, departamento, comite):
 		return HttpResponse('We had some errors <pre>'+ html + '</pre>')
 
 	return response
-#----------------------------------------------------------------------------------------------------------------------------------
+
+def exportarEmpleados(request, agencia, departamento, comite):
+
+	response = HttpResponse(content_type='text/csv')
+	response['Content-Disposition'] = 'attachment; filename="ReporteEmpleados.csv"'
+
+	wb = xlwt.Workbook(encoding='utf-8')
+	ws = wb.add_sheet('Reporte de Empleados') 
+
+	row_num = 0
+
+	font_style = xlwt.XFStyle()
+	font_style.font.bold = True
+
+	columns = ['Nombres', 'Apellidos', 'Agencia', 'Departamento', 'Cómite', 'Correo']
+
+	for col_num in range(len(columns)):
+		ws.write(row_num, col_num, columns[col_num], font_style) 
+
+	# Sheet body, remaining rows
+	font_style = xlwt.XFStyle()
+
+	if agencia != 'vacio' and departamento !='vacio' and comite != 'vacio':
+		empleados_todos_filtro = Empleado.objects.filter(codigo_agencia=agencia, codigo_departamento=departamento, id_comite=int(comite))
+		reporte_empleados_filtro=empleados_todos_filtro
+
+	elif agencia != 'vacio' and departamento != 'vacio':
+		empleados_agencia_depto_filtro = Empleado.objects.filter(codigo_agencia=agencia, codigo_departamento=departamento)
+		reporte_empleados_filtro=empleados_agencia_depto_filtro
+	
+	elif agencia != 'vacio' and comite != 'vacio':
+		empleados_agencia_comite_filtro = Empleado.objects.filter(codigo_agencia=agencia, id_comite=int(comite))
+		reporte_empleados_filtro=empleados_agencia_comite_filtro							
+
+	elif departamento != 'vacio' and comite != 'vacio':
+		empleados_depto_comite_filtro = Empleado.objects.filter(codigo_departamento=departamento, id_comite=int(comite))
+		reporte_empleados_filtro=empleados_depto_comite_filtro
+
+	elif comite != 'vacio':
+		empleados_comite_filtro = Empleado.objects.filter(id_comite=int(comite))
+		reporte_empleados_filtro=empleados_comite_filtro
+
+	elif agencia !='vacio':
+		empleados_agencia_filtro = Empleado.objects.filter(codigo_agencia=agencia)
+		reporte_empleados_filtro=empleados_agencia_filtro
+
+	elif departamento != 'vacio':
+		empleados_depto_filtro = Empleado.objects.filter(codigo_departamento=departamento)
+		reporte_empleados_filtro=empleados_depto_filtro
+
+	elif agencia == 'vacio' and departamento == 'vacio' and comite == 'vacio':		
+		empleados_sin_filtro = Empleado.objects.order_by('nombres')
+		reporte_empleados_filtro=empleados_sin_filtro
+
+
+
+
+
+	agencias = Agencia.objects.order_by('nombre_agencia')	
+	departamentos = Departamento.objects.order_by('codigo_departamento')	
+	comites = Comite.objects.order_by('nombre_comite')			
+
+	for repEmp in reporte_empleados_filtro:
+		row_num += 1
+
+		for age in agencias:			
+			if repEmp.codigo_agencia_id == age.codigo_agencia:
+				codAgencia= age.nombre_agencia
+
+		for dep in departamentos:			
+			if repEmp.codigo_departamento_id == dep.codigo_departamento:
+				codDepto= dep.nombre_departamento
+
+
+		for com in comites:			
+			if repEmp.id_comite_id == com.id_comite:
+				codComite = com.nombre_comite
+
+		row = [repEmp.nombres, repEmp.apellidos, codAgencia, codDepto, codComite, repEmp.email]
+
+		for col_num in range(len(row)):
+		    ws.write(row_num, col_num, row[col_num], font_style)
+
+	wb.save(response)
+
+	return response	
+	#----------------------------------------------------------------------------------------------------------------------------------
 
 
 #----------------------------------------------------------------------------------------------------------------------------------

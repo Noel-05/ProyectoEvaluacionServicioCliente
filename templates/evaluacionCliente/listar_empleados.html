@@ -68,7 +68,8 @@
     	<br>
         <div align="center" class="busqueda">
             <input class="btn btn-success" type = "submit" value = "Imprimir PDF" id = "ImprimirPDF" onclick="window.location.href='{% url 'evaluacionCliente:reporte_empleadosPDF' agencia departamento comite %}'">
-            <input class="btn btn-success" type = "submit" value = "Exportar CSV" id = "ExportarCSV" onclick="">                 
+            
+            <input class="btn btn-success" type = "submit" value = "Exportar CSV" id = "ExportarCSV" onclick="window.location.href='{% url 'evaluacionCliente:reporte_empleadosCSV' agencia departamento comite %}'">                 
         </div>
     {% endif %}
 
