@@ -12,6 +12,12 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from SistemaACOPUS import settings
+from django.template.loader import render_to_string
+
 from django.template.loader import get_template
 from xhtml2pdf import pisa
 from django.contrib.staticfiles import finders
@@ -94,7 +100,7 @@ def crearDepartamento(request):
 
 # Vista para el Departamento
 def listarDepartamento(request):
-	departamentos = Departamento.objects.all()
+	departamentos = Departamento.objects.order_by('nombre_departamento')
 	#Mandar la consulta al template
 	return render(request, 'evaluacionCliente/listar_departamento.html', {'departamentos': departamentos})		
 
@@ -144,7 +150,7 @@ def crearComite(request):
 
 # Vista para el Comite
 def listarComite(request):
-	comites = Comite.objects.all()
+	comites = Comite.objects.order_by('nombre_comite')
 	#Mandar la consulta al template
 	return render(request, 'evaluacionCliente/listar_comite.html', {'comites': comites})	
 
@@ -194,7 +200,7 @@ def crearAgencia(request):
 
 # Vista para la Agencia
 def listarAgencia(request):
-	agencias = Agencia.objects.all()
+	agencias = Agencia.objects.order_by('nombre_agencia')
 	#Mandar la consulta al template
 	return render(request, 'evaluacionCliente/listar_agencia.html', {'agencias': agencias})
 
@@ -250,7 +256,8 @@ def crearActividad(request):
 
 # Vista para las Actividades
 def listarActividad(request):
-	actividades = Actividad.objects.all()
+	actividades = Actividad.objects.order_by('-fecha_realizacion')
+
 	#Mandar la consulta al template
 	return render(request, 'evaluacionCliente/listar_actividad.html', {'actividades': actividades})
 
@@ -522,10 +529,6 @@ def exportarEmpleados(request, agencia, departamento, comite):
 		empleados_sin_filtro = Empleado.objects.order_by('nombres')
 		reporte_empleados_filtro=empleados_sin_filtro
 
-
-
-
-
 	agencias = Agencia.objects.order_by('nombre_agencia')	
 	departamentos = Departamento.objects.order_by('codigo_departamento')	
 	comites = Comite.objects.order_by('nombre_comite')			
@@ -541,7 +544,6 @@ def exportarEmpleados(request, agencia, departamento, comite):
 			if repEmp.codigo_departamento_id == dep.codigo_departamento:
 				codDepto= dep.nombre_departamento
 
-
 		for com in comites:			
 			if repEmp.id_comite_id == com.id_comite:
 				codComite = com.nombre_comite
@@ -553,8 +555,250 @@ def exportarEmpleados(request, agencia, departamento, comite):
 
 	wb.save(response)
 
-	return response	
-	#----------------------------------------------------------------------------------------------------------------------------------
+	return response
+
+
+#Enviar correo de Invitacion 
+def enviarEmail(request, agencia, departamento, comite):
+	if request.method == 'POST':
+		actividad = request.POST['activity']
+
+		filtro_actividad = Actividad.objects.filter(id_actividad=actividad)
+
+		for fil in filtro_actividad:
+			nombreAc = fil.nombre_actividad
+
+		if agencia == '':
+			agencia = 'vacio'
+		
+		if departamento == '':
+			departamento = 'vacio'
+
+		if comite == '':
+			str(comite)
+			comite = 'vacio'			
+
+		if agencia != 'vacio' and departamento != 'vacio' and comite != 'vacio':
+			empleados_todos_filtro = Empleado.objects.filter(codigo_agencia=agencia, codigo_departamento=departamento, id_comite=int(comite))
+			empleados_filtro=empleados_todos_filtro
+
+		elif agencia != 'vacio' and departamento != 'vacio' :
+			empleados_agencia_depto_filtro = Empleado.objects.filter(codigo_agencia=agencia, codigo_departamento=departamento)
+			empleados_filtro=empleados_agencia_depto_filtro
+		
+		elif agencia != 'vacio' and comite != 'vacio':
+			empleados_agencia_comite_filtro = Empleado.objects.filter(codigo_agencia=agencia, id_comite=int(comite))
+			empleados_filtro=empleados_agencia_comite_filtro							
+
+		elif departamento != 'vacio' and comite != 'vacio':
+			empleados_depto_comite_filtro = Empleado.objects.filter(codigo_departamento=departamento, id_comite=int(comite))
+			empleados_filtro=empleados_depto_comite_filtro
+
+		elif comite !='vacio':
+			empleados_comite_filtro = Empleado.objects.filter(id_comite=int(comite))
+			empleados_filtro=empleados_comite_filtro
+
+		elif agencia != 'vacio':
+			empleados_agencia_filtro = Empleado.objects.filter(codigo_agencia=agencia)
+			empleados_filtro=empleados_agencia_filtro
+
+		elif departamento != 'vacio':
+			empleados_depto_filtro = Empleado.objects.filter(codigo_departamento=departamento)
+			empleados_filtro=empleados_depto_filtro
+
+		elif agencia == 'vacio' and departamento == 'vacio' and comite == 'vacio':
+			empleados_sin_filtro = Empleado.objects.order_by('nombres')
+			empleados_filtro=empleados_sin_filtro
+		
+		for ite in empleados_filtro:
+			try:
+				# Establecemos conexion con el servidor smtp de gmail
+				mailServer = smtplib.SMTP(settings.EMAIL_HOST, settings.EMAIL_PORT)
+				print(mailServer.ehlo())
+				mailServer.starttls()
+				print(mailServer.ehlo())
+				mailServer.login(settings.EMAIL_HOST_USER, settings.EMAIL_HOST_PASSWORD)
+				print('...Conectado')
+
+				# Construimos el mensaje simple
+				mensaje = MIMEMultipart()
+				mensaje['From']= settings.EMAIL_HOST_USER
+				mensaje['To']= ite.email
+				print(ite.email)
+				mensaje['Subject']="Invitacion a la actividad de: " + nombreAc
+				print(nombreAc)
+
+				content = render_to_string('accounts/plantilla_correo.html')
+
+				# Adjuntamos el texto
+				mensaje.attach(MIMEText(content, 'html'))		
+
+				# Envio del mensaje
+				mailServer.sendmail(settings.EMAIL_HOST_USER,
+				                ite.email,
+				                mensaje.as_string())
+
+				print('Correo enviado correctamente')		
+
+			except Exception as e:
+				print(e)
+
+	return HttpResponseRedirect(reverse_lazy('evaluacionCliente:confirmar_invitacion'))  
+
+def confirmarInvitacion(request):
+	return render(
+		request, 
+		'evaluacionCliente/confirmar_invitacion.html', 
+	)	
+
+# Vista para los Empleados
+def listarEmpleadosCorreo(request):
+	empleados = Empleado.objects.order_by('nombres')
+	
+	# Se usa doble subrayado para que funcione como el "." en el template (osea un join)
+	agencias = Agencia.objects.order_by('nombre_agencia')	
+	departamentos = Departamento.objects.order_by('codigo_departamento')	
+	comites = Comite.objects.order_by('nombre_comite')	
+	
+	context = {
+	    'empleados': empleados,
+	    'agencias': agencias,
+	    'departamentos': departamentos,
+	    'comites': comites,
+	}
+
+	#Mandar la consulta al template
+	return render(
+		request, 
+		'evaluacionCliente/listar_empleados_correo.html', 
+		context,	
+	)	
+
+def filtrarEmpleadosCorreo(request):
+
+	if request.method == 'POST':
+		agencia = request.POST['agency']
+		departamento = request.POST['depto']
+		comite = request.POST['comit']
+
+		if agencia == '':
+			agencia = 'vacio'
+		
+		if departamento == '':
+			departamento = 'vacio'
+
+		if comite == '':
+			str(comite)
+			comite = 'vacio'			
+
+		if agencia != 'vacio' and departamento != 'vacio' and comite != 'vacio':
+			empleados_todos_filtro = Empleado.objects.filter(codigo_agencia=agencia, codigo_departamento=departamento, id_comite=int(comite))
+			empleados_filtro=empleados_todos_filtro
+
+		elif agencia != 'vacio' and departamento != 'vacio' :
+			empleados_agencia_depto_filtro = Empleado.objects.filter(codigo_agencia=agencia, codigo_departamento=departamento)
+			empleados_filtro=empleados_agencia_depto_filtro
+		
+		elif agencia != 'vacio' and comite != 'vacio':
+			empleados_agencia_comite_filtro = Empleado.objects.filter(codigo_agencia=agencia, id_comite=int(comite))
+			empleados_filtro=empleados_agencia_comite_filtro							
+
+		elif departamento != 'vacio' and comite != 'vacio':
+			empleados_depto_comite_filtro = Empleado.objects.filter(codigo_departamento=departamento, id_comite=int(comite))
+			empleados_filtro=empleados_depto_comite_filtro
+
+		elif comite !='vacio':
+			empleados_comite_filtro = Empleado.objects.filter(id_comite=int(comite))
+			empleados_filtro=empleados_comite_filtro
+
+		elif agencia != 'vacio':
+			empleados_agencia_filtro = Empleado.objects.filter(codigo_agencia=agencia)
+			empleados_filtro=empleados_agencia_filtro
+
+		elif departamento != 'vacio':
+			empleados_depto_filtro = Empleado.objects.filter(codigo_departamento=departamento)
+			empleados_filtro=empleados_depto_filtro
+
+		elif agencia == 'vacio' and departamento == 'vacio' and comite == 'vacio':
+			empleados_sin_filtro = Empleado.objects.order_by('nombres')
+			empleados_filtro=empleados_sin_filtro
+
+		agencias = Agencia.objects.order_by('nombre_agencia')	
+		departamentos = Departamento.objects.order_by('codigo_departamento')	
+		comites = Comite.objects.order_by('nombre_comite')	
+
+		context = {
+			'empleados_filtro': empleados_filtro,
+			
+			'agencia': agencia,
+			'departamento': departamento,
+			'comite': comite,
+			
+			'agencias': agencias,
+			'departamentos': departamentos,
+			'comites': comites,
+		}
+
+		return render(
+			request,
+			'evaluacionCliente/listar_empleados_correo.html', 
+			context,
+		) 
+
+def enviarCorreo(request, agencia, departamento, comite):
+
+	actividad = Actividad.objects.order_by('-fecha_realizacion')	
+
+	if agencia != 'vacio' and departamento !='vacio' and comite != 'vacio':
+		empleados_todos_filtro = Empleado.objects.filter(codigo_agencia=agencia, codigo_departamento=departamento, id_comite=int(comite))
+		reporte_empleados_filtro=empleados_todos_filtro
+
+	elif agencia != 'vacio' and departamento != 'vacio':
+		empleados_agencia_depto_filtro = Empleado.objects.filter(codigo_agencia=agencia, codigo_departamento=departamento)
+		reporte_empleados_filtro=empleados_agencia_depto_filtro
+	
+	elif agencia != 'vacio' and comite != 'vacio':
+		empleados_agencia_comite_filtro = Empleado.objects.filter(codigo_agencia=agencia, id_comite=int(comite))
+		reporte_empleados_filtro=empleados_agencia_comite_filtro							
+
+	elif departamento != 'vacio' and comite != 'vacio':
+		empleados_depto_comite_filtro = Empleado.objects.filter(codigo_departamento=departamento, id_comite=int(comite))
+		reporte_empleados_filtro=empleados_depto_comite_filtro
+
+	elif comite != 'vacio':
+		empleados_comite_filtro = Empleado.objects.filter(id_comite=int(comite))
+		reporte_empleados_filtro=empleados_comite_filtro
+
+	elif agencia !='vacio':
+		empleados_agencia_filtro = Empleado.objects.filter(codigo_agencia=agencia)
+		reporte_empleados_filtro=empleados_agencia_filtro
+
+	elif departamento != 'vacio':
+		empleados_depto_filtro = Empleado.objects.filter(codigo_departamento=departamento)
+		reporte_empleados_filtro=empleados_depto_filtro
+
+	elif agencia == 'vacio' and departamento == 'vacio' and comite == 'vacio':		
+		empleados_sin_filtro = Empleado.objects.order_by('nombres')
+		reporte_empleados_filtro=empleados_sin_filtro
+		
+	context = {
+
+		'actividad': actividad,
+
+		'reporte_empleados_filtro': reporte_empleados_filtro,
+		
+		'agencia': agencia,
+		'departamento': departamento,
+		'comite': comite,
+	}
+
+	return render(
+		request,
+		'evaluacionCliente/enviar_correo.html', 
+		context,
+	) 
+
+#----------------------------------------------------------------------------------------------------------------------------------
 
 
 #----------------------------------------------------------------------------------------------------------------------------------

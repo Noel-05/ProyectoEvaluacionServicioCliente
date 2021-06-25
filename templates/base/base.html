@@ -40,8 +40,9 @@
       {% endif %}
 
 	$(document).ready(function() {
-	    $('#bootstrapdatatable').DataTable({     
+	    $('#bootstrapdatatable').DataTable({
 		      	"aLengthMenu": [[5, 10, 25, -1], [5, 10, 25, "Todo"]],
+		      	"order": false,
 		        "iDisplayLength": 5, 
             language: {           	
                 "decimal": "",

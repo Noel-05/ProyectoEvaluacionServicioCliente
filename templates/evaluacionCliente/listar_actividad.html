@@ -9,12 +9,15 @@
 	<div style="text-align:center; margin: 0 auto;">
 	    <div class="container" align="center">
 
+
+			<img  onclick="location.href='{% url 'evaluacionCliente:listar_empleado_correo' %}'" style ="margin-left:2px; display:inline" src="../../static/img/mensaje.png" width="90" height="70" align="right">
+
 			<font face="small fonts" size="10" color="#049286">
-				<h2 align="center" class="form-titulo" style ="margin-left: 5px; margin-top:20px; bg-success text-white">Listado de Actividades</h2>
-			</font>
-	    	
-			<button class="btn btn-outline-success" onclick="location.href='{% url 'evaluacionCliente:crear_actividad' %}'">Agregar</button>
-	    	<p></p>
+				<h2 align="center" class="form-titulo" style ="margin-top:10px; bg-success text-white: display:inline">Listado de Actividades</h2>
+			</font>	
+
+		<button class="btn btn-outline-success" onclick="location.href='{% url 'evaluacionCliente:crear_actividad' %}'">Agregar</button>
+	    <p></p>
 
 	    </div>
 
