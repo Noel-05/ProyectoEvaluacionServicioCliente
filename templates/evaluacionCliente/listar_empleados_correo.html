@@ -16,8 +16,8 @@
 
 			{% if empleados_filtro %}
 
-			<button class="btn btn-outline-success" onclick="location.href='{% url 'evaluacionCliente:enviar_correo' agencia departamento comite %}'">Enviar Correo a los empleados filtrados</button>
-			<br><br>
+			<button class="btn btn-outline-success" onclick="location.href='{% url 'evaluacionCliente:enviar_correo' agencia departamento comite %}'">Confirmar empleados filtrados</button>
+
 			{% endif %}
 
 
@@ -26,7 +26,7 @@
 
 	    <!-- Boton Buscar Fech-->
 	    <div align="center" class="busqueda">
-	        <form method="POST" action="{% url 'evaluacionCliente:filtrar_empleados_correo' %}">
+	        <form method="POST"  style ="margin-top:20px;" action="{% url 'evaluacionCliente:filtrar_empleados_correo' %}">
 	            {% csrf_token %} 
 	            
 			  <div class="form-row" style="width:95%; margin:auto;">
@@ -35,7 +35,7 @@
 		                <option selected value=""> Selecciona la Agencia </option>
 		                    {% if agencias %}
 		                        {% for age in agencias %}
-		                            <option value="{{ age.codigo_agencia }}">{{ age.codigo_agencia }} - {{ age.nombre_agencia }}</option>
+		                            <option value="{{ age.codigo_agencia }}">{{ age.nombre_agencia }}</option>
 		                        {% endfor %}
 		                    {% endif %}
 		                </option> 
@@ -46,7 +46,7 @@
 		                <option selected value=""> Selecciona el Departamento </option>
 		                    {% if agencias %}
 		                        {% for dep in departamentos %}
-		                            <option value="{{ dep.codigo_departamento }}">{{ dep.codigo_departamento }} - {{ dep.nombre_departamento }}</option>
+		                            <option value="{{ dep.codigo_departamento }}">{{ dep.nombre_departamento }}</option>
 		                        {% endfor %}
 		                    {% endif %}
 		                </option> 
@@ -65,7 +65,10 @@
 			    </div>
 			  </div>	            
 
-          		<button class="btn btn-success" type = "submit" value = "Buscar" id = "fechaBuscar">Filtrar Busqueda</button>
+          		<input class="btn btn-success col-2" type = "submit" value = "Filtrar Busqueda" id = "fechaBuscar"></input>
+
+				<input class="btn btn-danger col-2" value = "Cancelar" onclick="location.href='{% url 'evaluacionCliente:listar_actividad' %}'"></input>
+
 	        </form> 
 
 	    </div>	

@@ -567,6 +567,7 @@ def enviarEmail(request, agencia, departamento, comite):
 
 		for fil in filtro_actividad:
 			nombreAc = fil.nombre_actividad
+			fecha = fil.fecha_realizacion
 
 		if agencia == '':
 			agencia = 'vacio'
@@ -628,7 +629,13 @@ def enviarEmail(request, agencia, departamento, comite):
 				mensaje['Subject']="Invitacion a la actividad de: " + nombreAc
 				print(nombreAc)
 
-				content = render_to_string('accounts/plantilla_correo.html')
+				context = {
+					'nombres': ite.nombres,
+					'actividad': nombreAc,
+					'fecha': fecha,
+				}
+
+				content = render_to_string('accounts/plantilla_correo.html', context)
 
 				# Adjuntamos el texto
 				mensaje.attach(MIMEText(content, 'html'))		
