@@ -4,8 +4,6 @@ from apps.usuario.models import *
 
 roles=[
     ('ADM', 'Administrador'),
-    ('EST', 'Estudiante'),
-    ('DOC', 'Profesor')
 ]
 
 class UsuarioManager(BaseUserManager):
@@ -39,14 +37,14 @@ class UsuarioManager(BaseUserManager):
 
 
 class Usuario(AbstractBaseUser):
-    username = models.CharField('Nombre de usuario',unique = True, max_length=100)
-    email = models.EmailField('Correo Electrónico', max_length=254,unique = True)
-    nombres = models.CharField('Nombres', max_length=200, blank = True, null = True)
-    apellidos = models.CharField('Apellidos', max_length=200,blank = True, null = True)
+    username = models.CharField('Nombre de usuario',unique = True, max_length=15, blank=False)
+    email = models.EmailField('Correo Electrónico', max_length=254,unique = True, blank=False)
+    nombres = models.CharField('Nombres', max_length=200, null = False, blank=False)
+    apellidos = models.CharField('Apellidos', max_length=200, null = False, blank=False)
     imagen = models.ImageField('Imagen de Perfil', upload_to='perfil/', max_length=200,blank = True,null = True)
     is_active = models.BooleanField(default = True)
     usuario_administrador = models.BooleanField(default = False)
-    rol=models.CharField(max_length=3,null=False, blank=False,choices=roles,default='EST')
+    rol=models.CharField(max_length=3,null=False, blank=False,choices=roles,default='ADM')    
 
     objects = UsuarioManager()
 
