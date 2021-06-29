@@ -1,0 +1,180 @@
+{% extends 'base/base.html' %}
+
+{% load static %}
+
+{%block title%}
+  Consulta de Resultados de Encuestas
+{%endblock%}
+
+{% block content %}
+	<div style="text-align:center; margin: 0 auto;">
+
+<!-- ######################################################################################################################################################### -->
+
+	    <div class="container" align="center">
+			
+			<font face="small fonts" size="10" color="#049286">
+				<h2 align="center" class="form-titulo" style ="margin-left: 5px; margin-top:20px; bg-success text-white">Consulta de Resultados de Encuestas</h2>
+			</font>
+	    
+		</div>
+
+<!-- ######################################################################################################################################################### -->
+	<!-- VIENE DE LA VIEW  listarRespuestasEncuesta -->
+
+        <!-- Boton Buscar Agencia-->
+        {% if agenciasCon %}
+		
+        	</br>
+			<h5>Porfavor selecciona una Agencia para consultar sus Encuestas.</h5>
+			</br>
+
+			<div align="center" class="busqueda">
+				<form method="POST" action="{% url 'evaluacionCliente:consultar_agencia_respuestas_cliente' %}">
+					{% csrf_token %} 
+					<select name="codigo_agencia" id="codigo_agencia" class="form-control col-4 col-sm-3 input-style" title="Selecciona la Agencia Porfavor" required>
+						<option selected value=""> Seleccione Agencia </option>
+							{% for i in agenciasCon %}
+								<option value="{{i.codigo_agencia}}">{{i.nombre_agencia}}</option> 
+							{% endfor %}
+						</option> 
+					</select></br>
+					<input class="btn btn-outline-success" type = "submit" value = "Buscar" id = "AgenciaBuscar">
+				</form>
+			</div>
+		
+		{% endif %}
+        </br>
+
+<!-- ######################################################################################################################################################### -->
+	<!-- VIENE DE LA VIEW  consultarAgencia -->
+
+		<!-- Boton Buscar Encuesta-->
+		{% if encuestasAgencia %}
+
+			<h5>Porfavor selecciona la Encuesta que quieres consultar.</h5>
+			</br>
+
+			<div class="table-responsive" style="width:50%; display:inline-block;">
+				<table class="table table-hover text-center">
+					
+					<thead>
+						<tr>
+							<th class="text-center" style="color:#049286"><strong>Agencia:</strong></th>
+							{% for i in nombreAgencia%}
+								<th class="text-center"><i>{{ i.nombre_agencia }}</i></th>
+							{% endfor %}
+						</tr>
+					</thead>
+
+				</table>
+			</div>
+
+			</br></br>
+		
+			<div align="center" class="busqueda">
+				<form method="POST" action="{% url 'evaluacionCliente:consultar_respuestas_encuesta_cliente' codAgencia %}">
+					{% csrf_token %} 
+					<select name="titulo_encuesta" id="titulo_encuesta" class="form-control col-4 col-sm-3 input-style" title="Selecciona la Encuesta a Consultar" required>
+						<option selected value=""> Seleccione la Encuesta </option>
+							{% for i in encuestasAgencia %}
+								<option value="{{i.titulo_encuesta_cliente}}">{{i.titulo_encuesta_cliente}}</option> 
+							{% endfor %}
+						</option> 
+					</select></br>
+					<input class="btn btn-outline-success" type = "submit" value = "Buscar" id = "AgenciaBuscar"></br>
+				</form>
+			</div>
+
+			</br>
+
+		{% endif %}
+        </br>
+
+<!-- ######################################################################################################################################################### -->
+	<!-- VIENE DE LA VIEW  consultarEncuesta -->
+
+		{% if respuestaEncuestasClientes %}
+
+            <div class="table-responsive" style="width:50%; display:inline-block;">
+				<table class="table table-hover text-center">
+					
+					<thead>
+						<tr>
+							<th class="text-center" style="color:#049286">Agencia</th>
+							<th class="text-center" style="color:#049286">Título Encuesta</th>
+						</tr>
+					</thead>
+
+					<tbody>
+						<tr>
+							<td><strong>{{ nombreAgencia }}</strong></td>
+							<td><strong><i>{{ tituloEncuesta }}</i></strong></td>
+						</tr>
+					</tbody>
+
+				</table>
+			</div>
+
+			</br>
+			<div class="table-responsive" style="width:80%; display:inline-block;">
+                <table id="bootstrapdatatable" class="table table-hover">
+                    
+                    <thead>
+                        <tr>
+                            <th>Pregunta</th>
+                            <th>Excelente</th>	
+							<th>Regular</th>	
+                            <th>Pesimo</th>
+                        </tr>
+                    </thead>
+                    
+                    <tbody>
+                        {% for lis in lista %}
+                            <tr>
+                                <td>{{ lis.pregunta }}</td>
+								<td>{{ lis.excelente }}</td>
+								<td>{{ lis.regular }}</td>
+								<td>{{ lis.pesimo }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+            </div>
+            
+		{% endif %}
+
+		{% if mensajeVacia %}
+			<div style="text-align:center; margin: 0 auto;">
+				<div class="container" align="center">
+					<font face="small fonts" size="10" color="#049286">
+
+						<h1 align="center" class="form-titulo" style ="margin-left: 5px; margin-top:20px; color: black; bg-success text-white">
+							<strong>Est&aacute; encuesta a&uacute;n no ha sido contestada.</strong> 
+						</h1> 
+						
+						<h2 align="center" class="form-titulo" style ="margin-left: 5px; margin-top:20px; color: black; bg-success text-white">
+							Para visualizar resultados de est&aacute; encuesta </br>primero debe de contestarse.
+						</h2>
+
+						<div class="container" align="center">
+							<input align="center" class="btn btn-outline-success" type = "submit" value = "Inicio" id = "AgenciaBuscar" onclick="location.href='{% url 'evaluacionCliente:index' %}'">
+						</div>
+
+					</font>
+				</div>
+			</div>
+		{% endif %}
+	</div>
+
+	{% block js %}
+
+	{% endblock js %}
+
+{% endblock content %}
+
+
+
+
+			

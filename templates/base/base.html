@@ -11,6 +11,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 	<link rel="stylesheet" href="{% static 'css/main.css' %}">
+	<link type="image/x-icon" href="{% static './assets/img/logo_acopus2.jpg' %}" rel="icon">
 
 	<script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -134,6 +135,12 @@
 						<li>
 							<a href="{% url 'evaluacionCliente:listar_encuesta' %}"><i class="zmdi zmdi-font zmdi-hc-fw"></i> Consultar Encuestas Clientes</a>
 						</li>
+						<li>
+							<a href="{% url 'evaluacionCliente:listar_respuestas_encuesta' %}"><i class="zmdi zmdi-format-list-bulleted zmdi-hc-fw"></i>Consultar Resultados Encuesta</a>
+						</li>
+						<li>
+							<a href="{% url 'evaluacionCliente:contestar_encuesta' %}"><i class="zmdi zmdi-check-all zmdi-hc-fw"></i> Contestar Encuestas Clientes</a>
+						</li>
 					</ul>
 				</li>
 
@@ -236,12 +243,12 @@
 
             <div class="full-box text-center" style="padding: 30px 10px;" >
 
-                <article class="full-box tile" onclick="window.location.href='{% url 'evaluacionCliente:index' %}'">
+                <article class="full-box tile" onclick="window.location.href='{% url 'evaluacionCliente:contestar_encuesta' %}'">
                     <div class="full-box tile-title text-center text-titles text-uppercase">
                         Encuesta
                     </div>
                     <div class="full-box tile-icon text-center">
-                        <i class="zmdi zmdi-check-all" onclick="window.location.href='{% url 'evaluacionCliente:index' %}'"></i>
+                        <i class="zmdi zmdi-check-all" onclick="window.location.href='{% url 'evaluacionCliente:contestar_encuesta' %}'"></i>
                         </br><small>Evaluar </small>
                     </div>
                 </article>

@@ -810,3 +810,302 @@ def AgregarPreguntasEncuestaPersonal(request, idActividad, tituloEncuesta):
 			'evaluacionCliente/agregar_preguntas_encuesta_personal.html', 
 			context
 		)
+
+
+#----------------------------------------------------------------------------------------------------------------------------------
+
+
+#Vista para Contestar la Encuesta
+def contestarEncuesta(request):
+	agencias = Agencia.objects.all()
+
+	context = {
+		'agencias': agencias,
+	}
+	
+	return render(
+        request,
+        'evaluacionCliente/contestar_encuesta.html',
+		context
+    )
+
+
+# Mostrar las Agencias
+def consultarAgenciaEncuesta(request):
+	if request.method == 'POST':
+		codigo_agencia = request.POST['codigo_agencia']
+		
+		encuestasAgencia = EncuestaCliente.objects.raw('select id, titulo_encuesta_cliente from proyecto_encuestacliente where codigo_agencia_id = %s group by titulo_encuesta_cliente;', [codigo_agencia])
+		nombreAgencia = Agencia.objects.filter(codigo_agencia = codigo_agencia)
+
+		i=0
+		while i < len(nombreAgencia):
+			codAgencia = nombreAgencia[i].codigo_agencia
+			i+=1
+		
+		contexto = {
+			'encuestasAgencia': encuestasAgencia,
+			'nombreAgencia': nombreAgencia,
+			'codAgencia': codAgencia,
+			'codigo_agencia': codigo_agencia,
+		}
+			
+		return render(
+			request, 
+			'evaluacionCliente/contestar_encuesta.html', 
+			contexto
+			)
+
+
+# Mostrar la Encuesta de esa Agencia
+def consultarEncuestaCliente(request, codigoAgencia):
+	if request.method == 'POST':
+		titulo_encuesta = request.POST['titulo_encuesta']
+		codigo_agencia = codigoAgencia
+
+		encuestasClientes = EncuestaCliente.objects.filter(codigo_agencia = codigo_agencia, titulo_encuesta_cliente = titulo_encuesta, visibilidad_pregunta_cliente = 'S')
+
+		i=0
+		contador = i
+		while i<1:
+			tituloEncuesta = encuestasClientes[i].titulo_encuesta_cliente
+			nombreAgencia = encuestasClientes[i].codigo_agencia.nombre_agencia
+			descripcionPregunta = encuestasClientes[i].descripcion_pregunta
+			i+=1
+
+		contexto = {
+			'encuestasClientes': encuestasClientes,
+			'nombreAgencia' : nombreAgencia,
+			'tituloEncuesta' : tituloEncuesta,
+			'codigoAgencia' : codigo_agencia,
+			'descripcionPregunta' : descripcionPregunta,
+			'contador' : contador,
+		}
+			
+		return render(
+			request, 
+			'evaluacionCliente/contestar_encuesta.html', 
+			contexto
+			)
+
+
+# Contestar la Pregunta de esa encuesta
+def contestarEncuestaCliente(request, codigoAgencia, tituloEncuesta, descripcionPregunta, contador):
+	if request.method == 'POST':
+		respuesta = request.POST['respuesta']
+		codigo_agencia = codigoAgencia
+		titulo_encuesta = tituloEncuesta
+		descripcion_pregunta = descripcionPregunta
+
+		encuestasClientes = EncuestaCliente.objects.filter(codigo_agencia = codigo_agencia, titulo_encuesta_cliente = titulo_encuesta, visibilidad_pregunta_cliente = 'S')
+		encuestasClientesResponder = EncuestaCliente.objects.filter(codigo_agencia = codigo_agencia, titulo_encuesta_cliente = titulo_encuesta, visibilidad_pregunta_cliente = 'S', descripcion_pregunta = descripcion_pregunta)
+		
+		j=0
+		while j < len(encuestasClientesResponder):
+			idEncuesta = encuestasClientesResponder[j].id
+			j+=1
+
+		responderEncuesta = RespuestaEncuestaCliente(respuesta_cliente = respuesta, encuesta_id = idEncuesta)
+		responderEncuesta.save()
+
+		if(contador < (len(encuestasClientes) - 1) ):
+
+			i = contador + 1
+			contador2 = i + 1
+			contador = i
+			while i < (contador2):
+				tituloEncuesta = encuestasClientes[i].titulo_encuesta_cliente
+				nombreAgencia = encuestasClientes[i].codigo_agencia.nombre_agencia
+				descripcionPregunta = encuestasClientes[i].descripcion_pregunta
+				i+=1
+
+			if(contador == (len(encuestasClientes) - 1) ):
+				contexto = {
+					'encuestasClientes': encuestasClientes,
+					'nombreAgencia' : nombreAgencia,
+					'tituloEncuesta' : tituloEncuesta,
+					'codigoAgencia' : codigo_agencia,
+					'descripcionPregunta' : descripcionPregunta,
+					'contador': contador,
+					'fin': "fin",
+				}
+			else:
+				contexto = {
+					'encuestasClientes': encuestasClientes,
+					'nombreAgencia' : nombreAgencia,
+					'tituloEncuesta' : tituloEncuesta,
+					'codigoAgencia' : codigo_agencia,
+					'descripcionPregunta' : descripcionPregunta,
+					'contador': contador,
+				}
+
+		else:
+			mensaje = "Terminar"
+
+			contexto = {
+				'mensaje' : mensaje,
+			}
+		
+			
+		return render(
+			request, 
+			'evaluacionCliente/contestar_encuesta.html', 
+			contexto
+			)
+#def responderEncuesta(request)
+
+
+#----------------------------------------------------------------------------------------------------------------------------------
+
+
+# LISTAR Agencias para buscar ENCUESTA
+def listarRespuestasEncuesta(request):
+	agencias = Agencia.objects.all()
+	respuestasEncuestaCliente = RespuestaEncuestaCliente.objects.all()
+
+	context = {
+		'agenciasCon': agencias,
+		'respuestasEncuestaCliente' : respuestasEncuestaCliente,
+	}
+
+	return render(
+		request,
+		'evaluacionCliente/listar_respuestas_clientes.html',
+		context
+	)
+
+
+# Mostrar la Encuesta de esa Agencia
+def consultarRespuestasAgenciaCliente(request):
+	if request.method == 'POST':
+		codigo_agencia = request.POST['codigo_agencia']
+		
+		encuestasAgencia = EncuestaCliente.objects.raw('select id, titulo_encuesta_cliente from proyecto_encuestacliente where codigo_agencia_id = %s group by titulo_encuesta_cliente;', [codigo_agencia])
+		nombreAgencia = Agencia.objects.filter(codigo_agencia = codigo_agencia)
+
+		i=0
+		while i < len(nombreAgencia):
+			codAgencia = nombreAgencia[i].codigo_agencia
+			i+=1
+		
+		contexto = {
+			'encuestasAgencia': encuestasAgencia,
+			'nombreAgencia': nombreAgencia,
+			'codAgencia': codAgencia,
+			'codigo_agencia': codigo_agencia,
+		}
+			
+		return render(
+			request, 
+			'evaluacionCliente/listar_respuestas_clientes.html', 
+			contexto
+			)
+
+
+# Mostrar la Encuesta de esa Agencia
+def consultarRespuestasEncuestaCliente(request, codigoAgencia):
+	if request.method == 'POST':
+		titulo_encuesta = request.POST['titulo_encuesta']
+		codigo_agencia = codigoAgencia
+
+		#respuestaEncuestasClientes = EncuestaCliente.objects.filter(codigo_agencia = codigo_agencia, titulo_encuesta_cliente = titulo_encuesta)
+		respuestaEncuestasClientes = RespuestaEncuestaCliente.objects.filter(encuesta_id__codigo_agencia = codigo_agencia, encuesta_id__titulo_encuesta_cliente= titulo_encuesta)
+
+		encuestas = EncuestaCliente.objects.filter(codigo_agencia = codigo_agencia)
+		agencias = Agencia.objects.all()
+
+		if len(respuestaEncuestasClientes) > 0:
+			i=0
+			while i<1:
+				tituloEncuesta = respuestaEncuestasClientes[i].encuesta.titulo_encuesta_cliente
+				nombreAgencia = respuestaEncuestasClientes[i].encuesta.codigo_agencia.nombre_agencia
+				i+=1
+
+
+			# Para realizar el conteo
+			lista = []
+			dic = {}
+
+			i=0
+			while i < len(respuestaEncuestasClientes):
+				excelente = 0
+				regular = 0
+				pesimo = 0
+				if i == 0:
+					pregunta = respuestaEncuestasClientes[i].encuesta.descripcion_pregunta
+					
+					j=0
+					while j < len(respuestaEncuestasClientes):
+						if respuestaEncuestasClientes[j].encuesta.descripcion_pregunta == pregunta:
+							if respuestaEncuestasClientes[j].respuesta_cliente == 1:
+								excelente = excelente + 1
+							elif respuestaEncuestasClientes[j].respuesta_cliente == 2:
+								regular = regular + 1
+							else:
+								pesimo = pesimo + 1
+						j+=1
+					
+					dic = {'pregunta': pregunta, 'excelente': excelente, 'regular': regular, 'pesimo': pesimo}
+					lista.append(dic)
+					i+=1
+				
+				else:
+					pregunta = respuestaEncuestasClientes[i].encuesta.descripcion_pregunta
+					preguntaAnterior = respuestaEncuestasClientes[(i-1)].encuesta.descripcion_pregunta
+					
+					if pregunta == preguntaAnterior:
+						i+=1
+					
+					else:
+						excelente = 0
+						regular = 0
+						pesimo = 0
+						j=0
+						while j < len(respuestaEncuestasClientes):
+							if respuestaEncuestasClientes[j].encuesta.descripcion_pregunta == pregunta:
+								if respuestaEncuestasClientes[j].respuesta_cliente == 1:
+									excelente = excelente + 1
+								elif respuestaEncuestasClientes[j].respuesta_cliente == 2:
+									regular = regular + 1
+								else:
+									pesimo = pesimo + 1
+							j+=1
+						
+						dic = {'pregunta': pregunta, 'excelente': excelente, 'regular': regular, 'pesimo': pesimo}
+						lista.append(dic)
+						i+=1
+
+			#Ejemplo de imprimir diccionario en Python
+			#for i in lista:
+			#	print(i.get('pregunta'))
+			
+			contexto = {
+				'respuestaEncuestasClientes': respuestaEncuestasClientes,
+				'agencias': agencias,
+				'encuestas': encuestas,
+				'nombreAgencia' : nombreAgencia,
+				'tituloEncuesta' : tituloEncuesta,
+				'codigoAgencia' : codigo_agencia,
+				'lista': lista,
+			}
+				
+			return render(
+				request, 
+				'evaluacionCliente/listar_respuestas_clientes.html', 
+				contexto
+				)
+		
+		else:
+			mensajeVacia = "NoneLista"
+			
+			contexto = {
+				'agencias': agencias,
+				'encuestas': encuestas,
+				'mensajeVacia': mensajeVacia,
+			}
+				
+			return render(
+				request, 
+				'evaluacionCliente/listar_respuestas_clientes.html', 
+				contexto
+				)

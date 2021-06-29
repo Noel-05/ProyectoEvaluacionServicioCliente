@@ -54,6 +54,15 @@ urlpatterns = [
     path('evaluacionCliente/editar_encuesta/<int:idEncuesta>/', login_required(editarEncuesta), name='editar_encuesta'),
     path('evaluacionCliente/eliminar_encuesta/<int:idEncuesta>/', login_required(eliminarEncuesta), name='eliminar_encuesta'),
 
+    path('evaluacionCliente/contestar_encuesta/', contestarEncuesta, name='contestar_encuesta'),
+    path('evaluacionCliente/encuesta/Agencia/', consultarAgenciaEncuesta, name='consultar_agencia_encuesta'),
+    path('evaluacionCliente/encuesta/Encuesta/<str:codigoAgencia>', consultarEncuestaCliente, name='consultar_encuesta_cliente'),
+    path('evaluacionCliente/encuesta/Respuesta/<str:codigoAgencia>/<str:tituloEncuesta>/<str:descripcionPregunta>/<int:contador>/', contestarEncuestaCliente, name='contestar_encuesta_cliente'),
+
+    path('evaluacionCliente/Resultados/listar_agencia/', login_required(listarRespuestasEncuesta), name='listar_respuestas_encuesta'),
+    path('evaluacionCliente/Resultados/listar_encuesta/', login_required(consultarRespuestasAgenciaCliente), name='consultar_agencia_respuestas_cliente'),
+    path('evaluacionCliente/Resultados/listar_resultados/<str:codigoAgencia>', login_required(consultarRespuestasEncuestaCliente), name='consultar_respuestas_encuesta_cliente'),
+
 
     #URLs para Encuesta Personal
     path('evaluacionCliente/listar_encuesta_personal/', login_required(listarEncuestaPersonal), name='listar_encuesta_personal'),

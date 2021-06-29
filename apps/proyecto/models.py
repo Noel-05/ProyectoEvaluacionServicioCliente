@@ -67,7 +67,7 @@ class RespuestaEncuestaCliente(models.Model):
     encuesta = models.ForeignKey(EncuestaCliente, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.encuesta.__str__() + self.respuesta_cliente
+        return self.encuesta.__str__() + ' | ' + self.respuesta_cliente.__str__()
 
 
 
