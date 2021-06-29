@@ -339,6 +339,9 @@ def editarEmpleado(request, id_empleado):
 			empleado_form = EmpleadoForm(request.POST, instance = empleado)
 			if empleado_form.is_valid():
 				empleado_form.save()
+			else:
+				empleado_form = EmpleadoForm(request.POST, instance = empleado)
+				return render(request, 'evaluacionCliente/editar_empleado.html', {'empleado_form': empleado_form, 'error':error})
 			return HttpResponseRedirect(reverse_lazy('evaluacionCliente:listar_empleados'))
 	except ObjectDoesNotExist as e:
 		error = e
