@@ -13,6 +13,12 @@ urlpatterns = [
     path('', login_required(index)),
     path('evaluacionCliente/index/', login_required(index), name='index'),
 
+    # URL envio de correo
+    path('evaluacionCliente/send_email/<str:agencia>/<str:departamento>/<str:comite>/', login_required(enviarEmail), name='send_email'),
+    path('evaluacionCliente/listar_empleado_correo/', login_required(listarEmpleadosCorreo), name='listar_empleado_correo'),        
+    path('evaluacionCliente/filtrarEmpleadosCorreo/', login_required(filtrarEmpleadosCorreo), name="filtrar_empleados_correo"),
+    path('evaluacionCliente/enviar_correo/<str:agencia>/<str:departamento>/<str:comite>/', login_required(enviarCorreo), name="enviar_correo"),
+    path('evaluacionCliente/confirmar_invitacion/', login_required(confirmarInvitacion), name="confirmar_invitacion"),
 
 	#URLs para Departamento
     path('evaluacionCliente/crear_departamento/', login_required(crearDepartamento), name='crear_departamento'),
@@ -20,20 +26,17 @@ urlpatterns = [
     path('evaluacionCliente/editar_departamento/<codigo_departamento>/', login_required(editarDepartamento), name='editar_departamento'),
     path('evaluacionCliente/eliminar_departamento/<pk>/', login_required(eliminarDepartamento.as_view()), name='eliminar_departamento'),
 
-
 	#URLs para Comites
     path('evaluacionCliente/crear_comite/', login_required(crearComite), name='crear_comite'),
     path('evaluacionCliente/listar_comite/', login_required(listarComite), name='listar_comite'),
     path('evaluacionCliente/editar_comite/<id_comite>/', login_required(editarComite), name='editar_comite'),
     path('evaluacionCliente/eliminar_comite/<pk>/', login_required(eliminarComite.as_view()), name='eliminar_comite'),
 
-
-	#URLs para Agencias
+	#URLs para Agenciaa
     path('evaluacionCliente/crear_agencia/', login_required(crearAgencia), name='crear_agencia'),
     path('evaluacionCliente/listar_agencia/', login_required(listarAgencia), name='listar_agencia'),    
     path('evaluacionCliente/editar_agencia/<codigo_agencia>/', login_required(editarAgencia), name='editar_agencia'),
     path('evaluacionCliente/eliminar_agencia/<pk>/', login_required(eliminarAgencia.as_view()), name='eliminar_agencia'),
-
 
     #URLs para Actividades
     path('evaluacionCliente/crear_actividad/', login_required(crearActividad), name='crear_actividad'),
@@ -41,6 +44,14 @@ urlpatterns = [
     path('evaluacionCliente/editar_actividad/<id_actividad>/', login_required(editarActividad), name='editar_actividad'),
     path('evaluacionCliente/eliminar_actividad/<pk>/', login_required(eliminarActividad.as_view()), name='eliminar_actividad'),
 
+    #URLs para Empleados
+    path('evaluacionCliente/crear_empleado/', login_required(crearEmpleado), name='crear_empleado'),
+    path('evaluacionCliente/listar_empleados/', login_required(listarEmpleados), name='listar_empleados'),    
+    path('evaluacionCliente/editar_empleado/<id_empleado>/', login_required(editarEmpleado), name='editar_empleado'),
+    path('evaluacionCliente/eliminar_empleado/<pk>/', login_required(eliminarEmpleado.as_view()), name='eliminar_empleado'),
+    path('evaluacionCliente/filtrarEmpleados/', login_required(filtrarEmpleados), name="filtrar_empleados"),
+    path('evaluacionCliente/reporteEmpleadosPDF/<str:agencia>/<str:departamento>/<str:comite>/', login_required(reporteEmpleadosPDF), name="reporte_empleadosPDF"),
+    path('evaluacionCliente/exportarEmpleadosCSV/<str:agencia>/<str:departamento>/<str:comite>/', login_required(exportarEmpleados), name="reporte_empleadosCSV"),
 
     #URLs para Encuesta Cliente
     path('evaluacionCliente/listar_encuesta/', login_required(listarEncuesta), name='listar_encuesta'),
@@ -54,6 +65,7 @@ urlpatterns = [
     path('evaluacionCliente/editar_encuesta/<int:idEncuesta>/', login_required(editarEncuesta), name='editar_encuesta'),
     path('evaluacionCliente/eliminar_encuesta/<int:idEncuesta>/', login_required(eliminarEncuesta), name='eliminar_encuesta'),
 
+<<<<<<< HEAD
     path('evaluacionCliente/contestar_encuesta/', contestarEncuesta, name='contestar_encuesta'),
     path('evaluacionCliente/encuesta/Agencia/', consultarAgenciaEncuesta, name='consultar_agencia_encuesta'),
     path('evaluacionCliente/encuesta/Encuesta/<str:codigoAgencia>', consultarEncuestaCliente, name='consultar_encuesta_cliente'),
@@ -64,6 +76,8 @@ urlpatterns = [
     path('evaluacionCliente/Resultados/listar_resultados/<str:codigoAgencia>', login_required(consultarRespuestasEncuestaCliente), name='consultar_respuestas_encuesta_cliente'),
 
 
+=======
+>>>>>>> origin/master
     #URLs para Encuesta Personal
     path('evaluacionCliente/listar_encuesta_personal/', login_required(listarEncuestaPersonal), name='listar_encuesta_personal'),
     path('evaluacionCliente/listar_encuesta_personal/Actividad/', login_required(consultarActividadPersonal), name='consultar_actividad_personal'),

@@ -10,7 +10,7 @@ class Agencia(models.Model):
     direccion_agencia = models.CharField(max_length=250, null=True, blank=True)
 
     def __str__(self):
-        return self.codigo_agencia
+        return self.nombre_agencia
 
 
 
@@ -92,3 +92,15 @@ class RespuestaEncuestaPersonal(models.Model):
 
     def __str__(self):
         return self.encuesta.__str__() + self.respuesta_personal
+
+class Empleado(models.Model):
+    id_empleado = models.AutoField(primary_key=True)    
+    codigo_agencia = models.ForeignKey(Agencia, on_delete=models.CASCADE)
+    codigo_departamento = models.ForeignKey(Departamento, on_delete=models.CASCADE)
+    id_comite = models.ForeignKey(Comite, on_delete=models.CASCADE)
+    email = models.EmailField('Correo Electrónico', max_length=254,unique = True)
+    nombres = models.CharField('Nombres', max_length=100, blank = False, null = False)
+    apellidos = models.CharField('Apellidos', max_length=100,blank = False, null = False)
+    
+    def __str__(self):
+        return self.id_empleado.__str__() + ' | '+ self.nombres.__str__() + ' '+ self.apellidos.__str__()
