@@ -12,16 +12,15 @@ function listadoUsuarios(){
             $('#tabla_usuarios tbody').html("");
             for(let i = 0;i < response.length;i++){
                 let fila = '<tr>';
-                fila += '<td>' + (i +1 ) + '</td>';
-                fila += '<td>' + response[i]["fields"]['username'] + '</td>';
-                fila += '<td>' + response[i]["fields"]['nombres'] + '</td>';
-                fila += '<td>' + response[i]["fields"]['apellidos'] + '</td>';
-                fila += '<td>' + response[i]["fields"]['email'] + '</td>';
-                fila += '<td>' + response[i]["fields"]['rol'] + '</td>';
-                fila += '<td><button type = "button" class = "btn btn-primary btn-sm tableButton"';
-                fila += ' onclick = "abrir_modal_edicion(\'/actualizar_usuario/' + response[i]['pk']+'/\');" style="color:white;"> EDITAR </button>';
+                fila += '<td style="text-align:center;">' + response[i]["fields"]['username'] + '</td>';
+                fila += '<td style="text-align:center;">' + response[i]["fields"]['nombres'] + '</td>';
+                fila += '<td style="text-align:center;">' + response[i]["fields"]['apellidos'] + '</td>';
+                fila += '<td style="text-align:center;">' + response[i]["fields"]['email'] + '</td>';
+                fila += '<td style="text-align:center;">' + response[i]["fields"]['rol'] + '</td>';
+                fila += '<td style="text-align:center;"><button type = "button" class = "btn btn-primary btn-sm tableButton"';
+                fila += ' onclick = "abrir_modal_edicion(\'/actualizar_usuario/' + response[i]['pk']+'/\');" style="color:white;"> Editar </button>';
                 fila += '<button type = "button" class = "btn btn-danger tableButton  btn-sm" ';
-                fila += 'onclick = "abrir_modal_eliminacion(\'/eliminar_usuario/' + response[i]['pk'] +'/\');" style="color:white;"> ELIMINAR </buttton></td>';
+                fila += 'onclick = "abrir_modal_eliminacion(\'/eliminar_usuario/' + response[i]['pk'] +'/\');" style="color:white;margin-left: 5px;"> Eliminar </buttton></td>';
                 fila += '</tr>';
                 $('#tabla_usuarios tbody').append(fila);
             }

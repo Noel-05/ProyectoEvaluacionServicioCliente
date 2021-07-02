@@ -21,7 +21,7 @@
 
 		{% if departamentos %}
 		    <div class="table-responsive">
-				<table id="bootstrapdatatable" class="table table-hover">
+				<table id="bootstrapdatatable" class="table table-hover" style="table-layout: fixed;">
 					
 					<thead>
 						<tr>
@@ -37,8 +37,8 @@
 								<td>{{ departamento.codigo_departamento }}</td>
 								<td>{{ departamento.nombre_departamento }}</td>	
 								<td>
-									<button type="button" class="btn btn-primary btn-sm tableButton"  onclick="location.href='{% url 'evaluacionCliente:editar_departamento' departamento.codigo_departamento %}'" style="color:white;"> EDITAR </button>
-									<button type="button" class="btn btn-danger tableButton  btn-sm" data-toggle="modal" data-target="#a{{ departamento.codigo_departamento }}">ELIMINAR</button>
+									<button type="button" class="btn btn-primary btn-sm tableButton"  onclick="location.href='{% url 'evaluacionCliente:editar_departamento' departamento.codigo_departamento %}'" style="color:white;"> Editar </button>
+									<button type="button" class="btn btn-danger tableButton  btn-sm" data-toggle="modal" data-target="#a{{ departamento.codigo_departamento }}">Eliminar</button>
 								</td>					
 							</tr>
 

@@ -20,7 +20,7 @@
 
 		{% if agencias %}
 		    <div class="table-responsive">
-				<table id="bootstrapdatatable" class="table table-hover">
+				<table id="bootstrapdatatable" class="table table-hover" style="table-layout: fixed;">
 
 					<thead>
 						<tr>
@@ -38,8 +38,8 @@
 								<td>{{ agencia.nombre_agencia }}</td>	
 								<td>{{ agencia.direccion_agencia }}</td>	
 								<td>
-									<button type="button" class="btn btn-primary btn-sm tableButton"  onclick="location.href='{% url 'evaluacionCliente:editar_agencia' agencia.codigo_agencia %}'" style="color:white;"> EDITAR </button>
-									<button type="button" class="btn btn-danger tableButton  btn-sm" data-toggle="modal" data-target="#a{{ agencia.codigo_agencia }}">ELIMINAR</button>
+									<button type="button" class="btn btn-primary btn-sm tableButton"  onclick="location.href='{% url 'evaluacionCliente:editar_agencia' agencia.codigo_agencia %}'" style="color:white;"> Editar </button>
+									<button type="button" class="btn btn-danger tableButton  btn-sm" data-toggle="modal" data-target="#a{{ agencia.codigo_agencia }}">Eliminar</button>
 								</td>					
 							</tr>
 
