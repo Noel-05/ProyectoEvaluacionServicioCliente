@@ -30,7 +30,7 @@
 		                <option selected value=""> Selecciona la Agencia </option>
 		                    {% if agencias %}
 		                        {% for age in agencias %}
-		                            <option value="{{ age.codigo_agencia }}">{{ age.codigo_agencia }} - {{ age.nombre_agencia }}</option>
+		                            <option value="{{ age.codigo_agencia }}">{{ age.nombre_agencia }}</option>
 		                        {% endfor %}
 		                    {% endif %}
 		                </option> 
@@ -41,7 +41,7 @@
 		                <option selected value=""> Selecciona el Departamento </option>
 		                    {% if agencias %}
 		                        {% for dep in departamentos %}
-		                            <option value="{{ dep.codigo_departamento }}">{{ dep.codigo_departamento }} - {{ dep.nombre_departamento }}</option>
+		                            <option value="{{ dep.codigo_departamento }}">{{ dep.nombre_departamento }}</option>
 		                        {% endfor %}
 		                    {% endif %}
 		                </option> 
