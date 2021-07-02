@@ -3,7 +3,6 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 
-
 class Agencia(models.Model):
     codigo_agencia = models.CharField(primary_key=True, max_length=15, null=False)
     nombre_agencia = models.CharField(max_length=250, null=False)
@@ -11,7 +10,6 @@ class Agencia(models.Model):
 
     def __str__(self):
         return self.nombre_agencia
-
 
 
 class Departamento(models.Model):
@@ -22,7 +20,6 @@ class Departamento(models.Model):
         return self.nombre_departamento
 
 
-
 class Comite(models.Model):
     id_comite = models.AutoField(primary_key=True)
     nombre_comite = models.CharField(max_length=150, null=False, unique=True)
@@ -30,7 +27,6 @@ class Comite(models.Model):
 
     def __str__(self):
         return self.nombre_comite
-
 
 
 class Actividad(models.Model):
@@ -46,7 +42,6 @@ class Actividad(models.Model):
         return self.nombre_actividad
 
 
-
 class EncuestaCliente(models.Model):
     codigo_agencia = models.ForeignKey(Agencia, on_delete=models.CASCADE)
     descripcion_pregunta = models.CharField(max_length=300, null=False)
@@ -60,7 +55,6 @@ class EncuestaCliente(models.Model):
         return self.codigo_agencia.__str__() +' | '+ self.titulo_encuesta_cliente.__str__() +' | '+ self.descripcion_pregunta.__str__()
 
 
-
 class RespuestaEncuestaCliente(models.Model):
     id_respuesta_encuesta_cliente = models.AutoField(primary_key=True)
     respuesta_cliente = models.IntegerField(null=False)
@@ -68,7 +62,6 @@ class RespuestaEncuestaCliente(models.Model):
 
     def __str__(self):
         return self.encuesta.__str__() + ' | ' + self.respuesta_cliente.__str__()
-
 
 
 class EncuestaPersonal(models.Model):
@@ -84,14 +77,14 @@ class EncuestaPersonal(models.Model):
         return self.id_actividad.__str__() +' | '+ self.titulo_encuesta_personal.__str__() +' | '+ self.descripcion_pregunta.__str__()
 
 
-
 class RespuestaEncuestaPersonal(models.Model):
     id_respuesta_encuesta_personal = models.AutoField(primary_key=True)
     respuesta_personal = models.IntegerField(null=False)
     encuesta = models.ForeignKey(EncuestaPersonal, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.encuesta.__str__() + self.respuesta_personal
+        return self.encuesta.__str__() + ' | ' + self.respuesta_personal.__str__()
+
 
 class Empleado(models.Model):
     id_empleado = models.AutoField(primary_key=True)    

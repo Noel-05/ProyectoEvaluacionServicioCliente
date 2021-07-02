@@ -3,35 +3,37 @@
 {% load static %}
 
 {%block title%}
-  Consulta de Resultados de Encuestas
+  Consulta de Resultados de Encuestas de Personal
 {%endblock%}
 
 {% block content %}
 	<div style="text-align:center; margin: 0 auto;">
 
 <!-- ######################################################################################################################################################### -->
-	<!-- VIENE DE LA VIEW  listarRespuestasEncuesta -->
+	<!-- VIENE DE LA VIEW  listarRespuestasEncuestaPersonal -->
 
         <!-- Boton Buscar Agencia-->
-        {% if agenciasCon %}
+        {% if actividadesCon %}
 
-			<div class="container" align="center">
-				<font face="small fonts" size="10" color="#049286">
-					<h2 align="center" class="form-titulo" style ="margin-left: 5px; margin-top:20px; bg-success text-white">Consulta de Resultados de Encuestas</h2>
-				</font>
-			</div>
+            <div style="text-align:center; margin: 0 auto;">
+                <div class="container" align="center">
+                    <font face="small fonts" size="10" color="#049286">
+                        <h2 align="center" class="form-titulo" style ="margin-left: 5px; margin-top:20px; bg-success text-white">Consulta de Resultados de Encuestas de Personal</h2>
+                    </font>
+                </div>
+            </div>
 		
         	</br>
-			<h5>Porfavor selecciona una Agencia para consultar sus Encuestas.</h5>
+			<h5 align="center">Porfavor selecciona la Actividad de la Agencia para consultar sus Encuestas de Personal.</h5>
 			</br>
 
 			<div align="center" class="busqueda">
-				<form method="POST" action="{% url 'evaluacionCliente:consultar_agencia_respuestas_cliente' %}">
+				<form method="POST" action="{% url 'evaluacionCliente:consultar_actividad_respuestas_personal' %}">
 					{% csrf_token %} 
-					<select name="codigo_agencia" id="codigo_agencia" class="form-control col-4 col-sm-3 input-style" title="Selecciona la Agencia Porfavor" required>
-						<option selected value=""> Seleccione Agencia </option>
-							{% for i in agenciasCon %}
-								<option value="{{i.codigo_agencia}}">{{i.nombre_agencia}}</option> 
+					<select name="codigo_actividad" id="codigo_actividad" class="form-control col-4 col-sm-3 input-style" title="Selecciona la Actividad Porfavor" required>
+						<option selected value=""> Seleccione Actividad </option>
+							{% for i in actividadesCon %}
+								<option value="{{i.id_actividad}}">{{i.codigo_agencia.nombre_agencia}} | {{i.nombre_actividad}}</option> 
 							{% endfor %}
 						</option> 
 					</select></br>
@@ -41,7 +43,7 @@
 		
 		{% endif %}
 
-		{% if noHayEncuestas %}
+        {% if noHayEncuestas %}
 
             <div style="text-align:center; margin: 0 auto;">
                 <div class="container" align="center">
@@ -73,80 +75,90 @@
         {% endif %}
 
 <!-- ######################################################################################################################################################### -->
-	<!-- VIENE DE LA VIEW  consultarAgencia -->
+	<!-- VIENE DE LA VIEW  consultarActividadEncuestaDePersonal -->
 
-		<!-- Boton Buscar Encuesta-->
-		{% if encuestasAgencia %}
+    <!-- Boton Buscar Encuesta-->
+		{% if encuestasActividad %}
 
-			<div class="container" align="center">
-				<font face="small fonts" size="10" color="#049286">
-					<h2 align="center" class="form-titulo" style ="margin-left: 5px; margin-top:20px; bg-success text-white">Consulta de Resultados de Encuestas</h2>
-				</font>
-			</div>
+            <div style="text-align:center; margin: 0 auto;">
+                <div class="container" align="center">
+                    <font face="small fonts" size="10" color="#049286">
+                        <h2 align="center" class="form-titulo" style ="margin-left: 5px; margin-top:20px; bg-success text-white">Consulta de Resultados de Encuestas de Personal</h2>
+                    </font>
+                </div>
+            </div>
 
+            </br>
+			<h5 align="center">Porfavor selecciona la Encuesta que quieres consultar.</h5>
 			</br>
-			<h5>Porfavor selecciona la Encuesta que quieres consultar.</h5>
-			</br>
 
-			<div class="table-responsive" style="width:50%; display:inline-block;">
-				<table class="table table-hover text-center">
-					
-					<thead>
+            <div style="text-align:center; margin: 0 auto;">
+                <div class="container" align="center">
+                    <table class="table table-hover text-center" style="width:50%">
+                        <thead>
 						<tr>
 							<th class="text-center" style="color:#049286"><strong>Agencia:</strong></th>
-							{% for i in nombreAgencia%}
-								<th class="text-center"><i>{{ i.nombre_agencia }}</i></th>
+							{% for i in nombreActividad %}
+								<th class="text-center"><i>{{ i.codigo_agencia.nombre_agencia }}</i></th>
+							{% endfor %}
+						</tr>
+                        <tr>
+							<th class="text-center" style="color:#049286"><strong>Actividad:</strong></th>
+							{% for i in nombreActividad %}
+								<th class="text-center"><i>{{ i.nombre_actividad }}</i></th>
 							{% endfor %}
 						</tr>
 					</thead>
+                    </table>
+                </div>
+            </div>
 
-				</table>
-			</div>
-
-			</br></br>
+            </br>
 		
 			<div align="center" class="busqueda">
-				<form method="POST" action="{% url 'evaluacionCliente:consultar_respuestas_encuesta_cliente' codAgencia %}">
+				<form method="POST" action="{% url 'evaluacionCliente:consultar_respuestas_encuesta_personal' codActividad %}">
 					{% csrf_token %} 
 					<select name="titulo_encuesta" id="titulo_encuesta" class="form-control col-4 col-sm-3 input-style" title="Selecciona la Encuesta a Consultar" required>
 						<option selected value=""> Seleccione la Encuesta </option>
-							{% for i in encuestasAgencia %}
-								<option value="{{i.titulo_encuesta_cliente}}">{{i.titulo_encuesta_cliente}}</option> 
+							{% for i in encuestasActividad %}
+								<option value="{{i.titulo_encuesta_personal}}">{{i.titulo_encuesta_personal}}</option> 
 							{% endfor %}
 						</option> 
 					</select></br>
-					<input class="btn btn-outline-success" type = "submit" value = "Buscar" id = "AgenciaBuscar"></br>
+					<input class="btn btn-outline-success" type = "submit" value = "Buscar" id = "ActividadBuscar"></br>
 				</form>
 			</div>
 
-		{% endif %}
+        {% endif %}
 
 <!-- ######################################################################################################################################################### -->
-	<!-- VIENE DE LA VIEW  consultarRespuestasEncuestaCliente -->
+	<!-- VIENE DE LA VIEW  consultarRespuestasEncuestaPersonal -->
 
-		{% if respuestaEncuestasClientes %}
+		{% if respuestaEncuestasPersonal %}
 
-			<div class="container" align="center">
-				<font face="small fonts" size="10" color="#049286">
-					<h2 align="center" class="form-titulo" style ="margin-left: 5px; margin-top:20px; bg-success text-white">Consulta de Resultados de Encuestas</h2>
-				</font>
-			</div>
+            <div style="text-align:center; margin: 0 auto;">
+                <div class="container" align="center">
+                    <font face="small fonts" size="10" color="#049286">
+                        <h2 align="center" class="form-titulo" style ="margin-left: 5px; margin-top:20px; bg-success text-white">Consulta de Resultados de Encuestas de Personal</h2>
+                    </font>
+                </div>
+            </div>
 
-			</br>
+            </br>
 
             <div class="table-responsive" style="width:50%; display:inline-block;">
 				<table class="table table-hover text-center">
 					
 					<thead>
 						<tr>
-							<th class="text-center" style="color:#049286">Agencia</th>
+							<th class="text-center" style="color:#049286">Actividad</th>
 							<th class="text-center" style="color:#049286">T&iacute;tulo Encuesta</th>
 						</tr>
 					</thead>
 
 					<tbody>
 						<tr>
-							<td><strong>{{ nombreAgencia }}</strong></td>
+							<td><strong>{{ nombreActividad }}</strong></td>
 							<td><strong><i>{{ tituloEncuesta }}</i></strong></td>
 						</tr>
 					</tbody>
@@ -211,8 +223,3 @@
 	{% endblock js %}
 
 {% endblock content %}
-
-
-
-
-			

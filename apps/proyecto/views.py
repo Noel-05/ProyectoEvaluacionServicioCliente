@@ -38,6 +38,7 @@ def index(request):
         'base/base.html'
     )
 
+
 """
 Función para mostrar imagenes dentro de los reportes en PDF elaborados.
 @param      una url relativa
@@ -81,6 +82,8 @@ def link_callback(uri, rel):
         )
     
     return path
+
+
 #----------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -1415,13 +1418,27 @@ def consultarAgenciaEncuesta(request):
 		while i < len(nombreAgencia):
 			codAgencia = nombreAgencia[i].codigo_agencia
 			i+=1
+
+		if len(encuestasAgencia) > 0:
+			contexto = {
+				'encuestasAgencia': encuestasAgencia,
+				'nombreAgencia': nombreAgencia,
+				'codAgencia': codAgencia,
+				'codigo_agencia': codigo_agencia,
+			}
+
+		else:
+			noHayEncuestas = "NoHay"
 		
-		contexto = {
-			'encuestasAgencia': encuestasAgencia,
-			'nombreAgencia': nombreAgencia,
-			'codAgencia': codAgencia,
-			'codigo_agencia': codigo_agencia,
-		}
+			contexto = {
+				'encuestasAgencia': encuestasAgencia,
+				'nombreAgencia': nombreAgencia,
+				'codAgencia': codAgencia,
+				'codigo_agencia': codigo_agencia,
+				'noHayEncuestas': noHayEncuestas,
+			}
+		
+		
 			
 		return render(
 			request, 
@@ -1525,7 +1542,6 @@ def contestarEncuestaCliente(request, codigoAgencia, tituloEncuesta, descripcion
 			'evaluacionCliente/contestar_encuesta.html', 
 			contexto
 			)
-#def responderEncuesta(request)
 
 
 #----------------------------------------------------------------------------------------------------------------------------------
@@ -1560,13 +1576,25 @@ def consultarRespuestasAgenciaCliente(request):
 		while i < len(nombreAgencia):
 			codAgencia = nombreAgencia[i].codigo_agencia
 			i+=1
+
+		if len(encuestasAgencia) > 0:
+			contexto = {
+				'encuestasAgencia': encuestasAgencia,
+				'nombreAgencia': nombreAgencia,
+				'codAgencia': codAgencia,
+				'codigo_agencia': codigo_agencia,
+			}
+
+		else:
+			noHayEncuestas = "NoHay"
 		
-		contexto = {
-			'encuestasAgencia': encuestasAgencia,
-			'nombreAgencia': nombreAgencia,
-			'codAgencia': codAgencia,
-			'codigo_agencia': codigo_agencia,
-		}
+			contexto = {
+				'encuestasAgencia': encuestasAgencia,
+				'nombreAgencia': nombreAgencia,
+				'codAgencia': codAgencia,
+				'codigo_agencia': codigo_agencia,
+				'noHayEncuestas': noHayEncuestas,
+			}
 			
 		return render(
 			request, 
@@ -1575,7 +1603,7 @@ def consultarRespuestasAgenciaCliente(request):
 			)
 
 
-# Mostrar la Encuesta de esa Agencia
+# Mostrar los Resultados de la Encuesta de esa Agencia
 def consultarRespuestasEncuestaCliente(request, codigoAgencia):
 	if request.method == 'POST':
 		titulo_encuesta = request.POST['titulo_encuesta']
@@ -1670,7 +1698,7 @@ def consultarRespuestasEncuestaCliente(request, codigoAgencia):
 		
 		else:
 			mensajeVacia = "NoneLista"
-			
+
 			contexto = {
 				'agencias': agencias,
 				'encuestas': encuestas,
@@ -1680,5 +1708,333 @@ def consultarRespuestasEncuestaCliente(request, codigoAgencia):
 			return render(
 				request, 
 				'evaluacionCliente/listar_respuestas_clientes.html', 
+				contexto
+				)
+
+
+#----------------------------------------------------------------------------------------------------------------------------------
+
+
+#Vista para Contestar la Encuesta de Personal
+def contestarEncuestaPersonal(request):
+	actividades = Actividad.objects.all().order_by('codigo_agencia')
+
+	context = {
+		'actividadesCon': actividades,
+	}
+
+	return render(
+        request,
+        'evaluacionCliente/contestar_encuesta_personal.html',
+		context
+    )
+
+
+# Mostrar las Agencias
+def consultarActividadEncuestaDePersonal(request):
+	if request.method == 'POST':
+		codigo_actividad = request.POST['codigo_actividad']
+		
+		encuestasActividad = EncuestaPersonal.objects.raw('select id, titulo_encuesta_personal from proyecto_encuestapersonal where id_actividad_id = %s group by titulo_encuesta_personal;', [codigo_actividad])
+		nombreActividad = Actividad.objects.filter(id_actividad = codigo_actividad)
+		
+		i=0
+		while i < len(nombreActividad):
+			codActividad = nombreActividad[i].id_actividad
+			i+=1
+
+		if len(encuestasActividad) > 0:
+			contexto = {
+				'encuestasActividad': encuestasActividad,
+				'nombreActividad': nombreActividad,
+				'codActividad': codActividad,
+				'codigo_actividad': codigo_actividad,
+			}
+
+		else:
+			noHayEncuestas = "NoHay"
+		
+			contexto = {
+				'encuestasActividad': encuestasActividad,
+				'nombreActividad': nombreActividad,
+				'codActividad': codActividad,
+				'codigo_actividad': codigo_actividad,
+				'noHayEncuestas': noHayEncuestas,
+			}
+			
+		return render(
+			request, 
+			'evaluacionCliente/contestar_encuesta_personal.html', 
+			contexto
+			)
+		
+
+# Mostrar la Encuesta de esa Agencia
+def consultarEncuestaDePersonal(request, idActividad):
+	if request.method == 'POST':
+		titulo_encuesta = request.POST['titulo_encuesta']
+		codigo_actividad = idActividad
+
+		encuestasPersonal = EncuestaPersonal.objects.filter(id_actividad = codigo_actividad, titulo_encuesta_personal = titulo_encuesta, visibilidad_pregunta_personal = 'S')
+		
+		encuestas = EncuestaPersonal.objects.filter(id_actividad = codigo_actividad)
+		actividades = Actividad.objects.all()
+
+		i=0
+		contador = i
+		while i<1:
+			tituloEncuesta = encuestasPersonal[i].titulo_encuesta_personal
+			nombreAgencia = encuestasPersonal[i].id_actividad.codigo_agencia.nombre_agencia
+			nombreActividad = encuestasPersonal[i].id_actividad.nombre_actividad
+			descripcionPregunta = encuestasPersonal[i].descripcion_pregunta
+			i+=1
+
+		contexto = {
+			'encuestasPersonal': encuestasPersonal,
+			'actividades': actividades,
+			'encuestas': encuestas,
+			'nombreAgencia' : nombreAgencia,
+			'nombreActividad' : nombreActividad,
+			'tituloEncuesta' : tituloEncuesta,
+			'codigoActividad' : codigo_actividad,
+			'descripcionPregunta' : descripcionPregunta,
+			'contador' : contador,
+		}
+			
+		return render(
+			request, 
+			'evaluacionCliente/contestar_encuesta_personal.html', 
+			contexto
+			)
+
+
+# Contestar la Pregunta de esa encuesta
+def contestarEncuestaDePersonal(request, idActividad, tituloEncuesta, descripcionPregunta, contador):
+	if request.method == 'POST':
+		respuesta = request.POST['respuesta']
+		codigo_actividad = idActividad
+		titulo_encuesta = tituloEncuesta
+		descripcion_pregunta = descripcionPregunta
+
+		encuestasPersonal = EncuestaPersonal.objects.filter(id_actividad = codigo_actividad, titulo_encuesta_personal = titulo_encuesta, visibilidad_pregunta_personal = 'S')
+		encuestasPersonalResponder = EncuestaPersonal.objects.filter(id_actividad = codigo_actividad, titulo_encuesta_personal = titulo_encuesta, visibilidad_pregunta_personal = 'S', descripcion_pregunta = descripcion_pregunta)
+		
+		j=0
+		while j < len(encuestasPersonalResponder):
+			idEncuesta = encuestasPersonalResponder[j].id
+			j+=1
+
+		responderEncuesta = RespuestaEncuestaPersonal(respuesta_personal = respuesta, encuesta_id = idEncuesta)
+		responderEncuesta.save()
+
+		if(contador < (len(encuestasPersonal) - 1) ):
+
+			i = contador + 1
+			contador2 = i + 1
+			contador = i
+			while i < (contador2):
+				tituloEncuesta = encuestasPersonal[i].titulo_encuesta_personal
+				nombreActividad = encuestasPersonal[i].id_actividad.nombre_actividad
+				descripcionPregunta = encuestasPersonal[i].descripcion_pregunta
+				i+=1
+
+			if(contador == (len(encuestasPersonal) - 1) ):
+				contexto = {
+					'encuestasPersonal': encuestasPersonal,
+					'nombreActividad' : nombreActividad,
+					'tituloEncuesta' : tituloEncuesta,
+					'codigoActividad' : codigo_actividad,
+					'descripcionPregunta' : descripcionPregunta,
+					'contador': contador,
+					'fin': "fin",
+				}
+			
+			else:
+				contexto = {
+					'encuestasPersonal': encuestasPersonal,
+					'nombreActividad' : nombreActividad,
+					'tituloEncuesta' : tituloEncuesta,
+					'codigoActividad' : codigo_actividad,
+					'descripcionPregunta' : descripcionPregunta,
+					'contador': contador,
+				}
+
+		else:
+			mensaje = "Terminar"
+
+			contexto = {
+				'mensaje' : mensaje,
+			}
+			
+		return render(
+			request, 
+			'evaluacionCliente/contestar_encuesta_personal.html', 
+			contexto
+			)
+
+
+#----------------------------------------------------------------------------------------------------------------------------------
+
+
+# LISTAR Agencias para buscar ENCUESTA PERSONAL
+def listarRespuestasEncuestaPersonal(request):
+	actividades = Actividad.objects.all().order_by('codigo_agencia')
+	respuestasEncuestaPersonal = RespuestaEncuestaPersonal.objects.all()
+
+	context = {
+		'actividadesCon': actividades,
+		'respuestasEncuestaPersonal' : respuestasEncuestaPersonal,
+	}
+
+	return render(
+		request,
+		'evaluacionCliente/listar_respuestas_personal.html',
+		context
+	)
+
+
+# Mostrar la Encuesta de esa Agencia
+def consultarRespuestasActividadPersonal(request):
+	if request.method == 'POST':
+		codigo_actividad = request.POST['codigo_actividad']
+		
+		encuestasActividad = EncuestaPersonal.objects.raw('select id, titulo_encuesta_personal from proyecto_encuestapersonal where id_actividad_id = %s group by titulo_encuesta_personal;', [codigo_actividad])
+		nombreActividad = Actividad.objects.filter(id_actividad = codigo_actividad)
+		
+		i=0
+		while i < len(nombreActividad):
+			codActividad = nombreActividad[i].id_actividad
+			i+=1
+
+		if len(encuestasActividad) > 0:
+			contexto = {
+				'encuestasActividad': encuestasActividad,
+				'nombreActividad': nombreActividad,
+				'codActividad': codActividad,
+				'codigo_actividad': codigo_actividad,
+			}
+
+		else:
+			noHayEncuestas = "NoHay"
+		
+			contexto = {
+				'encuestasActividad': encuestasActividad,
+				'nombreActividad': nombreActividad,
+				'codActividad': codActividad,
+				'codigo_actividad': codigo_actividad,
+				'noHayEncuestas': noHayEncuestas,
+			}
+			
+		return render(
+			request, 
+			'evaluacionCliente/listar_respuestas_personal.html', 
+			contexto
+			)
+
+
+# Mostrar los Resultados de la Encuesta de esa Agencia
+def consultarRespuestasEncuestaPersonal(request, idActividad):
+	if request.method == 'POST':
+		titulo_encuesta = request.POST['titulo_encuesta']
+		codigo_actividad = idActividad
+
+		respuestaEncuestasPersonal = RespuestaEncuestaPersonal.objects.filter(encuesta_id__id_actividad = codigo_actividad, encuesta_id__titulo_encuesta_personal = titulo_encuesta)
+
+		encuestas = EncuestaPersonal.objects.filter(id_actividad = codigo_actividad)
+		actividades = Actividad.objects.all()
+
+		if len(respuestaEncuestasPersonal) > 0:
+			i=0
+			while i<1:
+				tituloEncuesta = respuestaEncuestasPersonal[i].encuesta.titulo_encuesta_personal
+				nombreActividad = respuestaEncuestasPersonal[i].encuesta.id_actividad.nombre_actividad
+				i+=1
+
+
+			# Para realizar el conteo
+			lista = []
+			dic = {}
+
+			i=0
+			while i < len(respuestaEncuestasPersonal):
+				excelente = 0
+				regular = 0
+				pesimo = 0
+				if i == 0:
+					pregunta = respuestaEncuestasPersonal[i].encuesta.descripcion_pregunta
+					
+					j=0
+					while j < len(respuestaEncuestasPersonal):
+						if respuestaEncuestasPersonal[j].encuesta.descripcion_pregunta == pregunta:
+							if respuestaEncuestasPersonal[j].respuesta_personal == 1:
+								excelente = excelente + 1
+							elif respuestaEncuestasPersonal[j].respuesta_personal == 2:
+								regular = regular + 1
+							else:
+								pesimo = pesimo + 1
+						j+=1
+					
+					dic = {'pregunta': pregunta, 'excelente': excelente, 'regular': regular, 'pesimo': pesimo}
+					lista.append(dic)
+					i+=1
+				
+				else:
+					pregunta = respuestaEncuestasPersonal[i].encuesta.descripcion_pregunta
+					preguntaAnterior = respuestaEncuestasPersonal[(i-1)].encuesta.descripcion_pregunta
+					
+					if pregunta == preguntaAnterior:
+						i+=1
+					
+					else:
+						excelente = 0
+						regular = 0
+						pesimo = 0
+						j=0
+						while j < len(respuestaEncuestasPersonal):
+							if respuestaEncuestasPersonal[j].encuesta.descripcion_pregunta == pregunta:
+								if respuestaEncuestasPersonal[j].respuesta_personal == 1:
+									excelente = excelente + 1
+								elif respuestaEncuestasPersonal[j].respuesta_personal == 2:
+									regular = regular + 1
+								else:
+									pesimo = pesimo + 1
+							j+=1
+						
+						dic = {'pregunta': pregunta, 'excelente': excelente, 'regular': regular, 'pesimo': pesimo}
+						lista.append(dic)
+						i+=1
+
+			#Ejemplo de imprimir diccionario en Python
+			#for i in lista:
+			#	print(i.get('pregunta'))
+			
+			contexto = {
+				'respuestaEncuestasPersonal': respuestaEncuestasPersonal,
+				'actividades': actividades,
+				'encuestas': encuestas,
+				'nombreActividad' : nombreActividad,
+				'tituloEncuesta' : tituloEncuesta,
+				'codigoActividad' : codigo_actividad,
+				'lista': lista,
+			}
+				
+			return render(
+				request, 
+				'evaluacionCliente/listar_respuestas_personal.html', 
+				contexto
+				)
+		
+		else:
+			mensajeVacia = "NoneLista"
+
+			contexto = {
+				'actividades': actividades,
+				'encuestas': encuestas,
+				'mensajeVacia': mensajeVacia,
+			}
+				
+			return render(
+				request, 
+				'evaluacionCliente/listar_respuestas_personal.html', 
 				contexto
 				)

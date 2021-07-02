@@ -3,106 +3,106 @@
 {% load static %}
 
 {%block title%}
-  Encuesta
+  Encuesta Personal
 {%endblock%}
 
 {% block content %}
 
 <link rel="stylesheet" href="{% static 'css/imgEncuesta.css' %}">
 
+
 <!-- ######################################################################################################################################################### -->
-	<!-- VIENE DE LA VIEW  contestarEncuesta -->
+	<!-- VIENE DE LA VIEW  contestarEncuestaPersonal -->
 
-    {% if agencias %}
+    <!-- Boton Buscar Agencia-->
+        {% if actividadesCon %}
 
-        <div style="text-align:center; margin: 0 auto;">
-            <div class="container" align="center">
-                <font face="small fonts" size="10" color="#049286">
-                    <h2 align="center" class="form-titulo" style ="margin-left: 5px; margin-top:20px; bg-success text-white">Encuesta</h2>
-                </font>
+            <div style="text-align:center; margin: 0 auto;">
+                <div class="container" align="center">
+                    <font face="small fonts" size="10" color="#049286">
+                        <h2 align="center" class="form-titulo" style ="margin-left: 5px; margin-top:20px; bg-success text-white">Encuestas de Personal</h2>
+                    </font>
+                </div>
             </div>
-        </div>
-    
-        </br>
-        <h5 align="center">Porfavor seleccione la Agencia.</h5>
-        </br>
+		
+        	</br>
+			<h5 align="center">Porfavor selecciona la Actividad de la Agencia para consultar sus Encuestas de Personal.</h5>
+			</br>
 
-        <div align="center" class="busqueda">
-            <form method="POST" action="{% url 'evaluacionCliente:consultar_agencia_encuesta' %}">
-                {% csrf_token %} 
-                
-                <select name="codigo_agencia" id="codigo_agencia" class="form-control col-4 col-sm-3 input-style" title="Selecciona la Agencia Porfavor" required>
-                    <option selected value=""> Seleccione la Agencia </option>
-                
-                        {% for i in agencias %}
-                            <option value="{{i.codigo_agencia}}">{{i.nombre_agencia}}</option> 
-                        {% endfor %}
-                
-                    </option> 
-                </select></br>
-                
-                <input class="btn btn-outline-success" type = "submit" value = "Buscar" id = "AgenciaBuscar">
-            </form>
-        </div>
-    
-    {% endif %}
+			<div align="center" class="busqueda">
+				<form method="POST" action="{% url 'evaluacionCliente:consultar_actividad_encuesta_de_personal' %}">
+					{% csrf_token %} 
+					<select name="codigo_actividad" id="codigo_actividad" class="form-control col-4 col-sm-3 input-style" title="Selecciona la Actividad de la Agencia Porfavor" required>
+						<option selected value=""> Seleccione Actividad de Agencia</option>
+							{% for i in actividadesCon %}
+								<option value="{{i.id_actividad}}">{{i.codigo_agencia.nombre_agencia}} | {{i.nombre_actividad}}</option> 
+							{% endfor %}
+						</option> 
+					</select></br>
+					<input class="btn btn-outline-success" type = "submit" value = "Buscar" id = "ActividadBuscar">
+				</form>
+			</div>
+		
+		{% endif %}
 
 <!-- ######################################################################################################################################################### -->
-	<!-- VIENE DE LA VIEW  consultarAgenciaEncuesta -->
+	<!-- VIENE DE LA VIEW  consultarActividadEncuestaDePersonal -->
 
     <!-- Boton Buscar Encuesta-->
-    {% if encuestasAgencia %}
+		{% if encuestasActividad %}
 
-        <div style="text-align:center; margin: 0 auto;">
-            <div class="container" align="center">
-                <font face="small fonts" size="10" color="#049286">
-                    <h2 align="center" class="form-titulo" style ="margin-left: 5px; margin-top:20px; bg-success text-white">Encuesta</h2>
-                </font>
+            <div style="text-align:center; margin: 0 auto;">
+                <div class="container" align="center">
+                    <font face="small fonts" size="10" color="#049286">
+                        <h2 align="center" class="form-titulo" style ="margin-left: 5px; margin-top:20px; bg-success text-white">Encuestas de Personal</h2>
+                    </font>
+                </div>
             </div>
-        </div>
 
-        </br>
-        <h5 align="center">Porfavor seleccione la Encuesta.</h5>
-        </br>
+            </br>
+			<h5 align="center">Porfavor selecciona la Encuesta que quieres consultar.</h5>
+			</br>
 
-        <div style="text-align:center; margin: 0 auto;">
-            <div class="container" align="center">
-                <table class="table table-hover text-center" style="width:50%">
-                    <thead>
+            <div style="text-align:center; margin: 0 auto;">
+                <div class="container" align="center">
+                    <table class="table table-hover text-center" style="width:50%">
+                        <thead>
+						<tr>
+							<th class="text-center" style="color:#049286"><strong>Agencia:</strong></th>
+							{% for i in nombreActividad %}
+								<th class="text-center"><i>{{ i.codigo_agencia.nombre_agencia }}</i></th>
+							{% endfor %}
+						</tr>
                         <tr>
-                            <th class="text-center" style="color:#049286"><strong>Agencia:</strong></th>
-                            {% for i in nombreAgencia%}
-                                <th class="text-center"><i>{{ i.nombre_agencia }}</i></th>
-                            {% endfor %}
-                        </tr>
-                    </thead>
-                </table>
+							<th class="text-center" style="color:#049286"><strong>Actividad:</strong></th>
+							{% for i in nombreActividad %}
+								<th class="text-center"><i>{{ i.nombre_actividad }}</i></th>
+							{% endfor %}
+						</tr>
+					</thead>
+                    </table>
+                </div>
             </div>
-        </div>
 
-        </br>
+            </br>
 		
-        <div align="center" class="busqueda">
-            <form method="POST" action="{% url 'evaluacionCliente:consultar_encuesta_cliente' codAgencia %}">
-                {% csrf_token %} 
-                
-                <select name="titulo_encuesta" id="titulo_encuesta" class="form-control col-4 col-sm-3 input-style" title="Selecciona la Encuesta a Consultar" required>
-                    <option selected value=""> Seleccione la Encuesta </option>
-                        
-                        {% for i in encuestasAgencia %}
-                            <option value="{{i.titulo_encuesta_cliente}}">{{i.titulo_encuesta_cliente}}</option> 
-                        {% endfor %}
-                    
-                    </option> 
-                </select></br>
-                
-                <input class="btn btn-outline-success" type = "submit" value = "Buscar" id = "AgenciaBuscar"></br>
-            </form>
-        </div>
+			<div align="center" class="busqueda">
+				<form method="POST" action="{% url 'evaluacionCliente:consultar_encuesta_de_personal' codActividad %}">
+					{% csrf_token %} 
+					<select name="titulo_encuesta" id="titulo_encuesta" class="form-control col-4 col-sm-3 input-style" title="Selecciona la Encuesta a Consultar" required>
+						<option selected value=""> Seleccione la Encuesta </option>
+							{% for i in encuestasActividad %}
+								<option value="{{i.titulo_encuesta_personal}}">{{i.titulo_encuesta_personal}}</option> 
+							{% endfor %}
+						</option> 
+					</select></br>
+					<input class="btn btn-outline-success" type = "submit" value = "Buscar" id = "ActividadBuscar"></br>
+				</form>
+			</div>
 
-    {% endif %}
+        {% endif %}
 
-    {% if noHayEncuestas %}
+        {% if noHayEncuestas %}
 
             <div style="text-align:center; margin: 0 auto;">
                 <div class="container" align="center">
@@ -113,7 +113,7 @@
                         </h1> 
                         
                         <h2 align="center" class="form-titulo" style ="margin-left: 5px; margin-top:20px; bg-success text-white">
-                            Porfavor verifique que est&aacute; Agencia </br> posea sus correspondientes encuestas.
+                            Porfavor verifique que est&aacute; Actividad </br> posea su correspondiente encuesta.
                         </h2>
 
                         <div class="imgResponsiva">
@@ -154,7 +154,7 @@
 
         <div class="imgWrapper3">
 
-            <form method="POST" action="{% url 'evaluacionCliente:contestar_encuesta_cliente' codigoAgencia tituloEncuesta descripcionPregunta contador%}">
+            <form method="POST" action="{% url 'evaluacionCliente:contestar_encuesta_de_personal' codigoActividad tituloEncuesta descripcionPregunta contador%}"> 
                 {% csrf_token %} 
                 
                 <div class="imgResponsiva">
