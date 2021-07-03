@@ -9,7 +9,7 @@ class Agencia(models.Model):
     direccion_agencia = models.CharField(max_length=250, null=True, blank=True)
 
     def __str__(self):
-        return self.nombre_agencia
+        return self.codigo_agencia
 
 
 class Departamento(models.Model):
@@ -39,7 +39,7 @@ class Actividad(models.Model):
     id_comite = models.ForeignKey(Comite, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.nombre_actividad
+        return self.id_actividad.__str__()
 
 
 class EncuestaCliente(models.Model):

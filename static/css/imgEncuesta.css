@@ -47,7 +47,7 @@
 }
 
 .label_item {
-    opacity: 0.3;
+    opacity: 0.5;
 }
 
 .radio_item:checked + label {
@@ -58,9 +58,9 @@
 }
 
 .label_item:hover {
-    -webkit-filter: brightness(1) grayscale(.7) opacity(.7);
-       -moz-filter: brightness(1) grayscale(.7) opacity(.7);
-            filter: brightness(1) grayscale(.7) opacity(.7);
+    -webkit-filter: brightness(1) grayscale(.5) opacity(.6);
+       -moz-filter: brightness(1) grayscale(.5) opacity(.6);
+            filter: brightness(1) grayscale(.5) opacity(.6);
 }
 
 label {

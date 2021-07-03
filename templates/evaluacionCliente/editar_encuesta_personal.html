@@ -29,13 +29,13 @@
                         <input type="text" class="form-control" value="{{i.id_actividad.codigo_agencia.nombre_agencia}}" readonly>
 
                         <label style ="margin-top:20px;">Actividad</label>
-                        <input type="text" class="form-control" value="{{i.id_actividad}}" readonly>
+                        <input type="text" class="form-control" value="{{i.id_actividad.nombre_actividad}}" readonly>
 
                         <label style ="margin-top:20px;">Título Encuesta</label>
                         <input type="text" class="form-control" value="{{i.titulo_encuesta_personal}}" readonly>
                     
                         <label style ="margin-top:20px;">Descripción Pregunta</label>
-                        <input type="text" class="form-control" id="pregunta" name="pregunta" value="{{i.descripcion_pregunta}}" required>
+                        <input type="text" class="form-control" id="pregunta" name="pregunta" value="{{i.descripcion_pregunta}}" required minlength="5">
                     
                         <label style ="margin-top:20px;">Visibilidad Pregunta</label></br>
 

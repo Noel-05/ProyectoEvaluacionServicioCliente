@@ -60,7 +60,7 @@
             </div>
 
             </br>
-			<h5 align="center">Porfavor selecciona la Encuesta que quieres consultar.</h5>
+			<h5 align="center">Porfavor seleccione la Encuesta que quiere contestar.</h5>
 			</br>
 
             <div style="text-align:center; margin: 0 auto;">
@@ -88,7 +88,7 @@
 		
 			<div align="center" class="busqueda">
 				<form method="POST" action="{% url 'evaluacionCliente:consultar_encuesta_de_personal' codActividad %}">
-					{% csrf_token %} 
+					{% csrf_token %}
 					<select name="titulo_encuesta" id="titulo_encuesta" class="form-control col-4 col-sm-3 input-style" title="Selecciona la Encuesta a Consultar" required>
 						<option selected value=""> Seleccione la Encuesta </option>
 							{% for i in encuestasActividad %}
@@ -100,7 +100,68 @@
 				</form>
 			</div>
 
+    <!-- ############################################################################################################################# -->
+    <!-- PARA OBTENER EL ENLACE -->
+
+            </br></br>
+
+            <hr size="3" style="width: 70%;" color="#rgba(42, 38, 38, 0.945); ">
+            </br>
+
+            <div style="text-align:center; margin: 0 auto;">
+                <div class="container" align="center">
+                    <font face="small fonts" size="10" color="#049286">
+                        <h2 align="center" class="form-titulo" style ="margin-left: 5px; margin-top:20px; bg-success text-white">Obtener Enlace</h2>
+                    </font>
+                </div>
+            </div>
+
+            </br>
+			<h5 align="center">Si solo desea obtener el enlace de la encuesta </br> porfavor seleccionela de la lista y presione el bot&oacute;n "Enlace".</h5>
+			</br>
+
+            <div align="center" class="busqueda">
+                <form method="POST" action="{% url 'evaluacionCliente:consultar_encuesta_de_personal2' codActividad %}">{% csrf_token %}
+                    <select name="titulo_encuesta" id="titulo_encuesta" class="form-control col-4 col-sm-3 input-style" title="Selecciona la Encuesta a Consultar" required>
+                        <option selected value=""> Seleccione la Encuesta </option>
+                            {% for i in encuestasActividad %}
+                                <option value="{{i.titulo_encuesta_personal}}">{{i.titulo_encuesta_personal}}</option> 
+                            {% endfor %}
+                        </option> 
+                    </select></br>
+                    <input class="btn btn-outline-success" type = "submit" value = "Enlace" id = "ActividadBuscar"></br>
+                </form>
+            </div>
+
+            </br></br></br>
+
         {% endif %}
+
+        {% if enlace %}
+
+            <div style="text-align:center; margin: 0 auto;">
+                <div class="container" align="center">
+                    <font face="small fonts" size="10" color="#049286">
+                        <h2 align="center" class="form-titulo" style ="margin-left: 5px; margin-top:20px; bg-success text-white">Enlace de la Encuesta</h2>
+                    </font>
+                </div>
+            </div>
+
+            <div class="col-auto p-5 text-left " style="width:65%; margin:auto;">
+
+                <label>Enlace de Encuesta</label>
+                <input type="text" class="form-control" value="{{enlace}}" readonly>
+                
+                <div align="center" style ="margin-top:40px;">
+                    <button type="button" class="btn btn-outline-danger" onclick="window.location.href='{%  url 'evaluacionCliente:index' %}'">Cancelar</button>
+                </div>
+
+            </div>
+
+        {% endif %}
+
+    <!-- ############################################################################################################################# -->
+                    
 
         {% if noHayEncuestas %}
 
@@ -112,7 +173,7 @@
                             <strong>¡No se encontraron Encuestas!</strong> 
                         </h1> 
                         
-                        <h2 align="center" class="form-titulo" style ="margin-left: 5px; margin-top:20px; bg-success text-white">
+                        <h2 align="center" class="form-titulo" style ="margin-left: 5px; color:black; margin-top:20px; bg-success text-white">
                             Porfavor verifique que est&aacute; Actividad </br> posea su correspondiente encuesta.
                         </h2>
 
@@ -208,6 +269,37 @@
 
     {% endif %}
 
+    {% if mensajeNV %}
+
+        <div style="text-align:center; margin: 0 auto;">
+            <div class="container" align="center">
+                <font face="small fonts" size="10" color="#049286">
+
+                    <h1 align="center" class="form-titulo" style ="margin-left: 5px; margin-top:20px; bg-success text-white">
+                        <strong>¡No se encontraron Preguntas para est&aacute; Encuesta!</strong> 
+                    </h1> 
+                    
+                    <h2 align="center" class="form-titulo" style ="margin-left: 5px; color:black; margin-top:20px; bg-success text-white">
+                        Porfavor verifique que se hayan agregado </br> preguntas a est&aacute; Encuesta
+                    </h2>
+
+                    <div class="imgResponsiva">
+                        </br>
+                        <img src="{% static './assets/img/LogoAcopus.png' %}" style="height: 15%; width: 30%;"/> </label>
+                    </div>
+
+                    </br>
+
+                    <div class="container" align="center">
+                        <input align="center" class="btn btn-outline-success" type = "submit" value = "Inicio" id = "AgenciaBuscar" onclick="location.href='{% url 'evaluacionCliente:index' %}'">
+                    </div>
+
+                </font>
+            </div>
+        </div>
+
+    {% endif %}
+
     {% if mensaje %}
 
         <div style="text-align:center; margin: 0 auto;">
@@ -218,7 +310,7 @@
                         <strong>¡Muchas Gracias por su colaboraci&oacute;n!</strong> 
                     </h1> 
                     
-                    <h2 align="center" class="form-titulo" style ="margin-left: 5px; margin-top:20px; bg-success text-white">
+                    <h2 align="center" class="form-titulo" style ="margin-left: 5px; color:black; margin-top:20px; bg-success text-white">
                         Agradecemos el tiempo que nos brinda </br>en contestar est&aacute; encuesta.
                     </h2>
 

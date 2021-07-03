@@ -1458,28 +1458,42 @@ def consultarEncuestaCliente(request, codigoAgencia):
 
 		encuestasClientes = EncuestaCliente.objects.filter(codigo_agencia = codigo_agencia, titulo_encuesta_cliente = titulo_encuesta, visibilidad_pregunta_cliente = 'S')
 
-		i=0
-		contador = i
-		while i<1:
-			tituloEncuesta = encuestasClientes[i].titulo_encuesta_cliente
-			nombreAgencia = encuestasClientes[i].codigo_agencia.nombre_agencia
-			descripcionPregunta = encuestasClientes[i].descripcion_pregunta
-			i+=1
+		if len(encuestasClientes) > 0:
+			i=0
+			contador = i
+			while i<1:
+				tituloEncuesta = encuestasClientes[i].titulo_encuesta_cliente
+				nombreAgencia = encuestasClientes[i].codigo_agencia.nombre_agencia
+				descripcionPregunta = encuestasClientes[i].descripcion_pregunta
+				i+=1
 
-		contexto = {
-			'encuestasClientes': encuestasClientes,
-			'nombreAgencia' : nombreAgencia,
-			'tituloEncuesta' : tituloEncuesta,
-			'codigoAgencia' : codigo_agencia,
-			'descripcionPregunta' : descripcionPregunta,
-			'contador' : contador,
-		}
-			
-		return render(
-			request, 
-			'evaluacionCliente/contestar_encuesta.html', 
-			contexto
-			)
+			contexto = {
+				'encuestasClientes': encuestasClientes,
+				'nombreAgencia' : nombreAgencia,
+				'tituloEncuesta' : tituloEncuesta,
+				'codigoAgencia' : codigo_agencia,
+				'descripcionPregunta' : descripcionPregunta,
+				'contador' : contador,
+			}
+				
+			return render(
+				request, 
+				'evaluacionCliente/contestar_encuesta.html', 
+				contexto
+				)
+		
+		else:
+			mensajeNV = "PreguntaNV"
+			contexto = {
+				'codigoAgencia' : codigo_agencia,
+				'mensajeNV' : mensajeNV,
+			}
+				
+			return render(
+				request, 
+				'evaluacionCliente/contestar_encuesta.html', 
+				contexto
+				)
 
 
 # Contestar la Pregunta de esa encuesta
@@ -1783,6 +1797,89 @@ def consultarEncuestaDePersonal(request, idActividad):
 		encuestas = EncuestaPersonal.objects.filter(id_actividad = codigo_actividad)
 		actividades = Actividad.objects.all()
 
+		if len(encuestasPersonal) > 0:
+			i=0
+			contador = i
+			while i<1:
+				tituloEncuesta = encuestasPersonal[i].titulo_encuesta_personal
+				nombreAgencia = encuestasPersonal[i].id_actividad.codigo_agencia.nombre_agencia
+				nombreActividad = encuestasPersonal[i].id_actividad.nombre_actividad
+				descripcionPregunta = encuestasPersonal[i].descripcion_pregunta
+				i+=1
+
+			contexto = {
+				'encuestasPersonal': encuestasPersonal,
+				'actividades': actividades,
+				'encuestas': encuestas,
+				'nombreAgencia' : nombreAgencia,
+				'nombreActividad' : nombreActividad,
+				'tituloEncuesta' : tituloEncuesta,
+				'codigoActividad' : codigo_actividad,
+				'descripcionPregunta' : descripcionPregunta,
+				'contador' : contador,
+			}
+				
+			return render(
+				request, 
+				'evaluacionCliente/contestar_encuesta_personal.html', 
+				contexto
+				)
+
+		else:
+			mensajeNV = "PreguntaNV"
+			contexto = {
+				'actividades': actividades,
+				'encuestas': encuestas,
+				'codigoActividad' : codigo_actividad,
+				'mensajeNV' : mensajeNV,
+			}
+				
+			return render(
+				request, 
+				'evaluacionCliente/contestar_encuesta_personal.html', 
+				contexto
+				)
+
+
+
+# Obtener el enlace de la encuesta
+def consultarEncuestaDePersonal2(request, idActividad):
+	if request.method == 'POST':
+		titulo_encuesta = request.POST['titulo_encuesta']
+		codigo_actividad = idActividad
+
+		encuestasPersonal = EncuestaPersonal.objects.filter(id_actividad = codigo_actividad, titulo_encuesta_personal = titulo_encuesta, visibilidad_pregunta_personal = 'S')
+		
+		encuestas = EncuestaPersonal.objects.filter(id_actividad = codigo_actividad)
+		actividades = Actividad.objects.all()
+
+		enlace = "http://localhost:8000/evaluacionCliente/encuestaPersonal/Encuesta22/" + codigo_actividad + "/" + titulo_encuesta
+		 
+		contexto = {
+			'actividades': actividades,
+			'encuestas': encuestas,
+			'codigoActividad' : codigo_actividad,
+			'enlace' : enlace,
+		}
+			
+		return render(
+			request, 
+			'evaluacionCliente/contestar_encuesta_personal.html', 
+			contexto
+			)
+
+
+# Contestar la encuesta por medio del enlace
+def consultarEncuestaDePersonal22(request, idActividad, tituloEncuestaPersonal):
+	codigo_actividad = idActividad
+	titulo_encuesta = tituloEncuestaPersonal
+
+	encuestasPersonal = EncuestaPersonal.objects.filter(id_actividad = codigo_actividad, titulo_encuesta_personal = titulo_encuesta, visibilidad_pregunta_personal = 'S')
+	
+	encuestas = EncuestaPersonal.objects.filter(id_actividad = codigo_actividad)
+	actividades = Actividad.objects.all()
+
+	if len(encuestasPersonal) > 0:
 		i=0
 		contador = i
 		while i<1:
@@ -1802,6 +1899,21 @@ def consultarEncuestaDePersonal(request, idActividad):
 			'codigoActividad' : codigo_actividad,
 			'descripcionPregunta' : descripcionPregunta,
 			'contador' : contador,
+		}
+			
+		return render(
+			request, 
+			'evaluacionCliente/contestar_encuesta_personal.html', 
+			contexto
+			)
+
+	else:
+		mensajeNV = "PreguntaNV"
+		contexto = {
+			'actividades': actividades,
+			'encuestas': encuestas,
+			'codigoActividad' : codigo_actividad,
+			'mensajeNV' : mensajeNV,
 		}
 			
 		return render(

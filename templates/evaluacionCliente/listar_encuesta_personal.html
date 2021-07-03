@@ -66,6 +66,29 @@
 
 			<h5>Porfavor selecciona la Encuesta que quieres consultar.</h5>
 			</br>
+
+			<div class="table-responsive" style="width:50%; display:inline-block;">
+				<table class="table table-hover text-center">
+					
+					<thead>
+						<tr>
+							<th class="text-center" style="color:#049286"><strong>Agencia:</strong></th>
+							{% for i in nombreActividad %}
+								<th class="text-center"><i>{{ i.codigo_agencia.nombre_agencia }}</i></th>
+							{% endfor %}
+						</tr>
+                        <tr>
+							<th class="text-center" style="color:#049286"><strong>Actividad:</strong></th>
+							{% for i in nombreActividad %}
+								<th class="text-center"><i>{{ i.nombre_actividad }}</i></th>
+							{% endfor %}
+						</tr>
+					</thead>
+
+				</table>
+			</div>
+
+			</br></br>
 		
 			<div align="center" class="busqueda">
 				<form method="POST" action="{% url 'evaluacionCliente:consultar_encuesta_personal' codActividad %}">
@@ -79,29 +102,6 @@
 					</select></br>
 					<input class="btn btn-outline-success" type = "submit" value = "Buscar" id = "ActividadBuscar"></br>
 				</form>
-			</div>
-
-			</br>
-
-			<div class="table-responsive" style="width:50%; display:inline-block;">
-				<table class="table table-hover text-center">
-					
-					<thead>
-						<tr>
-							<th class="text-center"><strong>Agencia:</strong></th>
-							{% for i in nombreActividad %}
-								<th class="text-center"><i>{{ i.codigo_agencia.nombre_agencia }}</i></th>
-							{% endfor %}
-						</tr>
-                        <tr>
-							<th class="text-center"><strong>Actividad:</strong></th>
-							{% for i in nombreActividad %}
-								<th class="text-center"><i>{{ i.nombre_actividad }}</i></th>
-							{% endfor %}
-						</tr>
-					</thead>
-
-				</table>
 			</div>
 
 			</br></br></br>
@@ -118,13 +118,13 @@
                         
                         <thead>
                             <tr>
-                                <th class="text-center"><strong>Agencia:</strong></th>
+                                <th class="text-center" style="color:#049286"><strong>Agencia:</strong></th>
                                 {% for i in nombreActividad %}
                                     <th class="text-center"><i>{{ i.codigo_agencia.nombre_agencia }}</i></th>
                                 {% endfor %}
                             </tr>
                             <tr>
-                                <th class="text-center"><strong>Actividad:</strong></th>
+                                <th class="text-center" style="color:#049286"><strong>Actividad:</strong></th>
                                 {% for i in nombreActividad %}
                                     <th class="text-center"><i>{{ i.nombre_actividad }}</i></th>
                                 {% endfor %}
@@ -154,9 +154,9 @@
 					
 					<thead>
 						<tr>
-							<th class="text-center">Actividad</th>
-							<th class="text-center">Título Encuesta</th>
-							<th class="text-center">Agencia</th>
+							<th class="text-center" style="color:#049286">Actividad</th>
+							<th class="text-center" style="color:#049286">Título Encuesta</th>
+							<th class="text-center" style="color:#049286">Agencia</th>
 						</tr>
 					</thead>
 

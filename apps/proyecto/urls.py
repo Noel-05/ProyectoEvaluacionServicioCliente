@@ -90,6 +90,8 @@ urlpatterns = [
     path('evaluacionCliente/contestar_encuesta_personal/', contestarEncuestaPersonal, name='contestar_encuesta_personal'),
     path('evaluacionCliente/encuestaPersonal/Actividad/', consultarActividadEncuestaDePersonal, name='consultar_actividad_encuesta_de_personal'),
     path('evaluacionCliente/encuestaPersonal/Encuesta/<str:idActividad>', consultarEncuestaDePersonal, name='consultar_encuesta_de_personal'),
+    path('evaluacionCliente/encuestaPersonal/Encuesta2/<str:idActividad>', consultarEncuestaDePersonal2, name='consultar_encuesta_de_personal2'),
+    path('evaluacionCliente/encuestaPersonal/Encuesta22/<str:idActividad>/<str:tituloEncuestaPersonal>', consultarEncuestaDePersonal22, name='consultar_encuesta_de_personal22'),
     path('evaluacionCliente/encuestaPersonal/Respuesta/<str:idActividad>/<str:tituloEncuesta>/<str:descripcionPregunta>/<int:contador>/', contestarEncuestaDePersonal, name='contestar_encuesta_de_personal'),
 
     path('evaluacionCliente/Resultados/listar_actividad/', login_required(listarRespuestasEncuestaPersonal), name='listar_respuestas_encuesta_personal'),

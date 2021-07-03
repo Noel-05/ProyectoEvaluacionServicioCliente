@@ -62,7 +62,7 @@
         </div>
 
         </br>
-        <h5 align="center">Porfavor seleccione la Encuesta.</h5>
+        <h5 align="center">Porfavor seleccione la Encuesta que quiere contestar.</h5>
         </br>
 
         <div style="text-align:center; margin: 0 auto;">
@@ -112,7 +112,7 @@
                             <strong>¡No se encontraron Encuestas!</strong> 
                         </h1> 
                         
-                        <h2 align="center" class="form-titulo" style ="margin-left: 5px; margin-top:20px; bg-success text-white">
+                        <h2 align="center" class="form-titulo" style ="margin-left: 5px; color:black; margin-top:20px; bg-success text-white">
                             Porfavor verifique que est&aacute; Agencia </br> posea sus correspondientes encuestas.
                         </h2>
 
@@ -208,6 +208,37 @@
 
     {% endif %}
 
+    {% if mensajeNV %}
+
+        <div style="text-align:center; margin: 0 auto;">
+            <div class="container" align="center">
+                <font face="small fonts" size="10" color="#049286">
+
+                    <h1 align="center" class="form-titulo" style ="margin-left: 5px; margin-top:20px; bg-success text-white">
+                        <strong>¡No se encontraron Preguntas para est&aacute; Encuesta!</strong> 
+                    </h1> 
+                    
+                    <h2 align="center" class="form-titulo" style ="margin-left: 5px; color:black; margin-top:20px; bg-success text-white">
+                        Porfavor verifique que se hayan agregado </br> preguntas a est&aacute; Encuesta
+                    </h2>
+
+                    <div class="imgResponsiva">
+                        </br>
+                        <img src="{% static './assets/img/LogoAcopus.png' %}" style="height: 15%; width: 30%;"/> </label>
+                    </div>
+
+                    </br>
+
+                    <div class="container" align="center">
+                        <input align="center" class="btn btn-outline-success" type = "submit" value = "Inicio" id = "AgenciaBuscar" onclick="location.href='{% url 'evaluacionCliente:index' %}'">
+                    </div>
+
+                </font>
+            </div>
+        </div>
+
+    {% endif %}
+
     {% if mensaje %}
 
         <div style="text-align:center; margin: 0 auto;">
@@ -218,7 +249,7 @@
                         <strong>¡Muchas Gracias por su colaboraci&oacute;n!</strong> 
                     </h1> 
                     
-                    <h2 align="center" class="form-titulo" style ="margin-left: 5px; margin-top:20px; bg-success text-white">
+                    <h2 align="center" class="form-titulo" style ="margin-left: 5px; color:black; margin-top:20px; bg-success text-white">
                         Agradecemos el tiempo que nos brinda </br>en contestar est&aacute; encuesta.
                     </h2>
 
