@@ -96,4 +96,4 @@ class Empleado(models.Model):
     apellidos = models.CharField('Apellidos', max_length=100,blank = False, null = False)
     
     def __str__(self):
-        return self.id_empleado.__str__() + ' | '+ self.nombres.__str__() + ' '+ self.apellidos.__str__()
+        return self.nombres.__str__() + ' '+ self.apellidos.__str__()

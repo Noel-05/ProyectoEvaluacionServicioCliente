@@ -23,12 +23,11 @@
 
 		{% if actividades %}
 		    <div class="table-responsive">
-				<table id="bootstrapdatatable" class="table table-hover">
+				<table id="bootstrapdatatable" class="table table-hover" style="table-layout: fixed;">
 					
 					<thead>
 						<tr>
 							<th>Nombre Actividad</th>
-							<th>Descripci&oacute;n Actividad</th>	
 							<th>Fecha Realizaci&oacute;n </th>	
 							<th>Agencia Responsable</th>	
 							<th>Departamento Responsable</th>	
@@ -41,14 +40,13 @@
 						{% for actividad in actividades %}
 							<tr>
 								<td>{{ actividad.nombre_actividad }}</td>
-								<td>{{ actividad.descripcion_actividad }}</td>	
 								<td>{{ actividad.fecha_realizacion }}</td>	
 								<td>{{ actividad.codigo_agencia }}</td>	
 								<td>{{ actividad.codigo_departamento }}</td>	
 								<td>{{ actividad.id_comite }}</td>	
 								<td>
-									<button type="button" class="btn btn-primary btn-sm tableButton"  onclick="location.href='{% url 'evaluacionCliente:editar_actividad' actividad.id_actividad %}'" style="color:white;"> EDITAR </button>
-									<button type="button" class="btn btn-danger tableButton  btn-sm" data-toggle="modal" data-target="#a{{ actividad.id_actividad }}">ELIMINAR</button>
+									<button type="button" class="btn btn-primary btn-sm tableButton"  onclick="location.href='{% url 'evaluacionCliente:editar_actividad' actividad.id_actividad %}'" style="color:white;"> Editar </button>
+									<button type="button" class="btn btn-danger tableButton  btn-sm" data-toggle="modal" data-target="#a{{ actividad.id_actividad }}">Eliminar</button>
 								</td>					
 							</tr>
 

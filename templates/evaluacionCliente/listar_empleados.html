@@ -74,12 +74,11 @@
     {% endif %}
 
 		    <div class="table-responsive">
-				<table id="bootstrapdatatable" class="table table-hover">
+				<table id="bootstrapdatatable" class="table table-hover" style="table-layout: fixed;">
 					
 					<thead>
 						<tr>
 							<th>Nombres</th>
-							<th>Apellidos</th>	
 							<th>Agencia</th>	
 							<th>Departamento</th>	
 							<th>C&oacute;mite</th>	
@@ -94,17 +93,16 @@
 					{% for empage in empleados_filtro %}
 
 							<tr>
-								<td>{{ empage.nombres }}</td>
-								<td>{{ empage.apellidos }}</td>
+								<td>{{ empage.nombres}}<br>{{ emp.apellidos }}</td>
 								<td>{{ empage.codigo_agencia }}</td>
 								<td>{{ empage.codigo_departamento }}</td>
 								<td>{{ empage.id_comite }}</td>
 								<td>{{ empage.email }}</td>
 
 								<td>
-									<button type="button" class="btn btn-primary btn-sm tableButton"  onclick="location.href='{% url 'evaluacionCliente:editar_empleado' empage.id_empleado %}'" style="color:white;"> EDITAR </button>
+									<button type="button" class="btn btn-primary btn-sm tableButton"  onclick="location.href='{% url 'evaluacionCliente:editar_empleado' empage.id_empleado %}'" style="color:white;"> Editar </button>
 
-									<button type="button" class="btn btn-danger tableButton  btn-sm" data-toggle="modal" data-target="#a{{ empage.id_empleado }}">ELIMINAR</button>
+									<button type="button" class="btn btn-danger tableButton  btn-sm" data-toggle="modal" data-target="#a{{ empage.id_empleado }}">Eliminar</button>
 								</td>
 							</tr>
 
@@ -139,17 +137,16 @@
 
 						{% for emp in empleados %}
 							<tr>
-								<td>{{ emp.nombres }}</td>
-								<td>{{ emp.apellidos }}</td>
+								<td>{{ emp.nombres }} <br> {{ emp.apellidos }}</td>
 								<td>{{ emp.codigo_agencia }}</td>
 								<td>{{ emp.codigo_departamento }}</td>
 								<td>{{ emp.id_comite }}</td>
 								<td>{{ emp.email }}</td>
 
 								<td>
-									<button type="button" class="btn btn-primary btn-sm tableButton"  onclick="location.href='{% url 'evaluacionCliente:editar_empleado' emp.id_empleado %}'" style="color:white;"> EDITAR </button>
+									<button type="button" class="btn btn-primary btn-sm tableButton"  onclick="location.href='{% url 'evaluacionCliente:editar_empleado' emp.id_empleado %}'" style="color:white;"> Editar </button>
 
-									<button type="button" class="btn btn-danger tableButton  btn-sm" data-toggle="modal" data-target="#a{{ emp.id_empleado }}">ELIMINAR</button>
+									<button type="button" class="btn btn-danger tableButton  btn-sm" data-toggle="modal" data-target="#a{{ emp.id_empleado }}">Eliminar</button>
 								</td>
 							</tr>
 
