@@ -89,14 +89,18 @@
 			<div align="center" class="busqueda">
 				<form method="POST" action="{% url 'evaluacionCliente:consultar_encuesta_de_personal' codActividad %}">
 					{% csrf_token %}
+
 					<select name="titulo_encuesta" id="titulo_encuesta" class="form-control col-4 col-sm-3 input-style" title="Selecciona la Encuesta a Consultar" required>
 						<option selected value=""> Seleccione la Encuesta </option>
-							{% for i in encuestasActividad %}
+							
+                            {% for i in encuestasActividad %}
 								<option value="{{i.titulo_encuesta_personal}}">{{i.titulo_encuesta_personal}}</option> 
 							{% endfor %}
-						</option> 
+						
+                        </option> 
 					</select></br>
-					<input class="btn btn-outline-success" type = "submit" value = "Buscar" id = "ActividadBuscar"></br>
+					
+                    <input class="btn btn-outline-success" type = "submit" value = "Buscar" id = "ActividadBuscar"></br>
 				</form>
 			</div>
 
@@ -151,9 +155,14 @@
 
                 <label>Enlace de Encuesta</label>
                 <input type="text" class="form-control" value="{{enlace}}" readonly>
-                
-                <div align="center" style ="margin-top:40px;">
-                    <button type="button" class="btn btn-outline-danger" onclick="window.location.href='{%  url 'evaluacionCliente:index' %}'">Cancelar</button>
+
+                <div align="center" class="busqueda">
+                    <form method="POST" action="{% url 'evaluacionCliente:consultar_actividad_encuesta_de_personal' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="codigo_actividad" class="form-control" value="{{codigoActividad}}">
+                        </br>
+                        <input class="btn btn-outline-danger" type = "submit" value = "Cancelar"></br>
+                    </form>
                 </div>
 
             </div>

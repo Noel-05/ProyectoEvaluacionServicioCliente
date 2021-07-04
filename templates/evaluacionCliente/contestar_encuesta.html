@@ -100,9 +100,74 @@
             </form>
         </div>
 
+    <!-- ############################################################################################################################# -->
+    <!-- PARA OBTENER EL ENLACE -->
+
+        </br></br>
+
+        <hr size="3" style="width: 70%;" color="#rgba(42, 38, 38, 0.945); ">
+        </br>
+
+        <div style="text-align:center; margin: 0 auto;">
+            <div class="container" align="center">
+                <font face="small fonts" size="10" color="#049286">
+                    <h2 align="center" class="form-titulo" style ="margin-left: 5px; margin-top:20px; bg-success text-white">Obtener Enlace</h2>
+                </font>
+            </div>
+        </div>
+
+        </br>
+        <h5 align="center">Si solo desea obtener el enlace de la encuesta </br> porfavor seleccionela de la lista y presione el bot&oacute;n "Enlace".</h5>
+        </br>
+
+        <div align="center" class="busqueda">
+            <form method="POST" action="{% url 'evaluacionCliente:consultar_encuesta2' codAgencia %}">{% csrf_token %}
+                <select name="titulo_encuesta" id="titulo_encuesta" class="form-control col-4 col-sm-3 input-style" title="Selecciona la Encuesta a Consultar" required>
+                    <option selected value=""> Seleccione la Encuesta </option>
+                        {% for i in encuestasAgencia %}
+                            <option value="{{i.titulo_encuesta_cliente}}">{{i.titulo_encuesta_cliente}}</option> 
+                        {% endfor %}
+                    </option> 
+                </select></br>
+                <input class="btn btn-outline-success" type = "submit" value = "Enlace" id = "ActividadBuscar"></br>
+            </form>
+        </div>
+
+        </br></br></br>
+
     {% endif %}
 
-    {% if noHayEncuestas %}
+    {% if enlace %}
+
+        <div style="text-align:center; margin: 0 auto;">
+            <div class="container" align="center">
+                <font face="small fonts" size="10" color="#049286">
+                    <h2 align="center" class="form-titulo" style ="margin-left: 5px; margin-top:20px; bg-success text-white">Enlace de la Encuesta</h2>
+                </font>
+            </div>
+        </div>
+
+        <div class="col-auto p-5 text-left " style="width:65%; margin:auto;">
+
+            <label>Enlace de Encuesta</label>
+            <input type="text" class="form-control" value="{{enlace}}" readonly>
+
+            <div align="center" class="busqueda">
+                <form method="POST" action="{% url 'evaluacionCliente:consultar_agencia_encuesta' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="codigo_agencia" class="form-control" value="{{codigoAgencia}}">
+                    </br>
+                    <input class="btn btn-outline-danger" type = "submit" value = "Cancelar"></br>
+                </form>
+            </div>
+
+        </div>
+
+    {% endif %}
+
+    <!-- ############################################################################################################################# -->
+                    
+        {% if noHayEncuestas %}
 
             <div style="text-align:center; margin: 0 auto;">
                 <div class="container" align="center">

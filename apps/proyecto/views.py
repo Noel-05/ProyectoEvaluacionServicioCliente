@@ -1496,6 +1496,73 @@ def consultarEncuestaCliente(request, codigoAgencia):
 				)
 
 
+# Obtener el enlace de la encuesta
+def consultarEncuestaCliente2(request, codigoAgencia):
+	if request.method == 'POST':
+		titulo_encuesta = request.POST['titulo_encuesta']
+		codigo_agencia = codigoAgencia
+
+		encuestasClientes = EncuestaCliente.objects.filter(codigo_agencia = codigo_agencia, titulo_encuesta_cliente = titulo_encuesta, visibilidad_pregunta_cliente = 'S')
+
+		enlace = "http://localhost:8000/evaluacionCliente/encuesta/Encuesta22/" + codigo_agencia + "/" + titulo_encuesta
+
+		contexto = {
+			'codigoAgencia' : codigo_agencia,
+			'enlace' : enlace,
+		}
+			
+		return render(
+			request, 
+			'evaluacionCliente/contestar_encuesta.html', 
+			contexto
+			)
+
+
+# Contestar la encuesta por medio del enlace
+def consultarEncuestaCliente22(request, codigoAgencia, tituloEncuesta):
+	codigo_agencia = codigoAgencia		
+	titulo_encuesta = tituloEncuesta
+
+	encuestasClientes = EncuestaCliente.objects.filter(codigo_agencia = codigo_agencia, titulo_encuesta_cliente = titulo_encuesta, visibilidad_pregunta_cliente = 'S')
+
+	if len(encuestasClientes) > 0:
+		i=0
+		contador = i
+		while i<1:
+			tituloEncuesta = encuestasClientes[i].titulo_encuesta_cliente
+			nombreAgencia = encuestasClientes[i].codigo_agencia.nombre_agencia
+			descripcionPregunta = encuestasClientes[i].descripcion_pregunta
+			i+=1
+
+		contexto = {
+			'encuestasClientes': encuestasClientes,
+			'nombreAgencia' : nombreAgencia,
+			'tituloEncuesta' : tituloEncuesta,
+			'codigoAgencia' : codigo_agencia,
+			'descripcionPregunta' : descripcionPregunta,
+			'contador' : contador,
+		}
+			
+		return render(
+			request, 
+			'evaluacionCliente/contestar_encuesta.html', 
+			contexto
+			)
+	
+	else:
+		mensajeNV = "PreguntaNV"
+		contexto = {
+			'codigoAgencia' : codigo_agencia,
+			'mensajeNV' : mensajeNV,
+		}
+			
+		return render(
+			request, 
+			'evaluacionCliente/contestar_encuesta.html', 
+			contexto
+			)
+
+
 # Contestar la Pregunta de esa encuesta
 def contestarEncuestaCliente(request, codigoAgencia, tituloEncuesta, descripcionPregunta, contador):
 	if request.method == 'POST':
@@ -1839,7 +1906,6 @@ def consultarEncuestaDePersonal(request, idActividad):
 				'evaluacionCliente/contestar_encuesta_personal.html', 
 				contexto
 				)
-
 
 
 # Obtener el enlace de la encuesta

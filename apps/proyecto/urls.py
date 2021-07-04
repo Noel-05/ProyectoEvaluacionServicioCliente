@@ -68,6 +68,8 @@ urlpatterns = [
     path('evaluacionCliente/contestar_encuesta/', contestarEncuesta, name='contestar_encuesta'),
     path('evaluacionCliente/encuesta/Agencia/', consultarAgenciaEncuesta, name='consultar_agencia_encuesta'),
     path('evaluacionCliente/encuesta/Encuesta/<str:codigoAgencia>', consultarEncuestaCliente, name='consultar_encuesta_cliente'),
+    path('evaluacionCliente/encuesta/Encuesta2/<str:codigoAgencia>', consultarEncuestaCliente2, name='consultar_encuesta2'),
+    path('evaluacionCliente/encuesta/Encuesta22/<str:codigoAgencia>/<str:tituloEncuesta>', consultarEncuestaCliente22, name='consultar_encuesta22'),
     path('evaluacionCliente/encuesta/Respuesta/<str:codigoAgencia>/<str:tituloEncuesta>/<str:descripcionPregunta>/<int:contador>/', contestarEncuestaCliente, name='contestar_encuesta_cliente'),
 
     path('evaluacionCliente/Resultados/listar_agencia/', login_required(listarRespuestasEncuesta), name='listar_respuestas_encuesta'),
@@ -78,7 +80,7 @@ urlpatterns = [
     #URLs para Encuesta Personal
     path('evaluacionCliente/listar_encuesta_personal/', login_required(listarEncuestaPersonal), name='listar_encuesta_personal'),
     path('evaluacionCliente/listar_encuesta_personal/Actividad/', login_required(consultarActividadPersonal), name='consultar_actividad_personal'),
-    path('evaluacionCliente/listar_encuesta_personal/Agencia2/<str:idActividad>/', login_required(consultarActividad2Personal), name='consultar_actividad2_personal'),
+    path('evaluacionCliente/listar_encuesta_personal/Actividad2/<str:idActividad>/', login_required(consultarActividad2Personal), name='consultar_actividad2_personal'),
     path('evaluacionCliente/listar_encuesta_personal/Encuesta/<str:idActividad>', login_required(consultarEncuestaPersonal), name='consultar_encuesta_personal'),
     path('evaluacionCliente/listar_encuesta_personal/Encuesta2/<str:idActividad>/<str:tituloEncuesta>/', login_required(consultarEncuesta2Personal), name='consultar_encuesta2_personal'),
     path('evaluacionCliente/listar_encuesta_personal/Preguntas/<str:idActividad>/<str:tituloEncuesta>/', login_required(AgregarPreguntasEncuestaPersonal), name='agregar_preguntas_encuesta_personal'),
