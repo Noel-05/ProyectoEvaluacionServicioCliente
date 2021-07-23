@@ -568,6 +568,7 @@ def exportarEmpleados(request, agencia, departamento, comite):
 def enviarEmail(request, agencia, departamento, comite):
 	if request.method == 'POST':
 		actividad = request.POST['activity']
+		cuerpoMensaje = request.POST['bodyCorreo']
 
 		filtro_actividad = Actividad.objects.filter(id_actividad=actividad)
 
@@ -627,7 +628,7 @@ def enviarEmail(request, agencia, departamento, comite):
 				mailServer.login(settings.EMAIL_HOST_USER, settings.EMAIL_HOST_PASSWORD)
 				print('...Conectado')
 
-				# Construimos el mensaje simple
+				# Construimos el mensaje
 				mensaje = MIMEMultipart()
 				mensaje['From']= settings.EMAIL_HOST_USER
 				mensaje['To']= ite.email
@@ -639,6 +640,7 @@ def enviarEmail(request, agencia, departamento, comite):
 					'nombres': ite.nombres,
 					'actividad': nombreAc,
 					'fecha': fecha,
+					'cuerpoMensaje': cuerpoMensaje,
 				}
 
 				content = render_to_string('accounts/plantilla_correo.html', context)

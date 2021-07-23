@@ -76,9 +76,9 @@ class ActividadForm(forms.ModelForm):
 	nombre_actividad = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
 	descripcion_actividad = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))   
 	fecha_realizacion = forms.DateField(widget=forms.TextInput(attrs={'placeholder': 'Fecha de Inicio', 'autocomplete': 'off', 'type':'date', 'min':'1940-01-01', 'class': 'form-control'})) 
-	codigo_agencia= forms.ModelChoiceField(queryset=Agencia.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
-	codigo_departamento= forms.ModelChoiceField(queryset=Departamento.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
-	id_comite= forms.ModelChoiceField(queryset=Comite.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
+	codigo_agencia= forms.ModelChoiceField(queryset=Agencia.objects.all(), empty_label="Seleccione una Agencia de la lista", widget=forms.Select(attrs={'class': 'form-control'}))
+	codigo_departamento= forms.ModelChoiceField(queryset=Departamento.objects.all(), empty_label="Seleccione un Departamento de la lista", widget=forms.Select(attrs={'class': 'form-control'}))
+	id_comite= forms.ModelChoiceField(queryset=Comite.objects.all(), empty_label="Seleccione un Comite de la lista", widget=forms.Select(attrs={'class': 'form-control'}))
 #----------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -109,9 +109,9 @@ class EmpleadoForm(forms.ModelForm):
 		
 		}
 
-	codigo_agencia= forms.ModelChoiceField(queryset=Agencia.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
-	codigo_departamento= forms.ModelChoiceField(queryset=Departamento.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
-	id_comite= forms.ModelChoiceField(queryset=Comite.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
+	codigo_agencia= forms.ModelChoiceField(queryset=Agencia.objects.all(), empty_label="Seleccione una Agencia de la lista", widget=forms.Select(attrs={'class': 'form-control'}))
+	codigo_departamento= forms.ModelChoiceField(queryset=Departamento.objects.all(), empty_label="Seleccione un Departamento de la lista",widget=forms.Select(attrs={'class': 'form-control'}))
+	id_comite= forms.ModelChoiceField(queryset=Comite.objects.all(), empty_label="Seleccione un Comite de la lista",widget=forms.Select(attrs={'class': 'form-control'}))
 
 	def clean_nombres(self):
 		nombres=self.cleaned_data.get('nombres')

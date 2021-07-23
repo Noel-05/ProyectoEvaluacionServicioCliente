@@ -9,7 +9,7 @@ class Agencia(models.Model):
     direccion_agencia = models.CharField(max_length=250, null=True, blank=True)
 
     def __str__(self):
-        return self.codigo_agencia
+        return self.nombre_agencia
 
 
 class Departamento(models.Model):
