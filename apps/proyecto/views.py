@@ -13,6 +13,7 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from datetime import datetime
 
+import json
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -2028,6 +2029,8 @@ def consultarRespuestasEncuestaCliente(request, codigoAgencia):
 			#for i in lista:
 			#	print(i.get('pregunta'))
 			
+			mylist = json.dumps(lista)
+
 			contexto = {
 				'respuestaEncuestasClientes': respuestaEncuestasClientes,
 				'agencias': agencias,
@@ -2036,6 +2039,7 @@ def consultarRespuestasEncuestaCliente(request, codigoAgencia):
 				'tituloEncuesta' : tituloEncuesta,
 				'codigoAgencia' : codigo_agencia,
 				'lista': lista,
+				'mylist': mylist,
 			}
 				
 			return render(
@@ -2059,6 +2063,218 @@ def consultarRespuestasEncuestaCliente(request, codigoAgencia):
 				contexto
 				)
 
+#ROBERTOOOOOOOOOO
+
+def reporteRespuestasEncuestaCliente(request):
+	if request.method == 'GET':
+		nombreAgencia = request.GET['nombreAgencia']
+		tituloEncuesta = request.GET['tituloEncuesta']
+
+		agencia = Agencia.objects.filter(nombre_agencia = nombreAgencia)
+
+		for cod in agencia:
+			if cod.nombre_agencia == nombreAgencia:
+				codigo_agencia = cod.codigo_agencia
+
+		#respuestaEncuestasClientes = EncuestaCliente.objects.filter(codigo_agencia = codigo_agencia, titulo_encuesta_cliente = titulo_encuesta)
+		respuestaEncuestasClientes = RespuestaEncuestaCliente.objects.filter(encuesta_id__codigo_agencia = codigo_agencia, encuesta_id__titulo_encuesta_cliente= tituloEncuesta)
+
+		encuestas = EncuestaCliente.objects.filter(codigo_agencia = codigo_agencia)
+		agencias = Agencia.objects.all()
+
+		if len(respuestaEncuestasClientes) > 0:
+			i=0
+			while i<1:
+				tituloEncuesta = respuestaEncuestasClientes[i].encuesta.titulo_encuesta_cliente
+				nombreAgencia = respuestaEncuestasClientes[i].encuesta.codigo_agencia.nombre_agencia
+				i+=1
+
+
+			# Para realizar el conteo
+			lista = []
+			dic = {}
+
+			i=0
+			while i < len(respuestaEncuestasClientes):
+				excelente = 0
+				regular = 0
+				pesimo = 0
+				if i == 0:
+					pregunta = respuestaEncuestasClientes[i].encuesta.descripcion_pregunta
+					
+					j=0
+					while j < len(respuestaEncuestasClientes):
+						if respuestaEncuestasClientes[j].encuesta.descripcion_pregunta == pregunta:
+							if respuestaEncuestasClientes[j].respuesta_cliente == 1:
+								excelente = excelente + 1
+							elif respuestaEncuestasClientes[j].respuesta_cliente == 2:
+								regular = regular + 1
+							else:
+								pesimo = pesimo + 1
+						j+=1
+					
+					dic = {'pregunta': pregunta, 'excelente': excelente, 'regular': regular, 'pesimo': pesimo}
+					lista.append(dic)
+					i+=1
+				
+				else:
+					pregunta = respuestaEncuestasClientes[i].encuesta.descripcion_pregunta
+					preguntaAnterior = respuestaEncuestasClientes[(i-1)].encuesta.descripcion_pregunta
+					
+					if pregunta == preguntaAnterior:
+						i+=1
+					
+					else:
+						excelente = 0
+						regular = 0
+						pesimo = 0
+						j=0
+						while j < len(respuestaEncuestasClientes):
+							if respuestaEncuestasClientes[j].encuesta.descripcion_pregunta == pregunta:
+								if respuestaEncuestasClientes[j].respuesta_cliente == 1:
+									excelente = excelente + 1
+								elif respuestaEncuestasClientes[j].respuesta_cliente == 2:
+									regular = regular + 1
+								else:
+									pesimo = pesimo + 1
+							j+=1
+						
+						dic = {'pregunta': pregunta, 'excelente': excelente, 'regular': regular, 'pesimo': pesimo}
+						lista.append(dic)
+						i+=1
+
+		context = {
+			'nombreAgencia': nombreAgencia,
+			'tituloEncuesta': tituloEncuesta,
+			'lista': lista,
+			'codigo_agencia': codigo_agencia,
+		}
+
+		template = get_template('reportes/reporteRespuestasEncuestaCliente.html')
+
+		html = template.render(context)
+
+		response = HttpResponse(content_type = 'application/pdf')
+		response['Content-Disposition'] = 'inline; filename="ReporteRespuestasEncuestaCliente.pdf"'
+
+		pisa_status = pisa.CreatePDF(html, dest = response, link_callback=link_callback)
+	    
+		if pisa_status.err:
+			return HttpResponse('We had some errors <pre>'+ html + '</pre>')
+
+		return response
+
+def exportarRespuestasEncuestaCliente(request):
+	if request.method == 'GET':
+		nombreAgencia = request.GET['nombreAgencia']
+		tituloEncuesta = request.GET['tituloEncuesta']
+
+		agencia = Agencia.objects.filter(nombre_agencia = nombreAgencia)
+
+		for cod in agencia:
+			if cod.nombre_agencia == nombreAgencia:
+				codigo_agencia = cod.codigo_agencia
+
+		#respuestaEncuestasClientes = EncuestaCliente.objects.filter(codigo_agencia = codigo_agencia, titulo_encuesta_cliente = titulo_encuesta)
+		respuestaEncuestasClientes = RespuestaEncuestaCliente.objects.filter(encuesta_id__codigo_agencia = codigo_agencia, encuesta_id__titulo_encuesta_cliente= tituloEncuesta)
+
+		encuestas = EncuestaCliente.objects.filter(codigo_agencia = codigo_agencia)
+		agencias = Agencia.objects.all()
+
+		if len(respuestaEncuestasClientes) > 0:
+			i=0
+			while i<1:
+				tituloEncuesta = respuestaEncuestasClientes[i].encuesta.titulo_encuesta_cliente
+				nombreAgencia = respuestaEncuestasClientes[i].encuesta.codigo_agencia.nombre_agencia
+				i+=1
+
+
+			# Para realizar el conteo
+			lista = []
+			dic = {}
+
+			i=0
+			while i < len(respuestaEncuestasClientes):
+				excelente = 0
+				regular = 0
+				pesimo = 0
+				if i == 0:
+					pregunta = respuestaEncuestasClientes[i].encuesta.descripcion_pregunta
+					
+					j=0
+					while j < len(respuestaEncuestasClientes):
+						if respuestaEncuestasClientes[j].encuesta.descripcion_pregunta == pregunta:
+							if respuestaEncuestasClientes[j].respuesta_cliente == 1:
+								excelente = excelente + 1
+							elif respuestaEncuestasClientes[j].respuesta_cliente == 2:
+								regular = regular + 1
+							else:
+								pesimo = pesimo + 1
+						j+=1
+					
+					dic = {'pregunta': pregunta, 'excelente': excelente, 'regular': regular, 'pesimo': pesimo}
+					lista.append(dic)
+					i+=1
+				
+				else:
+					pregunta = respuestaEncuestasClientes[i].encuesta.descripcion_pregunta
+					preguntaAnterior = respuestaEncuestasClientes[(i-1)].encuesta.descripcion_pregunta
+					
+					if pregunta == preguntaAnterior:
+						i+=1
+					
+					else:
+						excelente = 0
+						regular = 0
+						pesimo = 0
+						j=0
+						while j < len(respuestaEncuestasClientes):
+							if respuestaEncuestasClientes[j].encuesta.descripcion_pregunta == pregunta:
+								if respuestaEncuestasClientes[j].respuesta_cliente == 1:
+									excelente = excelente + 1
+								elif respuestaEncuestasClientes[j].respuesta_cliente == 2:
+									regular = regular + 1
+								else:
+									pesimo = pesimo + 1
+							j+=1
+						
+						dic = {'pregunta': pregunta, 'excelente': excelente, 'regular': regular, 'pesimo': pesimo}
+						lista.append(dic)
+						i+=1		
+
+		response = HttpResponse(content_type='text/csv')
+		response['Content-Disposition'] = 'attachment; filename="CSVRespuestasEncuestaCliente.csv"'
+
+		wb = xlwt.Workbook(encoding='utf-8')
+		ws = wb.add_sheet('Estudiantes por Docente') 
+
+		row_num = 0
+
+		font_style = xlwt.XFStyle()
+		font_style.font.bold = True
+
+		columns = ['Pregunta', 'Excelente', 'Regular', 'Pesimo']
+
+		for col_num in range(len(columns)):
+		    ws.write(row_num, col_num, columns[col_num], font_style) 
+
+			#Ejemplo de imprimir diccionario en Python
+			#for i in lista:
+			#	print(i.get('pregunta'))
+
+		# Sheet body, remaining rows
+		font_style = xlwt.XFStyle()
+
+		for lis in lista:
+			row_num += 1
+			row = [lis.get('pregunta'), lis.get('excelente'), lis.get('regular'), lis.get('pesimo')]
+
+			for col_num in range(len(row)):
+				ws.write(row_num, col_num, row[col_num], font_style)
+
+		wb.save(response)
+
+		return response	
 
 #----------------------------------------------------------------------------------------------------------------------------------
 
@@ -2390,7 +2606,7 @@ def consultarRespuestasActividadPersonal(request):
 			)
 
 
-# Mostrar los Resultados de la Encuesta de esa Agencia
+# Mostrar los Resultados de la Encuesta de esa Agencia en PDF
 def consultarRespuestasEncuestaPersonal(request, idActividad):
 	if request.method == 'POST':
 		titulo_encuesta = request.POST['titulo_encuesta']
@@ -2465,6 +2681,8 @@ def consultarRespuestasEncuestaPersonal(request, idActividad):
 			#Ejemplo de imprimir diccionario en Python
 			#for i in lista:
 			#	print(i.get('pregunta'))
+
+			mylist = json.dumps(lista)
 			
 			contexto = {
 				'respuestaEncuestasPersonal': respuestaEncuestasPersonal,
@@ -2474,6 +2692,7 @@ def consultarRespuestasEncuestaPersonal(request, idActividad):
 				'tituloEncuesta' : tituloEncuesta,
 				'codigoActividad' : codigo_actividad,
 				'lista': lista,
+				'mylist': mylist,
 			}
 				
 			return render(
@@ -2496,3 +2715,214 @@ def consultarRespuestasEncuestaPersonal(request, idActividad):
 				'evaluacionCliente/listar_respuestas_personal.html', 
 				contexto
 				)
+
+#ROBERTOOOOOOOOOO
+
+def reporteRespuestasEncuestaPersonal(request):
+	if request.method == 'GET':
+		nombreAc = request.GET['nombreActividad']
+		titulo_encuesta = request.GET['tituloEncuesta']
+
+		actividad = Actividad.objects.filter(nombre_actividad = nombreAc)
+
+		for ac in actividad:
+			if ac.nombre_actividad == nombreAc:
+				codigo_actividad = ac.id_actividad
+
+		respuestaEncuestasPersonal = RespuestaEncuestaPersonal.objects.filter(encuesta_id__id_actividad = codigo_actividad, encuesta_id__titulo_encuesta_personal = titulo_encuesta)
+
+		encuestas = EncuestaPersonal.objects.filter(id_actividad = codigo_actividad)
+		actividades = Actividad.objects.all()
+
+		if len(respuestaEncuestasPersonal) > 0:
+			i=0
+			while i<1:
+				tituloEncuesta = respuestaEncuestasPersonal[i].encuesta.titulo_encuesta_personal
+				nombreActividad = respuestaEncuestasPersonal[i].encuesta.id_actividad.nombre_actividad
+				i+=1
+
+
+			# Para realizar el conteo
+			lista = []
+			dic = {}
+
+			i=0
+			while i < len(respuestaEncuestasPersonal):
+				excelente = 0
+				regular = 0
+				pesimo = 0
+				if i == 0:
+					pregunta = respuestaEncuestasPersonal[i].encuesta.descripcion_pregunta
+					
+					j=0
+					while j < len(respuestaEncuestasPersonal):
+						if respuestaEncuestasPersonal[j].encuesta.descripcion_pregunta == pregunta:
+							if respuestaEncuestasPersonal[j].respuesta_personal == 1:
+								excelente = excelente + 1
+							elif respuestaEncuestasPersonal[j].respuesta_personal == 2:
+								regular = regular + 1
+							else:
+								pesimo = pesimo + 1
+						j+=1
+					
+					dic = {'pregunta': pregunta, 'excelente': excelente, 'regular': regular, 'pesimo': pesimo}
+					lista.append(dic)
+					i+=1
+				
+				else:
+					pregunta = respuestaEncuestasPersonal[i].encuesta.descripcion_pregunta
+					preguntaAnterior = respuestaEncuestasPersonal[(i-1)].encuesta.descripcion_pregunta
+					
+					if pregunta == preguntaAnterior:
+						i+=1
+					
+					else:
+						excelente = 0
+						regular = 0
+						pesimo = 0
+						j=0
+						while j < len(respuestaEncuestasPersonal):
+							if respuestaEncuestasPersonal[j].encuesta.descripcion_pregunta == pregunta:
+								if respuestaEncuestasPersonal[j].respuesta_personal == 1:
+									excelente = excelente + 1
+								elif respuestaEncuestasPersonal[j].respuesta_personal == 2:
+									regular = regular + 1
+								else:
+									pesimo = pesimo + 1
+							j+=1
+						
+						dic = {'pregunta': pregunta, 'excelente': excelente, 'regular': regular, 'pesimo': pesimo}
+						lista.append(dic)
+						i+=1
+
+		context = {
+			'respuestaEncuestasPersonal': respuestaEncuestasPersonal,
+			'nombreAc': nombreAc,
+			'tituloEncuesta': tituloEncuesta,
+			'lista': lista,
+		}
+
+		template = get_template('reportes/reporteRespuestasEncuestaPersonal.html')
+
+		html = template.render(context)
+
+		response = HttpResponse(content_type = 'application/pdf')
+		response['Content-Disposition'] = 'inline; filename="ReporteRespuestasEncuestaPersonal.pdf"'
+
+		pisa_status = pisa.CreatePDF(html, dest = response, link_callback=link_callback)
+	    
+		if pisa_status.err:
+			return HttpResponse('We had some errors <pre>'+ html + '</pre>')
+
+		return response
+
+def exportarRespuestasEncuestaPersonal(request):
+	if request.method == 'GET':
+		nombreAc = request.GET['nombreActividad']
+		titulo_encuesta = request.GET['tituloEncuesta']
+
+		actividad = Actividad.objects.filter(nombre_actividad = nombreAc)
+
+		for ac in actividad:
+			if ac.nombre_actividad == nombreAc:
+				codigo_actividad = ac.id_actividad
+
+		respuestaEncuestasPersonal = RespuestaEncuestaPersonal.objects.filter(encuesta_id__id_actividad = codigo_actividad, encuesta_id__titulo_encuesta_personal = titulo_encuesta)
+
+		encuestas = EncuestaPersonal.objects.filter(id_actividad = codigo_actividad)
+		actividades = Actividad.objects.all()
+
+		if len(respuestaEncuestasPersonal) > 0:
+			i=0
+			while i<1:
+				tituloEncuesta = respuestaEncuestasPersonal[i].encuesta.titulo_encuesta_personal
+				nombreActividad = respuestaEncuestasPersonal[i].encuesta.id_actividad.nombre_actividad
+				i+=1
+
+
+			# Para realizar el conteo
+			lista = []
+			dic = {}
+
+			i=0
+			while i < len(respuestaEncuestasPersonal):
+				excelente = 0
+				regular = 0
+				pesimo = 0
+				if i == 0:
+					pregunta = respuestaEncuestasPersonal[i].encuesta.descripcion_pregunta
+					
+					j=0
+					while j < len(respuestaEncuestasPersonal):
+						if respuestaEncuestasPersonal[j].encuesta.descripcion_pregunta == pregunta:
+							if respuestaEncuestasPersonal[j].respuesta_personal == 1:
+								excelente = excelente + 1
+							elif respuestaEncuestasPersonal[j].respuesta_personal == 2:
+								regular = regular + 1
+							else:
+								pesimo = pesimo + 1
+						j+=1
+					
+					dic = {'pregunta': pregunta, 'excelente': excelente, 'regular': regular, 'pesimo': pesimo}
+					lista.append(dic)
+					i+=1
+				
+				else:
+					pregunta = respuestaEncuestasPersonal[i].encuesta.descripcion_pregunta
+					preguntaAnterior = respuestaEncuestasPersonal[(i-1)].encuesta.descripcion_pregunta
+					
+					if pregunta == preguntaAnterior:
+						i+=1
+					
+					else:
+						excelente = 0
+						regular = 0
+						pesimo = 0
+						j=0
+						while j < len(respuestaEncuestasPersonal):
+							if respuestaEncuestasPersonal[j].encuesta.descripcion_pregunta == pregunta:
+								if respuestaEncuestasPersonal[j].respuesta_personal == 1:
+									excelente = excelente + 1
+								elif respuestaEncuestasPersonal[j].respuesta_personal == 2:
+									regular = regular + 1
+								else:
+									pesimo = pesimo + 1
+							j+=1
+						
+						dic = {'pregunta': pregunta, 'excelente': excelente, 'regular': regular, 'pesimo': pesimo}
+						lista.append(dic)
+						i+=1
+	    
+		response = HttpResponse(content_type='text/csv')
+		response['Content-Disposition'] = 'attachment; filename="CSVRespuestasEncuestaPersonal.csv"'
+
+		wb = xlwt.Workbook(encoding='utf-8')
+		ws = wb.add_sheet('Estudiantes por Docente') 
+
+		row_num = 0
+
+		font_style = xlwt.XFStyle()
+		font_style.font.bold = True
+
+		columns = ['Pregunta', 'Excelente', 'Regular', 'Pesimo']
+
+		for col_num in range(len(columns)):
+		    ws.write(row_num, col_num, columns[col_num], font_style) 
+
+			#Ejemplo de imprimir diccionario en Python
+			#for i in lista:
+			#	print(i.get('pregunta'))
+
+		# Sheet body, remaining rows
+		font_style = xlwt.XFStyle()
+
+		for lis in lista:
+			row_num += 1
+			row = [lis.get('pregunta'), lis.get('excelente'), lis.get('regular'), lis.get('pesimo')]
+
+			for col_num in range(len(row)):
+				ws.write(row_num, col_num, row[col_num], font_style)
+
+		wb.save(response)
+
+		return response		

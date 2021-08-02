@@ -104,4 +104,12 @@ urlpatterns = [
     path('evaluacionCliente/Resultados/listar_encuesta_personal/', login_required(consultarRespuestasActividadPersonal), name='consultar_actividad_respuestas_personal'),
     path('evaluacionCliente/Resultados/listar_resultados_encuesta/<str:idActividad>', login_required(consultarRespuestasEncuestaPersonal), name='consultar_respuestas_encuesta_personal'),
 
+    #URLs para Reportes de Respuesta
+    path('evaluacionCliente/Resultados/respuestas_encuestas_cliente/', login_required(reporteRespuestasEncuestaCliente), name='respuestas_encuestas_cliente'),
+    path('evaluacionCliente/Resultados/respuestas_encuestas_personal/', login_required(reporteRespuestasEncuestaPersonal), name='respuestas_encuestas_personal'),
+
+    #URLs para Exportar Respuestas a CSV
+    path('evaluacionCliente/exportarResultadosEncuestaPersonal/', login_required(exportarRespuestasEncuestaPersonal), name="exportar_respuestas_encuesta_personal"),
+    path('evaluacionCliente/exportarResultadosEncuestaCliente/', login_required(exportarRespuestasEncuestaCliente), name="exportar_respuestas_encuesta_cliente"),
+
 ]

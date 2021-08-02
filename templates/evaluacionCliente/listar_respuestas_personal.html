@@ -6,6 +6,40 @@
   Consulta de Resultados de Encuestas de Personal
 {%endblock%}
 
+{% block head %}
+
+	{% block static %}
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<link rel="stylesheet" href="{% static 'css/main.css' %}">
+	<link type="image/x-icon" href="{% static './assets/img/logo_acopus2.jpg' %}" rel="icon">
+
+	<script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+	<script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+	<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+	<script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+	
+
+	<!--====== Scripts -->
+	<script src="{% static 'js/sweetalert2.min.js' %}"></script>
+	<script src="{% static 'js/material.min.js' %}"></script>
+	<script src="{% static 'js/ripples.min.js' %}"></script>
+	<script src="{% static 'js/jquery.mCustomScrollbar.concat.min.js' %}"></script>
+  	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>	
+	<script src="{% static 'js/main.js' %}"></script>
+
+	{% endblock %}
+{% endblock %}
+
 {% block content %}
 	<div style="text-align:center; margin: 0 auto;">
 
@@ -166,6 +200,32 @@
 				</table>
 			</div>
 
+			<!-- PDF -->
+			<div align="center" class="inline-block">
+					<form style="display:inline" method="GET" action="{% url 'evaluacionCliente:respuestas_encuestas_personal' %}">
+						{% csrf_token %} 
+						<input type="hidden" id="nombreActividad" name="nombreActividad" class="form-control" value="{{ nombreActividad }}">
+						<input type="hidden" id="tituloEncuesta" name="tituloEncuesta" class="form-control" value="{{ tituloEncuesta }}">
+
+						<input type="hidden" id="lista" name="lista" class="form-control" value="{{ lista }}">
+
+			            
+			            <input class="btn btn-success" type = "submit" value = "Imprimir PDF" id = "ImprimirPDF">
+					</form>					
+
+					<form style="display:inline" method="GET" action="{% url 'evaluacionCliente:exportar_respuestas_encuesta_personal' %}">
+						{% csrf_token %} 
+						<input type="hidden" id="nombreActividad" name="nombreActividad" class="form-control" value="{{ nombreActividad }}">
+						<input type="hidden" id="tituloEncuesta" name="tituloEncuesta" class="form-control" value="{{ tituloEncuesta }}">
+
+						<input type="hidden" id="lista" name="lista" class="form-control" value="{{ lista }}">
+
+			            
+			            <input class="btn btn-success" type = "submit" value = "Exportar CSV" id = "ExportarCSV">
+					</form>					
+
+			</div>
+
 			</br>
 			<div class="table-responsive" style="width:80%; display:inline-block;">
                 <table id="bootstrapdatatable" class="table table-hover">
@@ -192,6 +252,104 @@
 
                 </table>
             </div>
+
+            <div align="center" id="container0"></div>
+            <div align="center" id="container1"></div>
+            <div align="center" id="container2"></div>
+            <div align="center" id="container3"></div>
+            <div align="center" id="container4"></div>
+            <div align="center" id="container5"></div>
+            <div align="center" id="container6"></div>
+            <div align="center" id="container7"></div>
+            <div align="center" id="container8"></div>
+            <div align="center" id="container9"></div>
+            <div align="center" id="container10"></div>
+            <div align="center" id="container11"></div>
+            <div align="center" id="container12"></div>
+            <div align="center" id="container13"></div>
+            <div align="center" id="container14"></div>
+            <div align="center" id="container15"></div>
+            <div align="center" id="container16"></div>
+            <div align="center" id="container17"></div>
+            <div align="center" id="container18"></div>
+            <div align="center" id="container19"></div>
+            <div align="center" id="container20"></div>
+
+            <script type="application/javascript">
+                
+                //var nomA = document.getElementById("lista").value;
+
+                var jlist = {{ mylist|safe }};
+
+				for(i = 0; i < jlist.length; i++){				
+	                // Make monochrome colors
+	                var pieColors = (function () {
+
+	                    var colors = [],
+	                        base = Highcharts.getOptions().colors[0],
+	                        i;
+
+	                    for (i = 0; i < 10; i += 1) {
+	                        // Start out with a darkened base color (negative brighten), and end
+	                        // up with a much brighter color
+	                        colors.push(Highcharts.color(base).brighten((i - 3) / 7).get());
+	                    };
+	                    return colors;
+	                }());
+
+					// Build the chart
+					Highcharts.chart('container' + i, {
+					    chart: {
+					        plotBackgroundColor: null,
+					        plotBorderWidth: null,
+					        plotShadow: false,
+					        type: 'pie'
+					    },
+					    title: {
+					        text: jlist[i].pregunta,
+					    },
+					    tooltip: {
+					        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+					    },
+					    accessibility: {
+					        point: {
+					            valueSuffix: '%'
+					        }
+					    },
+					    plotOptions: {
+					        pie: {
+					            allowPointSelect: true,
+					            cursor: 'pointer',
+					            dataLabels: {
+					                enabled: false
+					            },
+					            showInLegend: true,
+					            colors: [
+							     '#021d34', 
+							     '#365b77', 
+							     '#94b8d7',
+							   ],
+					        }
+					    },
+					    series: [{
+					        name: 'Porcentaje',
+					        colorByPoint: true,
+					        data: [{
+					            name: 'Excelente: '+ jlist[i].excelente,
+					            y: jlist[i].excelente,
+					        }, {
+					            name: 'Regular: ' + jlist[i].regular,
+					            y: jlist[i].regular
+					        }, {
+					            name: 'Pesimo: ' + jlist[i].pesimo,
+					            y: jlist[i].pesimo
+					        }]
+					    }]
+					});
+                
+                };
+            </script>
+
             
 		{% endif %}
 
