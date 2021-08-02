@@ -149,22 +149,30 @@
 
 		{% if encuestasPersonal %}
 
-			<div class="table-responsive" style="width:50%; display:inline-block;">
+			<div class="table-responsive" style="width:60%; display:inline-block;">
 				<table class="table table-hover text-center">
 					
 					<thead>
 						<tr>
+							<th class="text-center" style="color:#049286">Agencia</th>
 							<th class="text-center" style="color:#049286">Actividad</th>
 							<th class="text-center" style="color:#049286">Título Encuesta</th>
-							<th class="text-center" style="color:#049286">Agencia</th>
+							<th class="text-center" style="color:#049286">Desde</th>
+							<th class="text-center" style="color:#049286">Hasta</th>
 						</tr>
 					</thead>
 
 					<tbody>
 						<tr>
-                            <td><strong>{{ nombreActividad }}</strong></td>
-							<td><strong><i>{{ tituloEncuesta }}</i></strong></td>
 							<td><strong>{{ nombreAgencia }}</strong></td>
+                            <td><strong>{{ nombreActividad }}</strong></td>
+							<td><strong><i><a style="color:black;" href="{% url 'evaluacionCliente:editar_inf_encuesta_personal' idPer %}">{{ tituloEncuesta }}</a></i></strong></td>
+							<td><strong><i><a style="color:black;" href="{% url 'evaluacionCliente:editar_inf_encuesta_personal' idPer %}">{{ desde }}</a></i></strong></td>
+							{% ifequal hasta None %}
+								<td><strong><i><a style="color:black;" href="{% url 'evaluacionCliente:editar_inf_encuesta_personal' idPer %}"> - </a></i></strong></td>
+							{% else %}
+								<td><strong><i><a style="color:black;" href="{% url 'evaluacionCliente:editar_inf_encuesta_personal' idPer %}">{{ hasta }}</a></i></strong></td>
+							{% endifequal %}
 						</tr>
 					</tbody>
 

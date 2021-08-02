@@ -8,6 +8,7 @@
 
 {% block content %}
 
+<meta http-equiv="refresh" content="90; url={% url 'evaluacionCliente:index' %}"/>
 <link rel="stylesheet" href="{% static 'css/imgEncuesta.css' %}">
 
 
@@ -93,9 +94,9 @@
 					<select name="titulo_encuesta" id="titulo_encuesta" class="form-control col-4 col-sm-3 input-style" title="Selecciona la Encuesta a Consultar" required>
 						<option selected value=""> Seleccione la Encuesta </option>
 							
-                            {% for i in encuestasActividad %}
-								<option value="{{i.titulo_encuesta_personal}}">{{i.titulo_encuesta_personal}}</option> 
-							{% endfor %}
+                            {% for tit in titulosEncuestas %}
+                                <option value="{{tit}}">{{tit}}</option> 
+                            {% endfor %}
 						
                         </option> 
 					</select></br>
@@ -128,8 +129,8 @@
                 <form method="POST" action="{% url 'evaluacionCliente:consultar_encuesta_de_personal2' codActividad %}">{% csrf_token %}
                     <select name="titulo_encuesta" id="titulo_encuesta" class="form-control col-4 col-sm-3 input-style" title="Selecciona la Encuesta a Consultar" required>
                         <option selected value=""> Seleccione la Encuesta </option>
-                            {% for i in encuestasActividad %}
-                                <option value="{{i.titulo_encuesta_personal}}">{{i.titulo_encuesta_personal}}</option> 
+                            {% for tit in titulosEncuestas %}
+                                <option value="{{tit}}">{{tit}}</option> 
                             {% endfor %}
                         </option> 
                     </select></br>

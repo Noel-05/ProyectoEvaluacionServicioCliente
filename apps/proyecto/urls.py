@@ -65,6 +65,8 @@ urlpatterns = [
     path('evaluacionCliente/editar_encuesta/<int:idEncuesta>/', login_required(editarEncuesta), name='editar_encuesta'),
     path('evaluacionCliente/eliminar_encuesta/<int:idEncuesta>/', login_required(eliminarEncuesta), name='eliminar_encuesta'),
 
+    path('evaluacionCliente/editar_informacion_encuesta/<int:idEncuesta>/', login_required(editarInfEncuesta), name='editar_inf_encuesta'),
+
     path('evaluacionCliente/contestar_encuesta/', contestarEncuesta, name='contestar_encuesta'),
     path('evaluacionCliente/encuesta/Agencia/', consultarAgenciaEncuesta, name='consultar_agencia_encuesta'),
     path('evaluacionCliente/encuesta/Encuesta/<str:codigoAgencia>', consultarEncuestaCliente, name='consultar_encuesta_cliente'),
@@ -89,6 +91,8 @@ urlpatterns = [
     path('evaluacionCliente/editar_encuesta_personal/<int:idEncuesta>/', login_required(editarEncuestaPersonal), name='editar_encuesta_personal'),
     path('evaluacionCliente/eliminar_encuesta_personal/<int:idEncuesta>/', login_required(eliminarEncuestaPersonal), name='eliminar_encuesta_personal'),
     
+    path('evaluacionCliente/editar_informacion_encuesta_personal/<int:idEncuesta>/', login_required(editarInfEncuestaPersonal), name='editar_inf_encuesta_personal'),
+
     path('evaluacionCliente/contestar_encuesta_personal/', contestarEncuestaPersonal, name='contestar_encuesta_personal'),
     path('evaluacionCliente/encuestaPersonal/Actividad/', consultarActividadEncuestaDePersonal, name='consultar_actividad_encuesta_de_personal'),
     path('evaluacionCliente/encuestaPersonal/Encuesta/<str:idActividad>', consultarEncuestaDePersonal, name='consultar_encuesta_de_personal'),

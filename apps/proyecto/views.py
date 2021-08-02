@@ -11,6 +11,7 @@ from django.contrib import messages
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
+from datetime import datetime
 
 import smtplib
 from email.mime.multipart import MIMEMultipart
@@ -829,9 +830,14 @@ def crearEncuesta(request, codigoAgencia):
 		titulo = request.POST['titulo']
 		pregunta = request.POST['pregunta']
 		visibilidad = request.POST['visibilidad']
+		fechaDesde = request.POST['fecha_desde']
+		fechaHasta = request.POST['fecha_hasta']
 		agencia = codigoAgencia
 
-		encuestaCliente = EncuestaCliente(codigo_agencia_id=agencia, descripcion_pregunta=pregunta, titulo_encuesta_cliente=titulo, visibilidad_pregunta_cliente=visibilidad)
+		if fechaHasta == "":
+			encuestaCliente = EncuestaCliente(codigo_agencia_id=agencia, descripcion_pregunta=pregunta, titulo_encuesta_cliente=titulo, visibilidad_pregunta_cliente=visibilidad, fecha_desde_cliente=fechaDesde)
+		else:
+			encuestaCliente = EncuestaCliente(codigo_agencia_id=agencia, descripcion_pregunta=pregunta, titulo_encuesta_cliente=titulo, visibilidad_pregunta_cliente=visibilidad, fecha_desde_cliente=fechaDesde, fecha_hasta_cliente=fechaHasta)
 		
 		encuestaCliente.save()
 
@@ -867,9 +873,11 @@ def editarEncuesta(request, idEncuesta):
 		while i < len(enc):
 			agencia = enc[i].codigo_agencia
 			titulo = enc[i].titulo_encuesta_cliente
+			desde = enc[i].fecha_desde_cliente
+			hasta = enc[i].fecha_hasta_cliente
 			i+=1
 
-		encuestaCliente = EncuestaCliente(id=idEnc, codigo_agencia_id=agencia, descripcion_pregunta=pregunta, titulo_encuesta_cliente=titulo, visibilidad_pregunta_cliente=visibilidad)
+		encuestaCliente = EncuestaCliente(id=idEnc, codigo_agencia_id=agencia, descripcion_pregunta=pregunta, titulo_encuesta_cliente=titulo, visibilidad_pregunta_cliente=visibilidad, fecha_desde_cliente=desde, fecha_hasta_cliente=hasta)
 		
 		encuestaCliente.save()
 
@@ -922,6 +930,105 @@ def eliminarEncuesta(request, idEncuesta):
 	
 	else:
 		return HttpResponseRedirect(reverse_lazy('evaluacionCliente:consultar_encuesta2', kwargs={'codigoAgencia':agencia, 'tituloEncuesta':titulo}))
+
+
+#----------------------------------------------------------------------------------------------------------------------------------
+
+
+def editarInfEncuesta(request, idEncuesta):
+	if request.method == 'POST':
+		tituloN = request.POST['titulo']
+		desdeN = request.POST['desde']
+		hastaN = request.POST['hasta']
+		idEnc = idEncuesta
+		enc = EncuestaCliente.objects.filter(id=idEnc)
+
+		i=0
+		while i < len(enc):
+			agencia = enc[i].codigo_agencia
+			titulo = enc[i].titulo_encuesta_cliente
+			i+=1
+
+		encuestasClientes = EncuestaCliente.objects.filter(codigo_agencia = agencia, titulo_encuesta_cliente = titulo)
+		
+		if desdeN == "" and hastaN == "":
+			j=0
+			while j < len(encuestasClientes):
+				idEnCl = encuestasClientes[j].id
+				descripcion = encuestasClientes[j].descripcion_pregunta
+				visibilidad = encuestasClientes[j].visibilidad_pregunta_cliente
+				desde = encuestasClientes[j].fecha_desde_cliente
+				hasta = encuestasClientes[j].fecha_hasta_cliente
+
+				encuestaCliente = EncuestaCliente(id=idEnCl, codigo_agencia_id=agencia, descripcion_pregunta=descripcion, titulo_encuesta_cliente=tituloN, visibilidad_pregunta_cliente=visibilidad, fecha_desde_cliente=desde, fecha_hasta_cliente=hasta)
+				encuestaCliente.save()
+
+				j+=1
+
+		elif desdeN != "" and hastaN == "":
+			j=0
+			while j < len(encuestasClientes):
+				idEnCl = encuestasClientes[j].id
+				descripcion = encuestasClientes[j].descripcion_pregunta
+				visibilidad = encuestasClientes[j].visibilidad_pregunta_cliente
+				hasta = encuestasClientes[j].fecha_hasta_cliente
+
+				encuestaCliente = EncuestaCliente(id=idEnCl, codigo_agencia_id=agencia, descripcion_pregunta=descripcion, titulo_encuesta_cliente=tituloN, visibilidad_pregunta_cliente=visibilidad, fecha_desde_cliente=desdeN, fecha_hasta_cliente=hasta)
+				encuestaCliente.save()
+
+				j+=1
+
+		elif desdeN == "" and hastaN != "":
+			j=0
+			while j < len(encuestasClientes):
+				idEnCl = encuestasClientes[j].id
+				descripcion = encuestasClientes[j].descripcion_pregunta
+				visibilidad = encuestasClientes[j].visibilidad_pregunta_cliente
+				desde = encuestasClientes[j].fecha_desde_cliente
+
+				encuestaCliente = EncuestaCliente(id=idEnCl, codigo_agencia_id=agencia, descripcion_pregunta=descripcion, titulo_encuesta_cliente=tituloN, visibilidad_pregunta_cliente=visibilidad, fecha_desde_cliente=desde, fecha_hasta_cliente=hastaN)
+				encuestaCliente.save()
+
+				j+=1
+
+		else:
+			j=0
+			while j < len(encuestasClientes):
+				idEnCl = encuestasClientes[j].id
+				descripcion = encuestasClientes[j].descripcion_pregunta
+				visibilidad = encuestasClientes[j].visibilidad_pregunta_cliente
+
+				encuestaCliente = EncuestaCliente(id=idEnCl, codigo_agencia_id=agencia, descripcion_pregunta=descripcion, titulo_encuesta_cliente=tituloN, visibilidad_pregunta_cliente=visibilidad, fecha_desde_cliente=desdeN, fecha_hasta_cliente=hastaN)
+				encuestaCliente.save()
+
+				j+=1
+
+		return HttpResponseRedirect(reverse_lazy('evaluacionCliente:consultar_encuesta2', kwargs={'codigoAgencia':agencia, 'tituloEncuesta':tituloN}))
+	
+	else:
+		idEnc = idEncuesta
+		enc = EncuestaCliente.objects.filter(id=idEnc)
+
+		i=0
+		while i < len(enc):
+			agencia = enc[i].codigo_agencia
+			titulo = enc[i].titulo_encuesta_cliente
+			i+=1
+
+		encuesta = EncuestaCliente.objects.filter(id=idEnc)
+
+		context = {
+			'idEnc': idEnc,
+			'encuesta' : encuesta,
+			'codigoAgencia': agencia,
+			'tituloEncuesta': titulo,
+		}
+
+		return render(
+			request,
+			'evaluacionCliente/editar_inf_encuesta_cliente.html', 
+			context
+		)
 
 
 #----------------------------------------------------------------------------------------------------------------------------------
@@ -1017,6 +1124,9 @@ def consultarEncuesta(request, codigoAgencia):
 		while i<1:
 			tituloEncuesta = encuestasClientes[i].titulo_encuesta_cliente
 			nombreAgencia = encuestasClientes[i].codigo_agencia.nombre_agencia
+			desde = encuestasClientes[i].fecha_desde_cliente
+			hasta = encuestasClientes[i].fecha_hasta_cliente
+			idCl = encuestasClientes[i].id
 			i+=1
 
 		contexto = {
@@ -1026,6 +1136,9 @@ def consultarEncuesta(request, codigoAgencia):
 			'nombreAgencia' : nombreAgencia,
 			'tituloEncuesta' : tituloEncuesta,
 			'codigoAgencia' : codigo_agencia,
+			'desde' : desde,
+			'hasta' : hasta,
+			'idCl' : idCl,
 		}
 			
 		return render(
@@ -1050,6 +1163,9 @@ def consultarEncuesta2(request, codigoAgencia, tituloEncuesta):
 	while i<1:
 		tituloEncuesta = encuestasClientes[i].titulo_encuesta_cliente
 		nombreAgencia = encuestasClientes[i].codigo_agencia.nombre_agencia
+		desde = encuestasClientes[i].fecha_desde_cliente
+		hasta = encuestasClientes[i].fecha_hasta_cliente
+		idCl = encuestasClientes[i].id
 		i+=1
 
 	contexto = {
@@ -1059,6 +1175,9 @@ def consultarEncuesta2(request, codigoAgencia, tituloEncuesta):
 		'nombreAgencia' : nombreAgencia,
 		'tituloEncuesta' : tituloEncuesta,
 		'codigoAgencia' : codigo_agencia,
+		'desde' : desde,
+		'hasta' : hasta,
+		'idCl' : idCl,
 	}
 		
 	return render(
@@ -1079,7 +1198,14 @@ def AgregarPreguntasEncuestaCliente(request, codigoAgencia, tituloEncuesta):
 		agencia = codigoAgencia
 		titulo = tituloEncuesta
 
-		encuestaCliente = EncuestaCliente(codigo_agencia_id=agencia, descripcion_pregunta=pregunta, titulo_encuesta_cliente=titulo, visibilidad_pregunta_cliente=visibilidad)
+		encues = EncuestaCliente.objects.filter(codigo_agencia=agencia, titulo_encuesta_cliente=titulo)
+		i=0
+		while i < 1:
+			desde = encues[i].fecha_desde_cliente
+			hasta = encues[i].fecha_hasta_cliente
+			i+=1
+
+		encuestaCliente = EncuestaCliente(codigo_agencia_id=agencia, descripcion_pregunta=pregunta, titulo_encuesta_cliente=titulo, visibilidad_pregunta_cliente=visibilidad, fecha_desde_cliente=desde, fecha_hasta_cliente=hasta)
 		
 		encuestaCliente.save()
 
@@ -1115,9 +1241,14 @@ def crearEncuestaPersonal(request, idActividad):
 		titulo = request.POST['titulo']
 		pregunta = request.POST['pregunta']
 		visibilidad = request.POST['visibilidad']
+		fechaDesde = request.POST['fecha_desde']
+		fechaHasta = request.POST['fecha_hasta']
 		actividad = idActividad
 
-		encuestaPersonal = EncuestaPersonal(id_actividad_id=actividad, descripcion_pregunta=pregunta, titulo_encuesta_personal=titulo, visibilidad_pregunta_personal=visibilidad)
+		if fechaHasta == "":
+			encuestaPersonal = EncuestaPersonal(id_actividad_id=actividad, descripcion_pregunta=pregunta, titulo_encuesta_personal=titulo, visibilidad_pregunta_personal=visibilidad, fecha_desde_personal=fechaDesde)
+		else:
+			encuestaPersonal = EncuestaPersonal(id_actividad_id=actividad, descripcion_pregunta=pregunta, titulo_encuesta_personal=titulo, visibilidad_pregunta_personal=visibilidad, fecha_desde_personal=fechaDesde, fecha_hasta_personal=fechaHasta)
 		
 		encuestaPersonal.save()
 
@@ -1153,9 +1284,11 @@ def editarEncuestaPersonal(request, idEncuesta):
 		while i < len(enc):
 			actividad = enc[i].id_actividad.id_actividad
 			titulo = enc[i].titulo_encuesta_personal
+			desde = enc[i].fecha_desde_personal
+			hasta = enc[i].fecha_hasta_personal
 			i+=1
 		
-		encuestaPersonal = EncuestaPersonal(id=idEnc, id_actividad_id=actividad, descripcion_pregunta=pregunta, titulo_encuesta_personal=titulo, visibilidad_pregunta_personal=visibilidad)
+		encuestaPersonal = EncuestaPersonal(id=idEnc, id_actividad_id=actividad, descripcion_pregunta=pregunta, titulo_encuesta_personal=titulo, visibilidad_pregunta_personal=visibilidad, fecha_desde_personal=desde, fecha_hasta_personal=hasta)
 		
 		encuestaPersonal.save()
 
@@ -1208,6 +1341,105 @@ def eliminarEncuestaPersonal(request, idEncuesta):
 	
 	else:
 		return HttpResponseRedirect(reverse_lazy('evaluacionCliente:consultar_encuesta2_personal', kwargs={'idActividad':actividad, 'tituloEncuesta':titulo}))
+
+
+#----------------------------------------------------------------------------------------------------------------------------------
+
+
+def editarInfEncuestaPersonal(request, idEncuesta):
+	if request.method == 'POST':
+		tituloN = request.POST['titulo']
+		desdeN = request.POST['desde']
+		hastaN = request.POST['hasta']
+		idEnc = idEncuesta
+		enc = EncuestaPersonal.objects.filter(id=idEnc)
+
+		i=0
+		while i < len(enc):
+			actividad = enc[i].id_actividad.id_actividad
+			titulo = enc[i].titulo_encuesta_personal
+			i+=1
+
+		encuestasPersonal = EncuestaPersonal.objects.filter(id_actividad_id=actividad, titulo_encuesta_personal=titulo)
+		
+		if desdeN == "" and hastaN == "":
+			j=0
+			while j < len(encuestasPersonal):
+				idEnPer = encuestasPersonal[j].id
+				descripcion = encuestasPersonal[j].descripcion_pregunta
+				visibilidad = encuestasPersonal[j].visibilidad_pregunta_personal
+				desde = encuestasPersonal[j].fecha_desde_personal
+				hasta = encuestasPersonal[j].fecha_hasta_personal
+
+				encuestaPersonal = EncuestaPersonal(id=idEnPer, id_actividad_id=actividad, descripcion_pregunta=descripcion, titulo_encuesta_personal=tituloN, visibilidad_pregunta_personal=visibilidad, fecha_desde_personal=desde, fecha_hasta_personal=hasta)
+				encuestaPersonal.save()
+
+				j+=1
+
+		elif desdeN != "" and hastaN == "":
+			j=0
+			while j < len(encuestasPersonal):
+				idEnPer = encuestasPersonal[j].id
+				descripcion = encuestasPersonal[j].descripcion_pregunta
+				visibilidad = encuestasPersonal[j].visibilidad_pregunta_personal
+				hasta = encuestasPersonal[j].fecha_hasta_personal
+
+				encuestaPersonal = EncuestaPersonal(id=idEnPer, id_actividad_id=actividad, descripcion_pregunta=descripcion, titulo_encuesta_personal=tituloN, visibilidad_pregunta_personal=visibilidad, fecha_desde_personal=desdeN, fecha_hasta_personal=hasta)
+				encuestaPersonal.save()
+
+				j+=1
+
+		elif desdeN == "" and hastaN != "":
+			j=0
+			while j < len(encuestasPersonal):
+				idEnPer = encuestasPersonal[j].id
+				descripcion = encuestasPersonal[j].descripcion_pregunta
+				visibilidad = encuestasPersonal[j].visibilidad_pregunta_personal
+				desde = encuestasPersonal[j].fecha_desde_personal
+
+				encuestaPersonal = EncuestaPersonal(id=idEnPer, id_actividad_id=actividad, descripcion_pregunta=descripcion, titulo_encuesta_personal=tituloN, visibilidad_pregunta_personal=visibilidad, fecha_desde_personal=desde, fecha_hasta_personal=hastaN)
+				encuestaPersonal.save()
+
+				j+=1
+
+		else:
+			j=0
+			while j < len(encuestasPersonal):
+				idEnPer = encuestasPersonal[j].id
+				descripcion = encuestasPersonal[j].descripcion_pregunta
+				visibilidad = encuestasPersonal[j].visibilidad_pregunta_personal
+
+				encuestaPersonal = EncuestaPersonal(id=idEnPer, id_actividad_id=actividad, descripcion_pregunta=descripcion, titulo_encuesta_personal=tituloN, visibilidad_pregunta_personal=visibilidad, fecha_desde_personal=desdeN, fecha_hasta_personal=hastaN)
+				encuestaPersonal.save()
+
+				j+=1
+
+		return HttpResponseRedirect(reverse_lazy('evaluacionCliente:consultar_encuesta2_personal', kwargs={'idActividad':actividad, 'tituloEncuesta':tituloN}))
+	
+	else:
+		idEnc = idEncuesta
+		enc = EncuestaPersonal.objects.filter(id=idEnc)
+
+		i=0
+		while i < len(enc):
+			actividad = enc[i].id_actividad.id_actividad
+			titulo = enc[i].titulo_encuesta_personal
+			i+=1
+
+		encuesta = EncuestaPersonal.objects.filter(id=idEnc)
+
+		context = {
+			'idEnc': idEnc,
+			'encuesta' : encuesta,
+			'codigoActividad': actividad,
+			'tituloEncuesta': titulo,
+		}
+
+		return render(
+			request,
+			'evaluacionCliente/editar_inf_encuesta_personal.html', 
+			context
+		)
 
 
 #----------------------------------------------------------------------------------------------------------------------------------
@@ -1304,6 +1536,9 @@ def consultarEncuestaPersonal(request, idActividad):
 			tituloEncuesta = encuestasPersonal[i].titulo_encuesta_personal
 			nombreAgencia = encuestasPersonal[i].id_actividad.codigo_agencia.nombre_agencia
 			nombreActividad = encuestasPersonal[i].id_actividad.nombre_actividad
+			desde = encuestasPersonal[i].fecha_desde_personal
+			hasta = encuestasPersonal[i].fecha_hasta_personal
+			idPer = encuestasPersonal[i].id
 			i+=1
 
 		contexto = {
@@ -1314,6 +1549,9 @@ def consultarEncuestaPersonal(request, idActividad):
 			'nombreActividad' : nombreActividad,
 			'tituloEncuesta' : tituloEncuesta,
 			'codigoActividad' : codigo_actividad,
+			'desde' : desde,
+			'hasta' : hasta,
+			'idPer' : idPer,
 		}
 			
 		return render(
@@ -1339,6 +1577,9 @@ def consultarEncuesta2Personal(request, idActividad, tituloEncuesta):
 		tituloEncuesta = encuestasPersonal[i].titulo_encuesta_personal
 		nombreAgencia = encuestasPersonal[i].id_actividad.codigo_agencia.nombre_agencia
 		nombreActividad = encuestasPersonal[i].id_actividad.nombre_actividad
+		desde = encuestasPersonal[i].fecha_desde_personal
+		hasta = encuestasPersonal[i].fecha_hasta_personal
+		idPer = encuestasPersonal[i].id
 		i+=1
 
 	contexto = {
@@ -1349,6 +1590,9 @@ def consultarEncuesta2Personal(request, idActividad, tituloEncuesta):
 		'nombreActividad' : nombreActividad,
 		'tituloEncuesta' : tituloEncuesta,
 		'codigoActividad' : codigo_actividad,
+		'desde' : desde,
+		'hasta' : hasta,
+		'idPer' : idPer,
 	}
 		
 	return render(
@@ -1369,7 +1613,14 @@ def AgregarPreguntasEncuestaPersonal(request, idActividad, tituloEncuesta):
 		actividad = idActividad
 		titulo = tituloEncuesta
 
-		encuestaPersonal = EncuestaPersonal(id_actividad_id=actividad, descripcion_pregunta=pregunta, titulo_encuesta_personal=titulo, visibilidad_pregunta_personal=visibilidad)
+		encues = EncuestaPersonal.objects.filter(id_actividad_id=actividad, titulo_encuesta_personal=titulo)
+		i=0
+		while i < 1:
+			desde = encues[i].fecha_desde_personal
+			hasta = encues[i].fecha_hasta_personal
+			i+=1
+
+		encuestaPersonal = EncuestaPersonal(id_actividad_id=actividad, descripcion_pregunta=pregunta, titulo_encuesta_personal=titulo, visibilidad_pregunta_personal=visibilidad, fecha_desde_personal=desde, fecha_hasta_personal=hasta)
 		
 		encuestaPersonal.save()
 
@@ -1419,6 +1670,17 @@ def consultarAgenciaEncuesta(request):
 		encuestasAgencia = EncuestaCliente.objects.raw('select id, titulo_encuesta_cliente from proyecto_encuestacliente where codigo_agencia_id = %s group by titulo_encuesta_cliente;', [codigo_agencia])
 		nombreAgencia = Agencia.objects.filter(codigo_agencia = codigo_agencia)
 
+		# Procedimiento para validar la Fecha Hasta y asi mostrar la encuesta o no
+		fechaHoy = datetime.now().date()
+		titulosEncuestas = []
+		j=0
+		while j < len(encuestasAgencia):
+			fechaDesde = encuestasAgencia[j].fecha_desde_cliente
+			fechaHasta = encuestasAgencia[j].fecha_hasta_cliente
+			if (fechaHasta == None) or (fechaHasta >= fechaHoy):
+				titulosEncuestas.append(encuestasAgencia[j].titulo_encuesta_cliente)
+			j+=1
+
 		i=0
 		while i < len(nombreAgencia):
 			codAgencia = nombreAgencia[i].codigo_agencia
@@ -1430,6 +1692,7 @@ def consultarAgenciaEncuesta(request):
 				'nombreAgencia': nombreAgencia,
 				'codAgencia': codAgencia,
 				'codigo_agencia': codigo_agencia,
+				'titulosEncuestas': titulosEncuestas,
 			}
 
 		else:
@@ -1441,10 +1704,9 @@ def consultarAgenciaEncuesta(request):
 				'codAgencia': codAgencia,
 				'codigo_agencia': codigo_agencia,
 				'noHayEncuestas': noHayEncuestas,
+				'titulosEncuestas': titulosEncuestas,
 			}
 		
-		
-			
 		return render(
 			request, 
 			'evaluacionCliente/contestar_encuesta.html', 
@@ -1824,6 +2086,17 @@ def consultarActividadEncuestaDePersonal(request):
 		encuestasActividad = EncuestaPersonal.objects.raw('select id, titulo_encuesta_personal from proyecto_encuestapersonal where id_actividad_id = %s group by titulo_encuesta_personal;', [codigo_actividad])
 		nombreActividad = Actividad.objects.filter(id_actividad = codigo_actividad)
 		
+		# Procedimiento para validar la Fecha Hasta y asi mostrar la encuesta o no
+		fechaHoy = datetime.now().date()
+		titulosEncuestas = []
+		j=0
+		while j < len(encuestasActividad):
+			fechaDesde = encuestasActividad[j].fecha_desde_personal
+			fechaHasta = encuestasActividad[j].fecha_hasta_personal
+			if (fechaHasta == None) or (fechaHasta >= fechaHoy):
+				titulosEncuestas.append(encuestasActividad[j].titulo_encuesta_personal)
+			j+=1
+		
 		i=0
 		while i < len(nombreActividad):
 			codActividad = nombreActividad[i].id_actividad
@@ -1835,6 +2108,7 @@ def consultarActividadEncuestaDePersonal(request):
 				'nombreActividad': nombreActividad,
 				'codActividad': codActividad,
 				'codigo_actividad': codigo_actividad,
+				'titulosEncuestas': titulosEncuestas,
 			}
 
 		else:
@@ -1846,6 +2120,7 @@ def consultarActividadEncuestaDePersonal(request):
 				'codActividad': codActividad,
 				'codigo_actividad': codigo_actividad,
 				'noHayEncuestas': noHayEncuestas,
+				'titulosEncuestas': titulosEncuestas,
 			}
 			
 		return render(
