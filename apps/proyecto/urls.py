@@ -10,8 +10,8 @@ app_name = 'evaluacionCliente'
 urlpatterns = [
     
     # URL de base 
-    path('', login_required(index)),
-    path('evaluacionCliente/index/', login_required(index), name='index'),
+    path('',index),
+    path('evaluacionCliente/index/',index, name='index'),
 
     # URL envio de correo
     path('evaluacionCliente/send_email/<str:agencia>/<str:departamento>/<str:comite>/', login_required(enviarEmail), name='send_email'),

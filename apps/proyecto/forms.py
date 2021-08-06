@@ -45,7 +45,7 @@ class ComiteForm(forms.ModelForm):
 class AgenciaForm(forms.ModelForm):
 	class Meta:
 		model = Agencia
-		fields = {'codigo_agencia', 'nombre_agencia', 'direccion_agencia'}
+		fields = {'codigo_agencia', 'nombre_agencia', 'direccion_agencia'}		
 
 	codigo_agencia = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'pattern': '([A-Za-z0-9]+)', 'title': 'No se permiten espacios, solo numeros y letras'}))
 	nombre_agencia = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))   
@@ -79,13 +79,22 @@ class ActividadForm(forms.ModelForm):
 	codigo_agencia= forms.ModelChoiceField(queryset=Agencia.objects.all(), empty_label="Seleccione una Agencia de la lista", widget=forms.Select(attrs={'class': 'form-control'}))
 	codigo_departamento= forms.ModelChoiceField(queryset=Departamento.objects.all(), empty_label="Seleccione un Departamento de la lista", widget=forms.Select(attrs={'class': 'form-control'}))
 	id_comite= forms.ModelChoiceField(queryset=Comite.objects.all(), empty_label="Seleccione un Comite de la lista", widget=forms.Select(attrs={'class': 'form-control'}))
+
+	def __init__(self, *args, **kwargs):
+	        super(ActividadForm, self).__init__(*args, **kwargs)
+	        self.fields['codigo_agencia'].queryset = Agencia.objects.all()
+	        self.fields['codigo_agencia'].label_from_instance = lambda obj: "%s" % (obj.nombre_agencia)
+        	self.fields['codigo_agencia'].widget.attrs['class'] = 'form-control'
+        	self.fields['codigo_agencia'].widget.attrs['placeholder'] = 'Seleccione una Agencia de la lista'
+
 #----------------------------------------------------------------------------------------------------------------------------------
 
 
-class EmpleadoForm(forms.ModelForm):
+
+class EmpleadoForm(forms.ModelForm):	
 	class Meta:
 		model=Empleado
-		fields=('codigo_agencia', 'codigo_departamento', 'id_comite', 'email', 'nombres', 'apellidos')
+		fields=('codigo_agencia', 'codigo_departamento', 'id_comite', 'email', 'nombres', 'apellidos')		
 
 		widgets ={
 			'email': forms.EmailInput(
@@ -112,6 +121,15 @@ class EmpleadoForm(forms.ModelForm):
 	codigo_agencia= forms.ModelChoiceField(queryset=Agencia.objects.all(), empty_label="Seleccione una Agencia de la lista", widget=forms.Select(attrs={'class': 'form-control'}))
 	codigo_departamento= forms.ModelChoiceField(queryset=Departamento.objects.all(), empty_label="Seleccione un Departamento de la lista",widget=forms.Select(attrs={'class': 'form-control'}))
 	id_comite= forms.ModelChoiceField(queryset=Comite.objects.all(), empty_label="Seleccione un Comite de la lista",widget=forms.Select(attrs={'class': 'form-control'}))
+
+
+	def __init__(self, *args, **kwargs):
+	        super(EmpleadoForm, self).__init__(*args, **kwargs)
+	        self.fields['codigo_agencia'].queryset = Agencia.objects.all()
+	        self.fields['codigo_agencia'].label_from_instance = lambda obj: "%s" % (obj.nombre_agencia)
+        	self.fields['codigo_agencia'].widget.attrs['class'] = 'form-control'
+        	self.fields['codigo_agencia'].widget.attrs['placeholder'] = 'Seleccione una Agencia de la lista'
+
 
 	def clean_nombres(self):
 		nombres=self.cleaned_data.get('nombres')

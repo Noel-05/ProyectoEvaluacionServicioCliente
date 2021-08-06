@@ -263,8 +263,33 @@ def crearActividad(request):
 def listarActividad(request):
 	actividades = Actividad.objects.order_by('-fecha_realizacion')
 
+	lista = []
+
+	for ac in actividades:
+
+		agencia = Agencia.objects.get(codigo_agencia = ac.codigo_agencia)
+		nombre_agencia = agencia.nombre_agencia
+
+		dic = {	'id_actividad': ac.id_actividad,
+				'nombre_agencia': nombre_agencia, 
+				'nombre_actividad': ac.nombre_actividad, 
+				'descripcion_actividad': ac.descripcion_actividad, 
+				'fecha_realizacion': ac.fecha_realizacion,
+				'codigo_departamento': ac.codigo_departamento,
+				'id_comite': ac.id_comite,
+			}
+
+		lista.append(dic)	
+
+	contexto = {
+				'lista': lista,
+				'actividades': actividades,
+
+	}
+
+
 	#Mandar la consulta al template
-	return render(request, 'evaluacionCliente/listar_actividad.html', {'actividades': actividades})
+	return render(request, 'evaluacionCliente/listar_actividad.html', contexto)
 
 
 #Editar Actividades
@@ -315,13 +340,32 @@ def listarEmpleados(request):
 	# Se usa doble subrayado para que funcione como el "." en el template (osea un join)
 	agencias = Agencia.objects.order_by('nombre_agencia')	
 	departamentos = Departamento.objects.order_by('codigo_departamento')	
-	comites = Comite.objects.order_by('nombre_comite')	
+	comites = Comite.objects.order_by('nombre_comite')
+
+	lista = []
+
+	for emp in empleados:
+
+		agencia = Agencia.objects.get(codigo_agencia = emp.codigo_agencia)
+		nombre_agencia = agencia.nombre_agencia
+
+		dic = {	'id_empleado': emp.id_empleado,
+				'nombre_agencia': nombre_agencia, 
+				'codigo_departamento': emp.codigo_departamento, 
+				'id_comite': emp.id_comite, 
+				'email': emp.email,
+				'nombres': emp.nombres,
+				'apellidos': emp.apellidos,
+			}
+
+		lista.append(dic)		
 	
 	context = {
 	    'empleados': empleados,
 	    'agencias': agencias,
 	    'departamentos': departamentos,
 	    'comites': comites,
+	    'lista': lista
 	}
 
 	#Mandar la consulta al template

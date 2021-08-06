@@ -37,11 +37,11 @@
 					</thead>
 
 					<tbody>
-						{% for actividad in actividades %}
+						{% for actividad in lista %}
 							<tr>
 								<td>{{ actividad.nombre_actividad }}</td>
 								<td>{{ actividad.fecha_realizacion }}</td>	
-								<td>{{ actividad.codigo_agencia }}</td>	
+								<td>{{ actividad.nombre_agencia }}</td>	
 								<td>{{ actividad.codigo_departamento }}</td>	
 								<td>{{ actividad.id_comite }}</td>	
 								<td>
