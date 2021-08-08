@@ -457,7 +457,26 @@ def filtrarEmpleados(request):
 		departamentos = Departamento.objects.order_by('codigo_departamento')	
 		comites = Comite.objects.order_by('nombre_comite')	
 
+		lista = []
+
+		for emp in empleados_filtro:
+
+			agenciaCod = Agencia.objects.get(codigo_agencia = emp.codigo_agencia)
+			nombre_agencia = agenciaCod.nombre_agencia
+
+			dic = {	'id_empleado': emp.id_empleado,
+					'nombre_agencia': nombre_agencia, 
+					'codigo_departamento': emp.codigo_departamento, 
+					'id_comite': emp.id_comite, 
+					'email': emp.email,
+					'nombres': emp.nombres,
+					'apellidos': emp.apellidos,
+				}
+
+			lista.append(dic)			
+
 		context = {
+			'lista': lista,
 			'empleados_filtro': empleados_filtro,
 			
 			'agencia': agencia,
@@ -509,10 +528,29 @@ def reporteEmpleadosPDF(request, agencia, departamento, comite):
 		empleados_sin_filtro = Empleado.objects.order_by('nombres')
 		reporte_empleados_filtro=empleados_sin_filtro
 
+	lista = []
+
+	for emp in reporte_empleados_filtro:
+
+		agenciaCod = Agencia.objects.get(codigo_agencia = emp.codigo_agencia)
+		nombre_agencia = agenciaCod.nombre_agencia
+
+		dic = {	'id_empleado': emp.id_empleado,
+				'nombre_agencia': nombre_agencia, 
+				'codigo_departamento': emp.codigo_departamento, 
+				'id_comite': emp.id_comite, 
+				'email': emp.email,
+				'nombres': emp.nombres,
+				'apellidos': emp.apellidos,
+			}
+
+		lista.append(dic)		
+
 
 	template = get_template('reportes/ReporteEmpleados.html')
 
 	context = {
+		'lista': lista,
 		'reporte_empleados_filtro': reporte_empleados_filtro
 	}
 

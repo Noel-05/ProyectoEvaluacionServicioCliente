@@ -90,11 +90,11 @@
 						<tbody>
 
 	    		{% if empleados_filtro %}
-					{% for empage in empleados_filtro %}
+					{% for empage in lista %}
 
 							<tr>
 								<td>{{ empage.nombres}}<br>{{ emp.apellidos }}</td>
-								<td>{{ empage.codigo_agencia }}</td>
+								<td>{{ empage.nombre_agencia }}</td>
 								<td>{{ empage.codigo_departamento }}</td>
 								<td>{{ empage.id_comite }}</td>
 								<td>{{ empage.email }}</td>
