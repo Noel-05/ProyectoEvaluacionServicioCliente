@@ -134,7 +134,7 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-LOGIN_REDIRECT_URL = reverse_lazy('evaluacioncliente:index')
+LOGIN_REDIRECT_URL = reverse_lazy('evaluacionCliente:index')
 
 IMPORT_EXPORT_USE_TRANSACTIONS = True 
 
@@ -146,4 +146,4 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'recuperacionacopus@gmail.com'
-EMAIL_HOST_PASSWORD = 'RecuperacionAcopus.1'
+EMAIL_HOST_PASSWORD = 'Recuperacion1.'
