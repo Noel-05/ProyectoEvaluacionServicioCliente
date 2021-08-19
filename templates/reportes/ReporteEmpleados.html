@@ -37,11 +37,11 @@
 
         {% if reporte_empleados_filtro %}
 
-            {% for repemp in reporte_empleados_filtro %}
+            {% for repemp in lista %}
                 <tr class="etiqueta-tr" align="center">
                     <td align="center">{{ repemp.nombres }}</td>
                     <td align="center">{{ repemp.apellidos }}</td>
-                    <td align="center">{{ repemp.codigo_agencia }}</td>
+                    <td align="center">{{ repemp.nombre_agencia }}</td>
                     <td align="center">{{ repemp.codigo_departamento }}</td>
                     <td align="center">{{ repemp.id_comite }}</td>
                     <td align="center">{{ repemp.email }}</td>

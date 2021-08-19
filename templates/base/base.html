@@ -80,6 +80,9 @@
 </head>
 
 <body>
+
+{% if user.is_authenticated %}
+
 	<!-- SideBar -->
 	<section class="full-box cover dashboard-sideBar">
 		<div class="full-box dashboard-sideBar-bg btn-menu-dashboard"></div>
@@ -222,14 +225,24 @@
 
 		</div>
 	</section>
+{% endif %}
 
+{% if user.is_authenticated %}
 	<!-- Content page-->
 	<section class="full-box dashboard-contentPage">
-
+{% endif %}
 		<!-- NavBar -->
 		<nav class="full-box dashboard-Navbar">
 			<ul class="full-box list-unstyled text-right" style="background-color:#049286;">
 				
+{% if not user.is_authenticated %}
+
+                <li class="pull-left">
+					<a onclick="location.href='{% url 'usuario:login' %}'" class="btn-menu-dashboard"><i class="zmdi zmdi-account-circle"></i></a>
+				</li>
+
+{% endif %}
+
                 <li class="pull-left">
 					<a href="#!" class="btn-menu-dashboard"><i class="zmdi zmdi-more-vert"></i></a>
 				</li>
@@ -284,7 +297,10 @@
         
         {% endblock content %}
 
+{% if user.is_authenticated %}
 	</section>
+
+{% endif %}	
 
 	<!-- Dialog help -->
 	<div class="modal fade" tabindex="-1" role="dialog" id="Dialog-Help">
